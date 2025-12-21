@@ -3,9 +3,9 @@ import { ProgramData, ChannelLayout, LayoutProgram } from "@/types/schedule";
 // 設定
 export const START_HOUR = 20; // 20時開始
 export const END_HOUR = 29;   // 29時(翌5時)終了
-export const HOUR_HEIGHT = 120; // 1時間あたりの高さ(px) -> 1分 = 2px
-export const COL_WIDTH = 140;   // 1列(レーン)の幅(px)
-export const MIN_HEIGHT = 2; // 1分あたりのpx数
+export const HOUR_HEIGHT = 180; // 1時間あたりの高さ(px) -> 1分 = 3px
+export const COL_WIDTH = 160;   // 1列(レーン)の幅(px)
+export const MIN_HEIGHT = 3; // 1分あたりのpx数
 
 /**
  * "HH:MM:SS" 形式の文字列を、開始時刻(20:00)からの経過分等に変換する

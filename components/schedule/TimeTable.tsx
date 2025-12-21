@@ -1,6 +1,8 @@
 import React, { useMemo } from "react";
 import { clsx } from "clsx";
 import { ProgramData } from "@/types/schedule";
+import { format, parseISO } from "date-fns";
+import { ja } from "date-fns/locale";
 import {
   calculateLayout,
   formatTime30,
@@ -77,7 +79,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs }) => {
                 {Array.from({ length: totalHours }).map((_, i) => (
                   <div
                     key={i}
-                    className="absolute w-full border-b border-dashed border-gray-100"
+                    className="absolute w-full border-b border-gray-100"
                     style={{
                       top: i * HOUR_HEIGHT,
                       height: HOUR_HEIGHT,
@@ -102,13 +104,19 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs }) => {
                       width: COL_WIDTH - 4,
                     }}
                   >
-                    <div className="flex flex-col h-full text-xs">
+                    <div className="flex flex-col h-full">
+                      {/* 開始日表示 */}
+                      {prog.start_date && (
+                         <span className="text-gray-600 text-xs w-fit rounded">
+                           {format(parseISO(prog.start_date), "M月d日スタート", { locale: ja })}
+                         </span>
+                      )}
                       {/* 時刻表示 */}
-                      <span className="font-mono text-[10px] opacity-70 leading-none mb-0.5 tracking-tight">
-                        {formatTime30(prog.start_time)} ～ {formatTime30(prog.end_time)}
+                      <span className="font-mono text-xs opacity-70 leading-none mb-0.5 tracking-tight">
+                        {formatTime30(prog.start_time)}～{formatTime30(prog.end_time)}
                       </span>
                       {/* 番組名 */}
-                      <span className="font-bold leading-tight line-clamp-3 group-hover:line-clamp-none">
+                      <span className="font-bold text-[13px] leading-tight line-clamp-3 group-hover:line-clamp-none">
                         {prog.name}
                       </span>
                     </div>
@@ -118,7 +126,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs }) => {
             </div>
           ))}
           
-          {/* データがない場合のプレースホルダー（任意） */}
+          {/* データがない場合のプレースホルダー */}
           {channels.length === 0 && (
             <div className="p-10 text-gray-400 text-sm">
               表示する番組がありません

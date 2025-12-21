@@ -1,8 +1,9 @@
 // DBから取得する生の番組データの型（結合済みデータを想定）
 export type ProgramData = {
   id: number;
-  name: string; // works.name または programs.note などから生成
-  start_time: string; // "23:00:00" や "01:30:00"
+  name: string;
+  start_date: string;
+  start_time: string;
   end_time: string;
   channel_id: number;
   channel_name: string;

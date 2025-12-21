@@ -20,6 +20,7 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
     .from("programs")
     .select(`
       id,
+      start_date,
       start_time,
       end_time,
       color,
@@ -47,7 +48,8 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
   // DBのネストしたデータを、UIコンポーネント用のフラットな型(ProgramData)に変換
   const formattedData: ProgramData[] = data.map((item: any) => ({
     id: item.id,
-    name: item.works?.name || "未定", // 作品名がない場合のフォールバック
+    name: item.works?.name || "未定",
+    start_date: item.start_date,
     start_time: item.start_time,
     end_time: item.end_time,
     channel_id: item.channels?.id,
