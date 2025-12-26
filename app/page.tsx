@@ -1,6 +1,5 @@
 import { Suspense } from "react";
-import { Header } from "@/components/layout/Header";
-import { getScheduleByDay, DAYS } from "@/lib/get-schedule";
+import { getScheduleByDay } from "@/lib/get-schedule";
 import { getSeasons } from "@/lib/get-seasons";
 import { TimeTable } from "@/components/schedule/TimeTable";
 import { DayTabs } from "@/components/schedule/DayTabs";
@@ -39,13 +38,11 @@ export default async function Home({ searchParams }: PageProps) {
   const programs = await getScheduleByDay(validDay, currentSeasonId);
 
   return (
-    <main className="flex flex-col h-screen bg-gray-50 overflow-hidden">
+    // 親(layoutのmain)が flex-col なので、ここで h-full を指定して高さを埋める
+    <div className="flex flex-col h-full w-full">
       
-      {/* 1. 共通ヘッダー */}
-      <Header />
-
-      {/* 2. コントロールバー */}
-      <div className="shrink-0 p-4 border-b bg-white z-99">
+      {/* コントロールバー */}
+      <div className="shrink-0 p-4 border-b bg-white z-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
@@ -55,13 +52,14 @@ export default async function Home({ searchParams }: PageProps) {
         </div>
       </div>
 
-      {/* 3. 番組表エリア  */}
+      {/* 番組表エリア  */}
       <div className="flex-1 overflow-hidden relative">
         <Suspense fallback={<LoadingSkeleton />}>
           <TimeTable programs={programs} mode={layoutMode} />
         </Suspense>
       </div>
-    </main>
+      
+    </div>
   );
 }
 
