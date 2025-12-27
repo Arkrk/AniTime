@@ -28,10 +28,8 @@ export default async function Home({ searchParams }: PageProps) {
   const currentSeasonId = seasonParam ? Number(seasonParam) : latestSeasonId;
 
   // 3. 曜日の決定
-  const today = new Date().getDay();
-  const dbToday = today === 0 ? 7 : today;
   const dayParam = params.day;
-  const currentDay = dayParam ? Number(dayParam) : dbToday;
+  const currentDay = dayParam ? Number(dayParam) : 1;
   const validDay = (currentDay >= 1 && currentDay <= 7) ? currentDay : 1;
 
   // 4. 番組データ取得
