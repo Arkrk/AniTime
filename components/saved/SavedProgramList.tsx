@@ -36,12 +36,68 @@ export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
     return grouped;
   }, [savedPrograms]);
 
+  // 統計情報の計算
+  const stats = useMemo(() => {
+    const count = savedPrograms.length;
+    let totalMinutes = 0;
+    const dayMinutes = new Map<number, number>();
+
+    savedPrograms.forEach(prog => {
+      const { minutesFromStart: startMin } = calculatePosition(prog.start_time);
+      const { minutesFromStart: endMin } = calculatePosition(prog.end_time);
+      // 日またぎ対応: 終了時刻が開始時刻より前の場合は翌日とみなす
+      const safeEndMin = endMin < startMin ? endMin + 24 * 60 : endMin;
+      const duration = safeEndMin - startMin;
+      
+      totalMinutes += duration;
+      
+      // 曜日ごとの集計
+      const current = dayMinutes.get(prog.day_of_the_week) || 0;
+      dayMinutes.set(prog.day_of_the_week, current + duration);
+    });
+
+    // 最大値を求める
+    let maxMinutes = 0;
+    for (const minutes of dayMinutes.values()) {
+      if (minutes > maxMinutes) maxMinutes = minutes;
+    }
+
+    const formatDuration = (minutes: number) => {
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      if (h > 0) return `${h}時間${m}分`;
+      return `${m}分`;
+    };
+
+    return {
+      count,
+      totalTime: formatDuration(totalMinutes),
+      maxTime: formatDuration(maxMinutes)
+    };
+  }, [savedPrograms]);
+
   if (savedPrograms.length === 0) {
     return <div className="p-8 text-center text-gray-500">保存された番組はありません。</div>;
   }
 
   return (
     <div className="p-4 space-y-8 pb-20">
+      {/* 統計情報 */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div className="bg-gray-50 p-4 rounded-lg border text-center">
+          <div className="text-xs text-gray-500 mb-1 font-bold">保存済み数</div>
+          <div className="text-2xl font-bold text-slate-900">{stats.count}</div>
+        </div>
+        <div className="bg-gray-50 p-4 rounded-lg border text-center">
+          <div className="text-xs text-gray-500 mb-1 font-bold">1週間の合計視聴時間</div>
+          <div className="text-2xl font-bold text-slate-900">{stats.totalTime}</div>
+        </div>
+        <div className="bg-gray-50 p-4 rounded-lg border text-center">
+          <div className="text-xs text-gray-500 mb-1 font-bold">1日の最大視聴時間</div>
+          <div className="text-2xl font-bold text-slate-900">{stats.maxTime}</div>
+        </div>
+      </div>
+
       {DAYS.map(day => {
         const dayPrograms = programsByDay.get(day.id) || [];
         if (dayPrograms.length === 0) return null;
