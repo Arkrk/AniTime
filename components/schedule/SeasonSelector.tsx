@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -17,6 +17,7 @@ type SeasonSelectorProps = {
 
 export const SeasonSelector = ({ seasons, currentSeasonId }: SeasonSelectorProps) => {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const handleValueChange = (value: string) => {
@@ -24,7 +25,7 @@ export const SeasonSelector = ({ seasons, currentSeasonId }: SeasonSelectorProps
     const params = new URLSearchParams(searchParams.toString());
      // seasonのみを更新
     params.set("season", value);
-    router.push(`/?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   return (

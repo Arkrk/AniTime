@@ -21,9 +21,11 @@ import { useSavedPrograms } from "@/hooks/use-saved-programs";
 type ProgramCardProps = {
   program: LayoutProgram;
   mode: LayoutMode;
+  className?: string;
+  style?: React.CSSProperties;
 };
 
-export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode }) => {
+export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, className, style }) => {
   const [copied, setCopied] = useState(false);
   const { isSaved, toggleSaved } = useSavedPrograms();
   const saved = isSaved(String(program.id));
@@ -50,7 +52,8 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode }) => {
             // ホバー時の拡張設定
             "hover:h-auto! hover:z-50 hover:shadow-2xl hover:scale-[1.02]",
             getProgramColorClass(program.color),
-            saved ? "border-red-500 border-2" : "border"
+            saved ? "border-red-500 border-2" : "border",
+            className
           )}
           style={{
             top: program.top,
@@ -58,6 +61,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode }) => {
             minHeight: program.height - 2,
             left: program.laneIndex * COL_WIDTH + 2,
             width: COL_WIDTH - 4,
+            ...style
           }}
         >
           <div className="flex flex-col h-full">

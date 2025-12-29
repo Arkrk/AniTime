@@ -19,6 +19,7 @@ export type ProgramData = {
   tags: string[];
   version: string | null;
   note: string | null;
+  day_of_the_week: number;
 };
 
 // 計算モードの型

@@ -16,7 +16,7 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
   const supabase = await createClient();
 
   // Supabaseからデータ取得（リレーションを含む）
-  const { data, error } = await supabase
+  let query = supabase
     .from("programs")
     .select(`
       id,
@@ -37,9 +37,15 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
       programs_seasons!inner ( season_id ),
       programs_tags ( tags ( name ) )
     `)
-    .eq("day_of_the_week", day)
     .eq("programs_seasons.season_id", seasonId) // シーズンを絞り込み
     .order("start_time", { ascending: true });
+
+  // dayが0以外の場合は曜日で絞り込み
+  if (day !== 0) {
+    query = query.eq("day_of_the_week", day);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("Error fetching schedule:", error);
@@ -68,6 +74,7 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
     website_url: item.works?.website_url ?? null,
     annict_url: item.works?.annict_url ?? null,
     wikipedia_url: item.works?.wikipedia_url ?? null,
+    day_of_the_week: item.day_of_the_week,
     // タグ配列をフラット化 (例: [{tags: {name: "字"}}, ...] -> ["字", ...])
     tags: item.programs_tags?.map((pt: any) => pt.tags?.name).filter(Boolean) || [],
   }));
