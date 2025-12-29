@@ -3,24 +3,32 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Table2, Search, Settings, Bookmark, Info } from "lucide-react";
+import { Table2, Search, Bolt, Bookmark, Database } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SearchDialog } from "@/components/search/SearchDialog";
+import { useLogin } from "@/hooks/login";
 
 export const Sidebar = () => {
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
+  const { user } = useLogin();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navItems = [
     { label: "番組表", icon: Table2, href: "/" },
     { label: "保存済み", icon: Bookmark, href: "/saved" },
-    { label: "情報", icon: Info, href: "/about" },
+    ...(mounted && user ? [{ label: "データ管理", icon: Database, href: "/data" }] : []),
+    { label: "設定", icon: Bolt, href: "/settings" },
   ];
 
   return (

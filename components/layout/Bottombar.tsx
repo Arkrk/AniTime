@@ -3,15 +3,24 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Table2, Bookmark, Info } from "lucide-react";
+import { Table2, Bookmark, Bolt, Database } from "lucide-react";
+import { useLogin } from "@/hooks/login";
+import { useEffect, useState } from "react";
 
 export const Bottombar = () => {
   const pathname = usePathname();
+  const { user } = useLogin();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navItems = [
     { label: "番組表", icon: Table2, href: "/" },
     { label: "保存済み", icon: Bookmark, href: "/saved" },
-    { label: "情報", icon: Info, href: "/about" },
+    ...(mounted && user ? [{ label: "データ管理", icon: Database, href: "/data" }] : []),
+    { label: "設定", icon: Bolt, href: "/settings" },
   ];
 
   return (
