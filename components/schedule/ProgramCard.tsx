@@ -2,19 +2,21 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { clsx } from "clsx";
 import { format, parseISO } from "date-fns";
 import { ja } from "date-fns/locale";
-import { Copy, Check, ExternalLink, Tv, Calendar } from "lucide-react";
+import { Copy, Check, ExternalLink, Tv, Calendar, Bookmark } from "lucide-react";
 
 import { LayoutProgram, LayoutMode } from "@/types/schedule";
 import { formatTime30, COL_WIDTH, getProgramColorClass } from "@/lib/schedule-utils";
+import { cn } from "@/lib/utils";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
+import { Toggle } from "@/components/ui/toggle";
+import { useSavedPrograms } from "@/hooks/use-saved-programs";
 
 type ProgramCardProps = {
   program: LayoutProgram;
@@ -23,6 +25,8 @@ type ProgramCardProps = {
 
 export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode }) => {
   const [copied, setCopied] = useState(false);
+  const { isSaved, toggleSaved } = useSavedPrograms();
+  const saved = isSaved(String(program.id));
 
   // クリップボードコピー機能
   const handleCopy = async () => {
@@ -40,12 +44,13 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode }) => {
     <HoverCard openDelay={300} closeDelay={50}>
       <HoverCardTrigger asChild>
         <div
-          className={clsx(
-            "absolute p-1 rounded border cursor-pointer group flex flex-col transition-all duration-200",
+          className={cn(
+            "absolute p-1 rounded cursor-pointer group flex flex-col transition-all duration-200",
             "overflow-hidden",
             // ホバー時の拡張設定
             "hover:h-auto! hover:z-50 hover:shadow-2xl hover:scale-[1.02]",
-            getProgramColorClass(program.color)
+            getProgramColorClass(program.color),
+            saved ? "border-red-500 border-2" : "border"
           )}
           style={{
             top: program.top,
@@ -111,15 +116,26 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode }) => {
                 program.name
               )}
             </h4>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6 shrink-0"
-              onClick={handleCopy}
-              title="作品名をコピー"
-            >
-              {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
-            </Button>
+            <div className="flex gap-1 shrink-0">
+              <Toggle
+                pressed={saved}
+                onPressedChange={() => toggleSaved(String(program.id))}
+                size="sm"
+                className="h-6 w-6 p-0 data-[state=on]:text-red-500"
+                title={saved ? "削除" : "保存"}
+              >
+                <Bookmark className={cn("h-3 w-3", saved && "fill-current")} />
+              </Toggle>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={handleCopy}
+                title="作品名をコピー"
+              >
+                {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+              </Button>
+            </div>
           </div>
 
           {/* バージョン・メモ */}
