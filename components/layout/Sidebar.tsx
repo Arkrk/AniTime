@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
-import { CalendarDays, Search, Clapperboard, Radio } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Table2, Search, Clapperboard, Bookmark, Menu } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -8,11 +12,13 @@ import {
 } from "@/components/ui/tooltip";
 
 export const Sidebar = () => {
+  const pathname = usePathname();
+
   const navItems = [
-    { label: "番組表", icon: CalendarDays, href: "/" },
+    { label: "番組表", icon: Table2, href: "/" },
+    { label: "保存済み", icon: Bookmark, href: "/saved" },
     { label: "検索", icon: Search, href: "/search" },
     { label: "作品", icon: Clapperboard, href: "/works" },
-    { label: "放送局", icon: Radio, href: "/channels" },
   ];
 
   return (
@@ -32,7 +38,12 @@ export const Sidebar = () => {
               <TooltipTrigger asChild>
                 <Link
                   href={item.href}
-                  className="group flex flex-col items-center gap-1 text-gray-400 hover:text-slate-900 transition-colors"
+                  className={cn(
+                    "group flex flex-col items-center gap-1 transition-colors",
+                    pathname === item.href
+                      ? "text-slate-900"
+                      : "text-gray-400 hover:text-slate-900"
+                  )}
                 >
                   <item.icon className="w-7 h-7 group-hover:scale-110 transition-transform stroke-[1.5]" />
                 </Link>
@@ -48,6 +59,7 @@ export const Sidebar = () => {
 
       {/* 下部のダミーエリア */}
       <div className="mt-auto">
+        <Menu className="w-7 h-7 text-gray-400" />
       </div>
     </aside>
   );

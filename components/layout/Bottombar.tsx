@@ -1,12 +1,18 @@
+"use client";
+
 import Link from "next/link";
-import { CalendarDays, Search, Clapperboard, Radio } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Table2, Search, Clapperboard, Bookmark } from "lucide-react";
 
 export const Bottombar = () => {
+  const pathname = usePathname();
+
   const navItems = [
-    { label: "番組表", icon: CalendarDays, href: "/" },
+    { label: "番組表", icon: Table2, href: "/" },
+    { label: "保存済み", icon: Bookmark, href: "/saved" },
     { label: "検索", icon: Search, href: "/search" },
     { label: "作品", icon: Clapperboard, href: "/works" },
-    { label: "放送局", icon: Radio, href: "/channels" },
   ];
 
   return (
@@ -15,7 +21,12 @@ export const Bottombar = () => {
         <Link
           key={item.label}
           href={item.href}
-          className="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-slate-900 active:text-slate-900 transition-colors"
+          className={cn(
+            "flex flex-col items-center justify-center w-full h-full transition-colors",
+            pathname === item.href
+              ? "text-slate-900"
+              : "text-gray-400 hover:text-slate-900 active:text-slate-900"
+          )}
           title={item.label}
         >
           <item.icon className="w-6 h-6 mb-1" />
