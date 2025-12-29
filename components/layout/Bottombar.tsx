@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Table2, Search, Clapperboard, Bookmark } from "lucide-react";
+import { Table2, Bookmark, Info } from "lucide-react";
 
 export const Bottombar = () => {
   const pathname = usePathname();
@@ -11,8 +11,7 @@ export const Bottombar = () => {
   const navItems = [
     { label: "番組表", icon: Table2, href: "/" },
     { label: "保存済み", icon: Bookmark, href: "/saved" },
-    { label: "検索", icon: Search, href: "/search" },
-    { label: "作品", icon: Clapperboard, href: "/works" },
+    { label: "情報", icon: Info, href: "/about" },
   ];
 
   return (

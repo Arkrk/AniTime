@@ -3,22 +3,24 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Table2, Search, Clapperboard, Bookmark, Menu } from "lucide-react";
+import { Table2, Search, Settings, Bookmark, Info } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useState } from "react";
+import { SearchDialog } from "@/components/search/SearchDialog";
 
 export const Sidebar = () => {
   const pathname = usePathname();
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const navItems = [
     { label: "番組表", icon: Table2, href: "/" },
     { label: "保存済み", icon: Bookmark, href: "/saved" },
-    { label: "検索", icon: Search, href: "/search" },
-    { label: "作品", icon: Clapperboard, href: "/works" },
+    { label: "情報", icon: Info, href: "/about" },
   ];
 
   return (
@@ -57,10 +59,26 @@ export const Sidebar = () => {
         </TooltipProvider>
       </nav>
 
-      {/* 下部のダミーエリア */}
+      {/* 検索ボタン */}
       <div className="mt-auto">
-        <Menu className="w-7 h-7 text-gray-400" />
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                onClick={() => setSearchOpen(true)}
+                className="text-gray-400 hover:text-slate-900 transition-colors"
+              >
+                <Search className="w-7 h-7 stroke-[1.5]" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="font-medium">
+              <p>検索</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
+
+      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </aside>
   );
 };
