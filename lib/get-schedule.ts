@@ -27,7 +27,7 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
       day_of_the_week,
       version,
       note,
-      works ( id, name, website_url, annict_url, wikipedia_url ),
+      works ( id, name, website_url, annict_url, wikipedia_url, x_username ),
       channels (
         id,
         name,
@@ -74,6 +74,7 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
     website_url: item.works?.website_url ?? null,
     annict_url: item.works?.annict_url ?? null,
     wikipedia_url: item.works?.wikipedia_url ?? null,
+    x_username: item.works?.x_username ?? null,
     day_of_the_week: item.day_of_the_week,
     // タグ配列をフラット化 (例: [{tags: {name: "字"}}, ...] -> ["字", ...])
     tags: item.programs_tags?.map((pt: any) => pt.tags?.name).filter(Boolean) || [],

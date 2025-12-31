@@ -16,6 +16,7 @@ export type ProgramData = {
   website_url: string | null;
   annict_url: string | null;
   wikipedia_url: string | null;
+  x_username: string | null;
   tags: string[];
   version: string | null;
   note: string | null;

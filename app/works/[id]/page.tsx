@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { ExternalLink } from "lucide-react";
+import { Globe } from "lucide-react";
+import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
 
 import { getWorkById } from "@/lib/get-work";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -37,21 +38,28 @@ export default async function WorkPage({ params }: PageProps) {
             {work.website_url && (
               <Button variant="outline" size="sm" asChild>
                 <a href={work.website_url} target="_blank" rel="noopener noreferrer">
-                  公式サイト <ExternalLink className="h-4 w-4" />
+                  <Globe className="h-4 w-4" />公式サイト
                 </a>
               </Button>
             )}
-            {work.annict_url && (
+            {work.x_username && (
               <Button variant="outline" size="sm" asChild>
-                <a href={work.annict_url} target="_blank" rel="noopener noreferrer">
-                  Annict <ExternalLink className="h-4 w-4" />
+                <a href={`https://x.com/${work.x_username}`} target="_blank" rel="noopener noreferrer">
+                  <FaXTwitter className="h-4 w-4" />@{work.x_username}
                 </a>
               </Button>
             )}
             {work.wikipedia_url && (
               <Button variant="outline" size="sm" asChild>
                 <a href={work.wikipedia_url} target="_blank" rel="noopener noreferrer">
-                  Wikipedia <ExternalLink className="h-4 w-4" />
+                  <FaWikipediaW className="h-4 w-4" />Wikipedia
+                </a>
+              </Button>
+            )}
+            {work.annict_url && (
+              <Button variant="outline" size="sm" asChild>
+                <a href={work.annict_url} target="_blank" rel="noopener noreferrer">
+                  Annict
                 </a>
               </Button>
             )}

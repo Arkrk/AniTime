@@ -4,16 +4,13 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { ja } from "date-fns/locale";
-import { Copy, Check, ExternalLink, Tv, Calendar, Bookmark } from "lucide-react";
+import { Copy, Check, ExternalLink, Tv, Calendar, Bookmark, Globe } from "lucide-react";
+import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
 
 import { LayoutProgram, LayoutMode } from "@/types/schedule";
 import { formatTime30, COL_WIDTH, getProgramColorClass } from "@/lib/schedule-utils";
 import { cn } from "@/lib/utils";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
@@ -109,7 +106,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
             </div>
           </div>
 
-          {/* 作品名・コピーボタン */}
+          {/* 作品タイトル・コピーボタン */}
           <div className="flex items-start gap-2">
             <h4 className="text-sm font-bold leading-snug flex-1">
               {program.work_id ? (
@@ -121,21 +118,12 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
               )}
             </h4>
             <div className="flex gap-1 shrink-0">
-              <Toggle
-                pressed={saved}
-                onPressedChange={() => toggleSaved(String(program.id))}
-                size="sm"
-                className="h-6 w-6 p-0 data-[state=on]:text-red-500"
-                title={saved ? "削除" : "保存"}
-              >
-                <Bookmark className={cn("h-3 w-3", saved && "fill-current")} />
-              </Toggle>
               <Button
                 variant="ghost"
                 size="icon"
                 className="h-6 w-6"
                 onClick={handleCopy}
-                title="作品名をコピー"
+                title="作品タイトルをコピー"
               >
                 {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
               </Button>
@@ -174,35 +162,56 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
             </div>
           )}
 
-          {/* 各種リンク */}
-          {(program.website_url || program.annict_url || program.wikipedia_url) && (
-            <div className="flex gap-2 pt-2 border-t mt-1">
+          {/* 各種リンク & 保存ボタン */}
+          <div className="flex items-center justify-between pt-2 border-t mt-1">
+            <div className="flex gap-2">
               {program.website_url && (
-                <LinkButton href={program.website_url} label="公式サイト" />
+                <a
+                  href={program.website_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs px-3 h-8 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 transition-colors"
+                >
+                  <Globe className="h-4 w-4" />
+                  公式サイト
+                </a>
               )}
-              {program.annict_url && (
-                <LinkButton href={program.annict_url} label="Annict" />
+              {program.x_username && (
+                <a
+                  href={`https://x.com/${program.x_username}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center h-8 w-8 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 transition-colors"
+                  title="X"
+                >
+                  <FaXTwitter className="h-4 w-4" />
+                </a>
               )}
               {program.wikipedia_url && (
-                <LinkButton href={program.wikipedia_url} label="Wikipedia" />
+                <a
+                  href={program.wikipedia_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center h-8 w-8 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 transition-colors"
+                  title="Wikipedia"
+                >
+                  <FaWikipediaW className="h-4 w-4" />
+                </a>
               )}
             </div>
-          )}
+
+            <Toggle
+              pressed={saved}
+              onPressedChange={() => toggleSaved(String(program.id))}
+              size="sm"
+              className="h-8 w-8 p-0 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded data-[state=on]:bg-red-500 data-[state=on]:text-white data-[state=on]:hover:bg-red-600"
+              title={saved ? "削除" : "保存"}
+            >
+              <Bookmark className={cn("h-4 w-4", saved && "fill-current")} />
+            </Toggle>
+          </div>
         </div>
       </HoverCardContent>
     </HoverCard>
   );
 };
-
-// ヘルパー: リンクボタンコンポーネント
-const LinkButton = ({ href, label }: { href: string; label: string }) => (
-  <a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 transition-colors"
-  >
-    {label}
-    <ExternalLink className="h-3 w-3" />
-  </a>
-);
