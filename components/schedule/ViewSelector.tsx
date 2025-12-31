@@ -13,7 +13,7 @@ import { Layout } from "lucide-react";
 export const ViewSelector = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentView = searchParams.get("view") || "channel";
+  const currentView = searchParams.get("view") || "area";
 
   const handleValueChange = (value: string) => {
     // 現在のクエリパラメータをコピーしてインスタンス化
@@ -32,8 +32,8 @@ export const ViewSelector = () => {
         </div>
       </SelectTrigger>
       <SelectContent className="z-100">
-        <SelectItem value="channel">チャンネル別</SelectItem>
         <SelectItem value="area">エリア別</SelectItem>
+        <SelectItem value="channel">チャンネル別</SelectItem>
       </SelectContent>
     </Select>
   );

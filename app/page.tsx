@@ -16,7 +16,7 @@ export default async function Home({ searchParams }: PageProps) {
 
   // viewパラメータの取得
   const viewParam = params.view as string;
-  const layoutMode: LayoutMode = (viewParam === "area") ? "area" : "channel";
+  const layoutMode: LayoutMode = (viewParam === "channel") ? "channel" : "area";
   
   // 1. シーズン一覧を取得
   const seasons = await getSeasons();

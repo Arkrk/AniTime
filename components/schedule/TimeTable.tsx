@@ -19,7 +19,7 @@ type TimeTableProps = {
   mode?: LayoutMode;
 };
 
-export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "channel" }) => {
+export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area" }) => {
   const channels = useMemo(() => calculateLayout(programs, mode), [programs, mode]);
 
   // 全体の幅を計算 (各列の幅の合計 + 時間軸の幅)
