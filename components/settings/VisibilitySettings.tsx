@@ -43,7 +43,7 @@ export function VisibilitySettings() {
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="text-xl font-bold mb-1">エリア表示設定</h2>
+        <h2 className="text-xl font-bold mb-1">表示するエリア</h2>
         <p className="text-sm text-gray-500 mb-4">
           エリア別レイアウトで表示するエリアを選択できます。
         </p>
@@ -71,7 +71,7 @@ export function VisibilitySettings() {
       </section>
 
       <section>
-        <h2 className="text-xl font-bold mb-1">チャンネル表示設定</h2>
+        <h2 className="text-xl font-bold mb-1">表示するチャンネル</h2>
         <p className="text-sm text-gray-500 mb-4">
           チャンネル別レイアウトで表示するチャンネルを選択できます。
         </p>
@@ -83,6 +83,8 @@ export function VisibilitySettings() {
 
               // Check if all channels in this area are visible
               const allVisible = areaChannels.every(c => !hiddenChannelIds.includes(c.id));
+              const someVisible = areaChannels.some(c => !hiddenChannelIds.includes(c.id));
+              const isIndeterminate = someVisible && !allVisible;
               
               const handleAreaToggle = () => {
                 const ids = areaChannels.map(c => c.id);
@@ -97,11 +99,18 @@ export function VisibilitySettings() {
 
               return (
                 <AccordionItem key={area.id} value={`area-${area.id}`} className="border-b last:border-b-0">
-                  <div className="flex items-center justify-between py-3 px-4 bg-gray-50/50 border-b -mb-px">
+                  <div className="flex items-center bg-gray-50/50 border-b -mb-px">
+                    <div className="flex items-center pl-4 py-3 pr-3">
+                      <Checkbox
+                        id={`area-group-${area.id}`}
+                        checked={isIndeterminate ? "indeterminate" : allVisible}
+                        onCheckedChange={handleAreaToggle}
+                      />
+                    </div>
                     <AccordionPrimitive.Header className="flex flex-1">
                       <AccordionPrimitive.Trigger
                         className={cn(
-                          "flex flex-1 items-center font-bold text-gray-700 transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+                          "flex flex-1 items-center justify-between py-3 pr-4 font-bold text-gray-700 transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
                           "text-left text-sm"
                         )}
                       >
@@ -109,17 +118,6 @@ export function VisibilitySettings() {
                         <ChevronDown className="text-muted-foreground size-4 shrink-0 transition-transform duration-200 ml-2" />
                       </AccordionPrimitive.Trigger>
                     </AccordionPrimitive.Header>
-                    
-                    <div className="flex items-center space-x-2 ml-4">
-                      <Checkbox
-                        id={`area-group-${area.id}`}
-                        checked={allVisible}
-                        onCheckedChange={handleAreaToggle}
-                      />
-                      <Label htmlFor={`area-group-${area.id}`} className="text-xs text-gray-500 cursor-pointer">
-                        一括切替
-                      </Label>
-                    </div>
                   </div>
                   <AccordionContent className="p-4">
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
