@@ -9,6 +9,7 @@ import {
   HOUR_HEIGHT,
 } from "@/lib/schedule-utils";
 import { ProgramCard } from "./ProgramCard";
+import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 
 const TIME_COL_WIDTH = 35;
 const HEADER_HEIGHT = 35;
@@ -20,7 +21,20 @@ type TimeTableProps = {
 };
 
 export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area" }) => {
-  const channels = useMemo(() => calculateLayout(programs, mode), [programs, mode]);
+  const { hiddenAreaIds, hiddenChannelIds, loaded } = useVisibilitySettings();
+
+  const channels = useMemo(() => {
+    const allChannels = calculateLayout(programs, mode);
+    if (!loaded) return allChannels;
+
+    return allChannels.filter((ch) => {
+      if (mode === "area") {
+        return !hiddenAreaIds.includes(ch.id);
+      } else {
+        return !hiddenChannelIds.includes(ch.id);
+      }
+    });
+  }, [programs, mode, hiddenAreaIds, hiddenChannelIds, loaded]);
 
   // 全体の幅を計算 (各列の幅の合計 + 時間軸の幅)
   const totalWidth = channels.reduce((acc, ch) => acc + ch.width, 0) + TIME_COL_WIDTH;

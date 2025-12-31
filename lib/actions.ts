@@ -18,3 +18,24 @@ export async function searchWorks(query: string) {
   }
   return data;
 }
+
+export async function getAreasAndChannels() {
+  const supabase = await createClient();
+  
+  const { data: areas, error: areasError } = await supabase
+    .from("areas")
+    .select("id, name, order")
+    .order("order");
+
+  const { data: channels, error: channelsError } = await supabase
+    .from("channels")
+    .select("id, name, order, area_id")
+    .order("order");
+
+  if (areasError || channelsError) {
+    console.error("Error fetching master data", areasError, channelsError);
+    return { areas: [], channels: [] };
+  }
+
+  return { areas, channels };
+}

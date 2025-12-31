@@ -4,16 +4,19 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Loader2 } from "lucide-react";
 import { useLogin } from "@/hooks/login";
+import { VisibilitySettings } from "@/components/settings/VisibilitySettings";
 
 export default function SettingsPage() {
   const { user, loading, message, handleLogin, handleLogout } = useLogin();
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col h-full bg-white overflow-y-auto">
       <PageHeader title="設定" />
 
       <main className="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full">
         <div className="space-y-8">
+          <VisibilitySettings />
+
           <section>
             <h2 className="text-xl font-bold mb-4">管理者ログイン</h2>
             <div className="p-6 rounded-xl border bg-gray-50">
