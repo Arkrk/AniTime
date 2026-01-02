@@ -1,20 +1,19 @@
 import { ProgramData, ChannelLayout, LayoutProgram, LayoutMode } from "@/types/schedule";
 
 // 設定
-export const START_HOUR = 20; // 20時開始
-export const END_HOUR = 29;   // 29時(翌5時)終了
+export const START_HOUR = 6; // 6時開始
+export const END_HOUR = 30;   // 30時(翌6時)終了
 export const HOUR_HEIGHT = 240; // 1時間あたりの高さ(px) -> 1分 = 4px
 export const COL_WIDTH = 160;   // 1列(レーン)の幅(px)
 export const MIN_HEIGHT = 4; // 1分あたりのpx数
 
 /**
- * "HH:MM:SS" 形式の文字列を、開始時刻(20:00)からの経過分等に変換する
+ * "HH:MM:SS" 形式の文字列を、開始時刻(6:00)からの経過分等に変換する
  */
 export const calculatePosition = (timeStr: string) => {
   const [h, m] = timeStr.split(":").map(Number);
   
-  // 30時間制対応: 0時〜19時は「翌日」とみなして +24時間する
-  // (今回の仕様では00:00〜05:00等のデータが来る想定)
+  // 30時間制対応: 0時〜5時は「翌日」とみなして +24時間する
   let hour = h;
   let isNextDay = false;
   if (hour < START_HOUR) {
@@ -22,7 +21,7 @@ export const calculatePosition = (timeStr: string) => {
     isNextDay = true;
   }
 
-  // 開始時間(20:00)からの経過分数
+  // 開始時間(6:00)からの経過分数
   const minutesFromStart = (hour - START_HOUR) * 60 + m;
   
   return { minutesFromStart, isNextDay };
@@ -139,9 +138,8 @@ export const formatTime30 = (timeStr: string) => {
   const [h, m] = timeStr.split(":").map(Number);
   let hour = h;
 
-  // 20時より前（00:00〜19:59）は翌日扱いとして +24 する
-  // ※ START_HOUR定数を使っても良いですが、単純化のため20未満で判定
-  if (hour < 20) {
+  // 6時より前（00:00〜05:59）は翌日扱いとして +24 する
+  if (hour < 6) {
     hour += 24;
   }
 

@@ -5,6 +5,7 @@ import { TimeTable } from "@/components/schedule/TimeTable";
 import { DayTabs } from "@/components/schedule/DayTabs";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 import { ViewSelector } from "@/components/schedule/ViewSelector";
+import { AllDayToggle } from "@/components/schedule/AllDayToggle";
 import { LayoutMode } from "@/types/schedule";
 
 type PageProps = {
@@ -17,6 +18,9 @@ export default async function Home({ searchParams }: PageProps) {
   // viewパラメータの取得
   const viewParam = params.view as string;
   const layoutMode: LayoutMode = (viewParam === "channel") ? "channel" : "area";
+  
+  // allDayパラメータの取得
+  const showAllDay = params.allDay === "true";
   
   // 1. シーズン一覧を取得
   const seasons = await getSeasons();
@@ -36,9 +40,7 @@ export default async function Home({ searchParams }: PageProps) {
   const programs = await getScheduleByDay(validDay, currentSeasonId);
 
   return (
-    // 親(layoutのmain)が flex-col なので、ここで h-full を指定して高さを埋める
     <div className="flex flex-col h-full w-full">
-      
       {/* コントロールバー */}
       <div className="shrink-0 p-4 border-b bg-white z-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -46,17 +48,19 @@ export default async function Home({ searchParams }: PageProps) {
             <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
             <DayTabs currentDay={validDay} />
           </div>
-          <ViewSelector />
+          <div className="flex items-center gap-2">
+            <AllDayToggle />
+            <ViewSelector />
+          </div>
         </div>
       </div>
 
       {/* 番組表エリア  */}
       <div className="flex-1 overflow-hidden relative">
         <Suspense fallback={<LoadingSkeleton />}>
-          <TimeTable programs={programs} mode={layoutMode} />
+          <TimeTable programs={programs} mode={layoutMode} showAllDay={showAllDay} />
         </Suspense>
       </div>
-      
     </div>
   );
 }
