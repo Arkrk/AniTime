@@ -6,6 +6,8 @@ import { ProgramCard } from "@/components/schedule/ProgramCard";
 import { DAYS } from "@/lib/get-schedule";
 import { calculatePosition } from "@/lib/schedule-utils";
 import { useMemo } from "react";
+import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
+import { Bookmark } from "lucide-react";
 
 export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
   const { isSaved } = useSavedPrograms();
@@ -77,7 +79,21 @@ export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
   }, [savedPrograms]);
 
   if (savedPrograms.length === 0) {
-    return <div className="p-8 text-center text-gray-500">保存された番組はありません。</div>;
+    return (
+      <div className="flex h-full items-center justify-center p-8">
+        <Empty>
+          <EmptyMedia variant="icon">
+            <Bookmark className="size-6" />
+          </EmptyMedia>
+          <EmptyHeader>
+            <EmptyTitle>保存済みの番組はありません</EmptyTitle>
+            <EmptyDescription>
+              番組表から気になる番組を保存すると<br />ここに一覧表示されます。
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      </div>
+    );
   }
 
   return (

@@ -11,6 +11,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyMedia,
+} from "@/components/ui/empty";
 import { Loader2, Plus, Pencil, Trash2, GripVertical, Calendar } from "lucide-react";
 import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
 import { DAYS } from "@/lib/get-schedule";
@@ -196,9 +203,9 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
     // 閲覧モード
     return (
       <div className="space-y-4">
-        {displayPrograms.length > 0 ? (
-          <div className="rounded-2xl border overflow-hidden">
-            {displayPrograms.map((program, index) => {
+        <div className="rounded-2xl border overflow-hidden bg-white">
+          {displayPrograms.length > 0 ? (
+            displayPrograms.map((program, index) => {
               const dayLabel = DAYS.find(d => d.id === program.day_of_the_week)?.label || "?";
               const colorClass = getProgramColorClass(program.color);
               const isLast = index === displayPrograms.length - 1;
@@ -257,11 +264,21 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
                   )}
                 </div>
               );
-            })}
-          </div>
-        ) : (
-          <p className="text-gray-500">登録されている放送スケジュールはありません。</p>
-        )}
+            })
+          ) : (
+            <Empty className="border-0">
+              <EmptyMedia variant="icon">
+                <Calendar className="h-5 w-5" />
+              </EmptyMedia>
+              <EmptyHeader>
+                <EmptyTitle>放送スケジュールがありません</EmptyTitle>
+                <EmptyDescription>
+                  登録されている放送スケジュールはありません。
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          )}
+        </div>
       </div>
     );
   }
@@ -294,20 +311,29 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
                   />
                 ))
               ) : (
-                <div className="p-8 text-center text-gray-500">
-                  登録されている放送スケジュールはありません。
-                </div>
+                <Empty className="border-0">
+                  <EmptyMedia variant="icon">
+                    <Calendar className="h-5 w-5" />
+                  </EmptyMedia>
+                  <EmptyHeader>
+                    <EmptyTitle>放送スケジュールがありません</EmptyTitle>
+                    <EmptyDescription>
+                      登録されている放送スケジュールはありません。
+                    </EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
               )}
+              <button
+                onClick={handleAdd}
+                className="w-full p-4 flex items-center justify-center gap-2 text-muted-foreground hover:bg-gray-50 hover:text-foreground transition-colors border-t border-black/10 font-medium text-sm"
+              >
+                <Plus className="h-4 w-4" />
+                番組を追加
+              </button>
             </div>
           </SortableContext>
         </DndContext>
       )}
-      <div className="flex justify-end">
-        <Button onClick={handleAdd}>
-          <Plus className="mr-2 h-4 w-4" />
-          番組追加
-        </Button>
-      </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
