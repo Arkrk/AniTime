@@ -12,6 +12,7 @@ import {
 } from "@/lib/schedule-utils";
 import { ProgramCard } from "./ProgramCard";
 import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
+import { useSavedPrograms } from "@/hooks/use-saved-programs";
 
 const TIME_COL_WIDTH = 35;
 const HEADER_HEIGHT = 35;
@@ -20,14 +21,21 @@ type TimeTableProps = {
   programs: ProgramData[];
   mode?: LayoutMode;
   showAllDay: boolean;
+  showSavedOnly?: boolean;
 };
 
-export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", showAllDay }) => {
+export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", showAllDay, showSavedOnly = false }) => {
   const { hiddenAreaIds, hiddenChannelIds, loaded } = useVisibilitySettings();
+  const { savedIds } = useSavedPrograms();
 
   // チャンネル・番組のレイアウト計算
   const channels = useMemo(() => {
-    const allChannels = calculateLayout(programs, mode);
+    let filteredPrograms = programs;
+    if (showSavedOnly) {
+      filteredPrograms = programs.filter((p) => savedIds.includes(String(p.id)));
+    }
+
+    const allChannels = calculateLayout(filteredPrograms, mode);
     if (!loaded) return allChannels;
 
     return allChannels.filter((ch) => {
@@ -37,7 +45,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
         return !hiddenChannelIds.includes(ch.id);
       }
     });
-  }, [programs, mode, hiddenAreaIds, hiddenChannelIds, loaded]);
+  }, [programs, mode, hiddenAreaIds, hiddenChannelIds, loaded, showSavedOnly, savedIds]);
 
   // 表示する時間帯（hour）のリストを計算
   const { visibleHours, hourToY, totalHeight } = useMemo(() => {

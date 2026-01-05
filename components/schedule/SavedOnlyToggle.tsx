@@ -4,28 +4,27 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
-export function AllDayToggle() {
+export function SavedOnlyToggle() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // 現在の状態を取得
-  const showAllDay = searchParams.get("allDay") === "true";
+  const isSavedOnly = searchParams.get("savedOnly") === "true";
 
   const handleCheckedChange = (checked: boolean) => {
     const params = new URLSearchParams(searchParams.toString());
     if (checked) {
-      params.set("allDay", "true");
+      params.set("savedOnly", "true");
     } else {
-      params.delete("allDay");
+      params.delete("savedOnly");
     }
     router.push(pathname + "?" + params.toString());
   };
 
   return (
     <Switch
-      id="all-day-mode"
-      checked={showAllDay}
+      id="saved-only-mode"
+      checked={isSavedOnly}
       onCheckedChange={handleCheckedChange}
     />
   );

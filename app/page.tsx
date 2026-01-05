@@ -4,8 +4,7 @@ import { getSeasons } from "@/lib/get-seasons";
 import { TimeTable } from "@/components/schedule/TimeTable";
 import { DayTabs } from "@/components/schedule/DayTabs";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
-import { ViewSelector } from "@/components/schedule/ViewSelector";
-import { AllDayToggle } from "@/components/schedule/AllDayToggle";
+import { DisplaySettings } from "@/components/schedule/DisplaySettings";
 import { LayoutMode } from "@/types/schedule";
 
 type PageProps = {
@@ -21,6 +20,7 @@ export default async function Home({ searchParams }: PageProps) {
   
   // allDayパラメータの取得
   const showAllDay = params.allDay === "true";
+  const showSavedOnly = params.savedOnly === "true";
   
   // 1. シーズン一覧を取得
   const seasons = await getSeasons();
@@ -43,14 +43,16 @@ export default async function Home({ searchParams }: PageProps) {
     <div className="flex flex-col h-full w-full">
       {/* コントロールバー */}
       <div className="shrink-0 p-4 border-b bg-white z-10">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-            <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
-            <DayTabs currentDay={validDay} />
+        <div className="flex items-center justify-between gap-4">
+          <div className="hidden sm:flex items-center gap-4">
+            <h1 className="text-lg font-bold">番組表</h1>
           </div>
-          <div className="flex items-center gap-2">
-            <AllDayToggle />
-            <ViewSelector />
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+            <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
+            <div className="flex items-center gap-2">
+              <DayTabs currentDay={validDay} />
+              <DisplaySettings />
+            </div>
           </div>
         </div>
       </div>
@@ -58,7 +60,7 @@ export default async function Home({ searchParams }: PageProps) {
       {/* 番組表エリア  */}
       <div className="flex-1 overflow-hidden relative">
         <Suspense fallback={<LoadingSkeleton />}>
-          <TimeTable programs={programs} mode={layoutMode} showAllDay={showAllDay} />
+          <TimeTable programs={programs} mode={layoutMode} showAllDay={showAllDay} showSavedOnly={showSavedOnly} />
         </Suspense>
       </div>
     </div>
