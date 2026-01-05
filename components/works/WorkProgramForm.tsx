@@ -74,7 +74,10 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({
+      ...formData,
+      start_date: formData.start_date || null,
+    });
   };
 
   // Group channels by area
@@ -134,7 +137,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
         </div>
 
         <div className="space-y-2 flex flex-col">
-          <Label htmlFor="start_date">開始日</Label>
+          <Label htmlFor="start_date">開始日 (任意)</Label>
           <Popover>
             <PopoverTrigger asChild>
               <Button

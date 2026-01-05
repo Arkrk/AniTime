@@ -3,7 +3,7 @@ export type ProgramData = {
   id: number;
   work_id: number;
   name: string;
-  start_date: string;
+  start_date: string | null;
   start_time: string;
   end_time: string;
   channel_id: number;

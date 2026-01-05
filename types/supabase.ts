@@ -86,7 +86,7 @@ export type Database = {
           id: number
           note: string | null
           order: number
-          start_date: string
+          start_date: string | null
           start_time: string
           version: string | null
           work_id: number
@@ -100,7 +100,7 @@ export type Database = {
           id?: number
           note?: string | null
           order: number
-          start_date: string
+          start_date: string | null
           start_time: string
           version?: string | null
           work_id: number
@@ -114,7 +114,7 @@ export type Database = {
           id?: number
           note?: string | null
           order?: number
-          start_date?: string
+          start_date?: string | null
           start_time?: string
           version?: string | null
           work_id?: number
