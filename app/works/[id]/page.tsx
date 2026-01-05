@@ -6,6 +6,7 @@ import { getWorkById } from "@/lib/get-work";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import { WorkProgramManager } from "@/components/works/WorkProgramManager";
+import { WorkEditor } from "@/components/works/WorkEditor";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -63,6 +64,7 @@ export default async function WorkPage({ params }: PageProps) {
                 </a>
               </Button>
             )}
+            <WorkEditor work={work} />
           </div>
         </div>
 
