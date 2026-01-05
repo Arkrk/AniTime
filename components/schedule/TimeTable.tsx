@@ -153,7 +153,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
               {channels.map((channel) => (
                 <div
                   key={channel.id}
-                  className="relative border-r border-gray-100"
+                  className="relative border-r border-gray-200"
                   style={{ width: channel.width, height: "100%" }}
                 >
                   {/* 補助線 (1時間ごと) */}
@@ -162,7 +162,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
                     return (
                       <div
                         key={hour}
-                        className="absolute w-full border-b border-gray-100 pointer-events-none"
+                        className="absolute w-full border-b border-gray-200 pointer-events-none"
                         style={{ top: top, height: HOUR_HEIGHT }}
                       />
                     );

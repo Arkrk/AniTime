@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { ja } from "date-fns/locale";
-import { Copy, Check, ExternalLink, Tv, Calendar, Bookmark, Globe } from "lucide-react";
+import { Copy, Check, Tv, Calendar, Bookmark, Globe } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
-
 import { LayoutProgram, LayoutMode } from "@/types/schedule";
 import { formatTime30, COL_WIDTH, getProgramColorClass } from "@/lib/schedule-utils";
 import { cn } from "@/lib/utils";
@@ -98,7 +97,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
             <div className="flex items-center gap-1 font-mono">
               <Calendar className="h-3 w-3" />
               <span>
-                {program.start_date && format(parseISO(program.start_date), "M/d", { locale: ja })}
+                {program.start_date && format(parseISO(program.start_date), "M/d～", { locale: ja })}
               </span>
               <span>
                 {formatTime30(program.start_time)}～{formatTime30(program.end_time)}

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useWorkPrograms } from "@/hooks/use-work-programs";
 import { WorkProgramForm } from "./WorkProgramForm";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -18,7 +17,7 @@ import {
   EmptyDescription,
   EmptyMedia,
 } from "@/components/ui/empty";
-import { Loader2, Plus, Pencil, Trash2, GripVertical, Calendar } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, GripVertical, Calendar, Clock } from "lucide-react";
 import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
 import { DAYS } from "@/lib/get-schedule";
 import { format, parseISO } from "date-fns";
@@ -87,15 +86,26 @@ function SortableItem({ program, onEdit, onDelete }: SortableItemProps) {
           ))}
         </div>
         
-        <div className="flex items-center gap-2 text-sm text-muted-foreground font-mono shrink-0">
-          <Calendar className="h-4 w-4 shrink-0" />
-          <span>
-            {program.start_date ? format(parseISO(program.start_date), "yyyy/MM/dd", { locale: ja }) : "日付未定"}
-            <span className="mx-1">スタート</span>
-            <span className="mx-1">|</span>
-            <span>{dayLabel}曜</span>
-            <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time)}</span>
-          </span>
+        <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground font-mono shrink-0">
+          {program.start_date && (
+            <>
+              <div className="flex items-center gap-1">
+                <Calendar className="h-4 w-4 shrink-0" />
+                <span>
+                  {format(parseISO(program.start_date), "yyyy/MM/dd", { locale: ja })}
+                  <span className="ml-1">スタート</span>
+                </span>
+              </div>
+              <div className="h-3 w-px bg-black/20" />
+            </>
+          )}
+          <div className="flex items-center gap-1">
+            <Clock className="h-4 w-4 shrink-0" />
+            <span>
+              <span>{dayLabel}曜</span>
+              <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time)}</span>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -225,15 +235,26 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
                       ))}
                     </div>
                     
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground font-mono shrink-0">
-                      <Calendar className="h-4 w-4 shrink-0" />
-                      <span>
-                        {program.start_date ? format(parseISO(program.start_date), "yyyy/MM/dd", { locale: ja }) : "日付未定"}
-                        <span className="mx-1">スタート</span>
-                        <span className="mx-1">|</span>
-                        <span>{dayLabel}曜</span>
-                        <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time)}</span>
-                      </span>
+                    <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground font-mono shrink-0">
+                      {program.start_date && (
+                        <>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-4 w-4 shrink-0" />
+                            <span>
+                              {format(parseISO(program.start_date), "yyyy/MM/dd", { locale: ja })}
+                              <span className="ml-1">スタート</span>
+                            </span>
+                          </div>
+                          <div className="h-3 w-px bg-black/20" />
+                        </>
+                      )}
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4 shrink-0" />
+                        <span>
+                          <span>{dayLabel}曜</span>
+                          <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time)}</span>
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -338,7 +359,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingProgram ? "番組編集" : "番組追加"}</DialogTitle>
+            <DialogTitle>{editingProgram ? "番組を編集" : "番組を追加"}</DialogTitle>
           </DialogHeader>
           <WorkProgramForm
             initialData={editingProgram || {}}

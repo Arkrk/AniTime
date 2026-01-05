@@ -137,7 +137,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
         </div>
 
         <div className="space-y-2 flex flex-col">
-          <Label htmlFor="start_date">開始日 (任意)</Label>
+          <Label htmlFor="start_date">開始日（任意）</Label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -245,7 +245,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="version">バージョン (任意)</Label>
+        <Label htmlFor="version">バージョン（任意）</Label>
         <Input 
           id="version" 
           value={formData.version || ""} 
@@ -254,7 +254,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="note">備考 (任意)</Label>
+        <Label htmlFor="note">備考（任意）</Label>
         <Textarea 
           id="note" 
           value={formData.note || ""} 
