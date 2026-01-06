@@ -26,6 +26,8 @@ type Channel = Database["public"]["Tables"]["channels"]["Row"] & {
 type Tag = Database["public"]["Tables"]["tags"]["Row"];
 type Season = Database["public"]["Tables"]["seasons"]["Row"];
 
+import { ChannelSelect } from "@/components/schedule/ChannelSelect";
+
 interface WorkProgramFormProps {
   initialData?: Partial<Program>;
   channels: Channel[];
@@ -80,41 +82,16 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
     });
   };
 
-  // Group channels by area
-  const channelsByArea = channels.reduce((acc, channel) => {
-    const areaName = channel.areas?.name || "その他";
-    if (!acc[areaName]) acc[areaName] = [];
-    acc[areaName].push(channel);
-    return acc;
-  }, {} as Record<string, Channel[]>);
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="channel_id">チャンネル</Label>
-          <Select 
-            value={formData.channel_id ? formData.channel_id.toString() : ""} 
-            onValueChange={(val) => handleChange("channel_id", Number(val))}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="チャンネルを選択" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(channelsByArea).map(([area, areaChannels]) => (
-                <div key={area}>
-                  <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50">
-                    {area}
-                  </div>
-                  {areaChannels.map(channel => (
-                    <SelectItem key={channel.id} value={channel.id.toString()}>
-                      {channel.name}
-                    </SelectItem>
-                  ))}
-                </div>
-              ))}
-            </SelectContent>
-          </Select>
+          <ChannelSelect
+            channels={channels}
+            value={formData.channel_id}
+            onValueChange={(val) => handleChange("channel_id", val)}
+          />
         </div>
 
         <div className="space-y-2">

@@ -37,7 +37,15 @@ export const calculateLayout = (programs: ProgramData[], mode: LayoutMode): Chan
 
   programs.forEach((p) => {
     // モードによってキーを切り替え
-    const key = mode === "channel" ? p.channel_id : p.area_id;
+    let key: number;
+    if (mode === "channel") {
+      key = p.channel_id;
+    } else if (mode === "area") {
+      key = p.area_id;
+    } else {
+      // week
+      key = p.day_of_the_week;
+    }
     
     if (!groupsMap.has(key)) {
       groupsMap.set(key, []);
@@ -47,9 +55,13 @@ export const calculateLayout = (programs: ProgramData[], mode: LayoutMode): Chan
         // チャンネル別
         const sortOrder = p.area_order * 1000 + p.channel_order;
         metaMap.set(key, { name: p.channel_name, order: sortOrder });
-      } else {
+      } else if (mode === "area") {
         // エリア別
         metaMap.set(key, { name: p.area_name, order: p.area_order });
+      } else {
+        // 週間表示: 曜日ごと
+        const dayLabel = ["", "月", "火", "水", "木", "金", "土", "日"][key] || "不明";
+        metaMap.set(key, { name: dayLabel, order: key });
       }
     }
     groupsMap.get(key)!.push(p);

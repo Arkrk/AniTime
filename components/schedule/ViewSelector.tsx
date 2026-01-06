@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Map, RadioTower } from "lucide-react";
+import { Map, RadioTower, CalendarDays } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const ViewSelector = () => {
   const router = useRouter();
@@ -17,16 +17,30 @@ export const ViewSelector = () => {
     router.push(`/?${params.toString()}`);
   };
 
+  const options = [
+    { value: "area", label: "エリア", icon: Map },
+    { value: "channel", label: "チャンネル", icon: RadioTower },
+    { value: "week", label: "週間番組表", icon: CalendarDays },
+  ];
+
   return (
-    <Tabs value={currentView} onValueChange={handleValueChange}>
-      <TabsList>
-        <TabsTrigger value="area" className="flex items-center gap-2">
-          <Map className="h-4 w-4" />
-        </TabsTrigger>
-        <TabsTrigger value="channel" className="flex items-center gap-2">
-          <RadioTower className="h-4 w-4" />
-        </TabsTrigger>
-      </TabsList>
-    </Tabs>
+    <div className="flex gap-2 w-full">
+      {options.map((option) => (
+        <button
+          key={option.value}
+          onClick={() => handleValueChange(option.value)}
+          type="button"
+          className={cn(
+            "flex flex-col items-center justify-center p-2 h-16 flex-1 rounded-md border text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+            currentView === option.value
+              ? "border-primary text-primary bg-primary/5"
+              : "border-border text-muted-foreground"
+          )}
+        >
+          <option.icon className="h-5 w-5 mb-1.5" />
+          {option.label}
+        </button>
+      ))}
+    </div>
   );
 };

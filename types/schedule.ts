@@ -24,7 +24,7 @@ export type ProgramData = {
 };
 
 // 計算モードの型
-export type LayoutMode = "channel" | "area";
+export type LayoutMode = "channel" | "area" | "week";
 
 // 描画用に計算された座標情報を持つ型
 export type LayoutProgram = ProgramData & {

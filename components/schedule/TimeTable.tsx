@@ -36,6 +36,12 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
     }
 
     const allChannels = calculateLayout(filteredPrograms, mode);
+    
+    // 週間表示(week)の場合はチャンネル/エリアのフィルタリングは行わない
+    if (mode === "week") {
+      return allChannels;
+    }
+
     if (!loaded) return allChannels;
 
     return allChannels.filter((ch) => {

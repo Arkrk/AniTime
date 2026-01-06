@@ -18,7 +18,7 @@ export function DisplaySettings() {
       </PopoverTrigger>
       <PopoverContent className="w-80 p-4" align="end">
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col gap-3">
             <Label>レイアウトモード</Label>
             <ViewSelector />
           </div>

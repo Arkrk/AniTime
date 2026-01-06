@@ -1,11 +1,12 @@
 import { Suspense } from "react";
-import { getScheduleByDay } from "@/lib/get-schedule";
+import { getScheduleByDay, getWeekScheduleByChannel, getChannels } from "@/lib/get-schedule";
 import { getSeasons } from "@/lib/get-seasons";
 import { TimeTable } from "@/components/schedule/TimeTable";
 import { DayTabs } from "@/components/schedule/DayTabs";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 import { DisplaySettings } from "@/components/schedule/DisplaySettings";
-import { LayoutMode } from "@/types/schedule";
+import { ChannelNavigator } from "@/components/schedule/ChannelNavigator";
+import { LayoutMode, ProgramData } from "@/types/schedule";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -16,7 +17,14 @@ export default async function Home({ searchParams }: PageProps) {
 
   // viewパラメータの取得
   const viewParam = params.view as string;
-  const layoutMode: LayoutMode = (viewParam === "channel") ? "channel" : "area";
+  let layoutMode: LayoutMode;
+  if (viewParam === "week") {
+    layoutMode = "week";
+  } else if (viewParam === "channel") {
+    layoutMode = "channel";
+  } else {
+    layoutMode = "area";
+  }
   
   // allDayパラメータの取得
   const showAllDay = params.allDay === "true";
@@ -31,13 +39,26 @@ export default async function Home({ searchParams }: PageProps) {
   const seasonParam = params.season;
   const currentSeasonId = seasonParam ? Number(seasonParam) : latestSeasonId;
 
-  // 3. 曜日の決定
-  const dayParam = params.day;
-  const currentDay = dayParam ? Number(dayParam) : 1;
-  const validDay = (currentDay >= 1 && currentDay <= 7) ? currentDay : 1;
+  // 3. データ取得分岐
+  let programs: ProgramData[] = [];
+  let channels: any[] = []; // weekモード用
+  let currentChannelId = 0;
+  let validDay = 1;
 
-  // 4. 番組データ取得
-  const programs = await getScheduleByDay(validDay, currentSeasonId);
+  if (layoutMode === "week") {
+    // 週間番組表モード
+    channels = await getChannels();
+    const defaultChannelId = channels.length > 0 ? channels[0].id : 0;
+    const channelParam = params.channel;
+    currentChannelId = channelParam ? Number(channelParam) : defaultChannelId;
+    programs = await getWeekScheduleByChannel(currentSeasonId, currentChannelId);
+  } else {
+    // 通常モード
+    const dayParam = params.day;
+    const currentDay = dayParam ? Number(dayParam) : 1;
+    validDay = (currentDay >= 1 && currentDay <= 7) ? currentDay : 1;
+    programs = await getScheduleByDay(validDay, currentSeasonId);
+  }
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -50,7 +71,11 @@ export default async function Home({ searchParams }: PageProps) {
           <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
             <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
             <div className="flex items-center gap-2">
-              <DayTabs currentDay={validDay} />
+              {layoutMode === "week" ? (
+                <ChannelNavigator channels={channels} currentChannelId={currentChannelId} />
+              ) : (
+                <DayTabs currentDay={validDay} />
+              )}
               <DisplaySettings />
             </div>
           </div>
