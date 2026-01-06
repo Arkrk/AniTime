@@ -91,6 +91,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
             channels={channels}
             value={formData.channel_id}
             onValueChange={(val) => handleChange("channel_id", val)}
+            className="w-full"
           />
         </div>
 

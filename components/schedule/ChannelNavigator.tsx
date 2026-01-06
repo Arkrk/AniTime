@@ -29,7 +29,7 @@ export function ChannelNavigator({ channels, currentChannelId }: ChannelNavigato
       channels={channels}
       value={currentChannelId}
       onValueChange={handleChannelChange}
-      className="w-[200px]"
+      className="w-50"
     />
   );
 }

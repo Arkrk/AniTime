@@ -16,7 +16,7 @@ export function DisplaySettings() {
           <Settings className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" align="end">
+      <PopoverContent className="w-80 p-0 overflow-hidden" align="end">
         <div className="flex flex-col">
           <div className="flex flex-col gap-3 p-4">
             <Label>レイアウトモード</Label>
