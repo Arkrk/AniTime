@@ -30,13 +30,29 @@ export function ChannelSelect({
   className
 }: ChannelSelectProps) {
   
-  // Group channels by area
-  const channelsByArea = React.useMemo(() => channels.reduce((acc, channel) => {
-    const areaName = channel.areas?.name || "その他";
-    if (!acc[areaName]) acc[areaName] = [];
-    acc[areaName].push(channel);
-    return acc;
-  }, {} as Record<string, Channel[]>), [channels]);
+  // エリア別にチャンネルをグループ化
+  const groupedChannels = React.useMemo(() => {
+    const groups = new Map<string, { order: number; channels: Channel[] }>();
+
+    channels.forEach((channel) => {
+      const areaName = channel.areas?.name || "その他";
+      const areaOrder = channel.areas?.order ?? 9999;
+
+      if (!groups.has(areaName)) {
+        groups.set(areaName, { order: areaOrder, channels: [] });
+      }
+      groups.get(areaName)!.channels.push(channel);
+    });
+
+    // 配列に変換してorder順にソート
+    return Array.from(groups.entries())
+      .map(([name, data]) => ({
+        name,
+        order: data.order,
+        channels: data.channels,
+      }))
+      .sort((a, b) => a.order - b.order);
+  }, [channels]);
 
   return (
     <Select 
@@ -47,12 +63,12 @@ export function ChannelSelect({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        {Object.entries(channelsByArea).map(([area, areaChannels]) => (
-          <div key={area}>
+        {groupedChannels.map((group) => (
+          <div key={group.name}>
             <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50">
-              {area}
+              {group.name}
             </div>
-            {areaChannels.map(channel => (
+            {group.channels.map(channel => (
               <SelectItem key={channel.id} value={channel.id.toString()}>
                 {channel.name}
               </SelectItem>
