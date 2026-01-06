@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Pencil, Trash2, Loader2 } from "lucide-react";
-import { updateWork, deleteWork } from "@/lib/actions";
+import { Pencil, Trash2, Loader2, Plus } from "lucide-react";
+import { updateWork, deleteWork, createWork } from "@/lib/actions";
 
 interface Work {
   id: number;
@@ -26,7 +26,7 @@ interface Work {
 }
 
 interface WorkEditorProps {
-  work: Work;
+  work?: Work;
 }
 
 export function WorkEditor({ work }: WorkEditorProps) {
@@ -41,12 +41,32 @@ export function WorkEditor({ work }: WorkEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [formData, setFormData] = useState({
-    name: work.name,
-    website_url: work.website_url || "",
-    x_username: work.x_username || "",
-    wikipedia_url: work.wikipedia_url || "",
-    annict_url: work.annict_url || "",
+    name: work?.name || "",
+    website_url: work?.website_url || "",
+    x_username: work?.x_username || "",
+    wikipedia_url: work?.wikipedia_url || "",
+    annict_url: work?.annict_url || "",
   });
+
+  useEffect(() => {
+    if (work) {
+      setFormData({
+        name: work.name,
+        website_url: work.website_url || "",
+        x_username: work.x_username || "",
+        wikipedia_url: work.wikipedia_url || "",
+        annict_url: work.annict_url || "",
+      });
+    } else {
+      setFormData({
+        name: "",
+        website_url: "",
+        x_username: "",
+        wikipedia_url: "",
+        annict_url: "",
+      });
+    }
+  }, [work, open]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,23 +77,34 @@ export function WorkEditor({ work }: WorkEditorProps) {
     if (!formData.name) return;
     setIsSaving(true);
     try {
-      await updateWork(work.id, {
-        name: formData.name,
-        website_url: formData.website_url || null,
-        x_username: formData.x_username || null,
-        wikipedia_url: formData.wikipedia_url || null,
-        annict_url: formData.annict_url || null,
-      });
+      if (work) {
+        await updateWork(work.id, {
+          name: formData.name,
+          website_url: formData.website_url || null,
+          x_username: formData.x_username || null,
+          wikipedia_url: formData.wikipedia_url || null,
+          annict_url: formData.annict_url || null,
+        });
+      } else {
+        await createWork({
+          name: formData.name,
+          website_url: formData.website_url || null,
+          x_username: formData.x_username || null,
+          wikipedia_url: formData.wikipedia_url || null,
+          annict_url: formData.annict_url || null,
+        });
+      }
       setOpen(false);
     } catch (error) {
       console.error(error);
-      alert("更新に失敗しました");
+      alert(work ? "更新に失敗しました" : "作成に失敗しました");
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleDelete = async () => {
+    if (!work) return;
     if (!confirm("本当に削除しますか？ この操作は取り消せません。")) return;
     setIsDeleting(true);
     try {
@@ -92,14 +123,21 @@ export function WorkEditor({ work }: WorkEditorProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Pencil className="h-4 w-4" />
-          編集
-        </Button>
+        {work ? (
+          <Button variant="outline" size="sm">
+            <Pencil className="h-4 w-4" />
+            編集
+          </Button>
+        ) : (
+          <Button variant="default" size="sm">
+            <Plus className="h-4 w-4" />
+            新規
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>作品を編集</DialogTitle>
+          <DialogTitle>{work ? "作品を編集" : "作品を追加"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
@@ -151,7 +189,8 @@ export function WorkEditor({ work }: WorkEditorProps) {
             />
           </div>
         </div>
-        <DialogFooter className="flex justify-between sm:justify-between">
+        <DialogFooter className={`flex ${work ? "justify-between" : "justify-end"}`}>
+          {work && (
           <Button
             variant="destructive"
             onClick={handleDelete}
@@ -164,13 +203,14 @@ export function WorkEditor({ work }: WorkEditorProps) {
             )}
             削除
           </Button>
+          )}
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>
               キャンセル
             </Button>
             <Button onClick={handleSave} disabled={isDeleting || isSaving}>
               {isSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              保存
+              {work ? "保存" : "追加"}
             </Button>
           </div>
         </DialogFooter>

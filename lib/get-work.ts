@@ -45,3 +45,27 @@ export const getWorkById = cache(async (id: number) => {
 
   return work;
 });
+
+export const getWorks = cache(async (
+  page: number = 1,
+  limit: number = 50,
+  sortColumn: string = "id",
+  sortDirection: "asc" | "desc" = "asc"
+) => {
+  const supabase = await createClient();
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const { data, count, error } = await supabase
+    .from("works")
+    .select("*", { count: "exact" })
+    .order(sortColumn, { ascending: sortDirection === "asc" })
+    .range(from, to);
+
+  if (error) {
+    console.error("Error fetching works:", error);
+    return { data: [], count: 0 };
+  }
+
+  return { data, count };
+});

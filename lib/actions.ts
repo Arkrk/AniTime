@@ -63,6 +63,28 @@ export async function updateWork(id: number, data: {
   return { success: true };
 }
 
+export async function createWork(data: {
+  name: string;
+  website_url?: string | null;
+  x_username?: string | null;
+  wikipedia_url?: string | null;
+  annict_url?: string | null;
+}) {
+  const supabase = await createClient();
+  const { data: newWork, error } = await supabase
+    .from("works")
+    .insert(data)
+    .select("id")
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/admin");
+  return { success: true, id: newWork.id };
+}
+
 export async function deleteWork(id: number) {
   const supabase = await createClient();
   const { error } = await supabase

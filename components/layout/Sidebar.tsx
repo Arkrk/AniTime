@@ -27,7 +27,7 @@ export const Sidebar = () => {
   const navItems = [
     { label: "番組表", icon: Table2, href: "/" },
     { label: "保存済み", icon: Bookmark, href: "/saved" },
-    ...(mounted && user ? [{ label: "データ管理", icon: Database, href: "/data" }] : []),
+    ...(mounted && user ? [{ label: "データ管理", icon: Database, href: "/admin" }] : []),
     { label: "設定", icon: Bolt, href: "/settings" },
   ];
 
