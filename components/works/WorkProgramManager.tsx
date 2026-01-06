@@ -17,7 +17,7 @@ import {
   EmptyDescription,
   EmptyMedia,
 } from "@/components/ui/empty";
-import { Loader2, Plus, Pencil, Trash2, GripVertical, Calendar, Clock } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, GripVertical, Calendar, Clock, Copy } from "lucide-react";
 import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
 import { DAYS } from "@/lib/get-schedule";
 import { format, parseISO } from "date-fns";
@@ -42,10 +42,11 @@ import { CSS } from "@dnd-kit/utilities";
 interface SortableItemProps {
   program: any;
   onEdit: (program: any) => void;
+  onDuplicate: (program: any) => void;
   onDelete: (id: number) => void;
 }
 
-function SortableItem({ program, onEdit, onDelete }: SortableItemProps) {
+function SortableItem({ program, onEdit, onDuplicate, onDelete }: SortableItemProps) {
   const {
     attributes,
     listeners,
@@ -67,6 +68,9 @@ function SortableItem({ program, onEdit, onDelete }: SortableItemProps) {
       <div className="absolute right-2 top-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 rounded p-1">
         <button {...attributes} {...listeners} className="p-1 hover:bg-gray-200 rounded cursor-grab active:cursor-grabbing">
           <GripVertical className="h-4 w-4 text-gray-500" />
+        </button>
+        <button onClick={() => onDuplicate(program)} className="p-1 hover:bg-gray-200 rounded">
+          <Copy className="h-4 w-4 text-green-500" />
         </button>
         <button onClick={() => onEdit(program)} className="p-1 hover:bg-gray-200 rounded">
           <Pencil className="h-4 w-4 text-blue-500" />
@@ -109,13 +113,14 @@ function SortableItem({ program, onEdit, onDelete }: SortableItemProps) {
         </div>
       </div>
 
-      {(program.version || (program.programs_tags && program.programs_tags.length > 0)) && (
+      {program.version && (
+        <div className="text-sm text-blue-600 font-medium">
+          {program.version}
+        </div>
+      )}
+
+      {program.programs_tags && program.programs_tags.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
-          {program.version && (
-            <span className="text-sm text-blue-600 font-medium">
-              {program.version}
-            </span>
-          )}
           {program.programs_tags?.map((pt: any) => (
             pt.tags && (
               <span
@@ -184,6 +189,12 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
     setIsDialogOpen(true);
   };
 
+  const handleDuplicate = (program: any) => {
+    const { id, created_at, updated_at, ...rest } = program;
+    setEditingProgram(rest);
+    setIsDialogOpen(true);
+  };
+
   const handleDelete = async (id: number) => {
     if (confirm("本当に削除しますか？")) {
       await deleteProgram(id);
@@ -192,7 +203,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
 
   const handleSubmit = async (data: any) => {
     try {
-      if (editingProgram) {
+      if (editingProgram?.id) {
         await updateProgram(editingProgram.id, data);
       } else {
         await addProgram(data);
@@ -258,13 +269,14 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
                     </div>
                   </div>
 
-                  {(program.version || (program.programs_tags && program.programs_tags.length > 0)) && (
+                  {program.version && (
+                    <div className="text-sm text-blue-600 font-medium">
+                      {program.version}
+                    </div>
+                  )}
+
+                  {program.programs_tags && program.programs_tags.length > 0 && (
                     <div className="flex flex-wrap items-center gap-2">
-                      {program.version && (
-                        <span className="text-sm text-blue-600 font-medium">
-                          {program.version}
-                        </span>
-                      )}
                       {program.programs_tags?.map((pt: any) => (
                         pt.tags && (
                           <span
@@ -328,6 +340,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
                     key={program.id}
                     program={program}
                     onEdit={handleEdit}
+                    onDuplicate={handleDuplicate}
                     onDelete={handleDelete}
                   />
                 ))
@@ -359,7 +372,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingProgram ? "番組を編集" : "番組を追加"}</DialogTitle>
+            <DialogTitle>{editingProgram?.id ? "番組を編集" : "番組を追加"}</DialogTitle>
           </DialogHeader>
           <WorkProgramForm
             initialData={editingProgram || {}}
