@@ -4,10 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { ja } from "date-fns/locale";
-import { Copy, Check, Tv, Calendar, Bookmark, Globe } from "lucide-react";
+import { Copy, Check, Tv, Calendar, Bookmark, Globe, Clock } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
 import { LayoutProgram, LayoutMode } from "@/types/schedule";
 import { formatTime30, COL_WIDTH, getProgramColorClass } from "@/lib/schedule-utils";
+import { DAYS } from "@/lib/get-schedule";
 import { cn } from "@/lib/utils";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
   const [copied, setCopied] = useState(false);
   const { isSaved, toggleSaved } = useSavedPrograms();
   const saved = isSaved(String(program.id));
+  const dayLabel = DAYS.find(d => d.id === program.day_of_the_week)?.label || "?";
 
   // クリップボードコピー機能
   const handleCopy = async () => {
@@ -70,7 +72,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
             {/* 放送開始日 */}
             {program.start_date && (
               <span className="text-xs text-black w-fit rounded shrink-0">
-                {format(parseISO(program.start_date), "M月d日スタート", { locale: ja })}
+                {format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}
               </span>
             )}
             {/* 放送時間 */}
@@ -88,44 +90,49 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       {/* Hover Card */}
       <HoverCardContent className="w-80 p-4 shadow-xl z-100" side="right" align="start">
         <div className="flex flex-col gap-3">
-          {/* チャンネル名・放送日時 */}
-          <div className="flex items-start justify-between text-xs text-muted-foreground">
+          {/* 放送日時 */}
+          <div className="flex items-center justify-between text-xs text-muted-foreground border-b pb-2">
             <div className="flex items-center gap-1">
-              <Tv className="h-3 w-3" />
-              <span>{program.channel_name}</span>
-            </div>
-            <div className="flex items-center gap-1 font-mono">
               <Calendar className="h-3 w-3" />
               <span>
-                {program.start_date && format(parseISO(program.start_date), "M/d～", { locale: ja })}
+                {program.start_date && format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}
               </span>
+            </div>
+            <div className="flex items-center gap-1 font-mono">
+              <Clock className="h-3 w-3" />
               <span>
-                {formatTime30(program.start_time)}～{formatTime30(program.end_time)}
+                <span>{dayLabel}曜</span>
+                <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time)}</span>
               </span>
             </div>
           </div>
 
-          {/* 作品タイトル・コピーボタン */}
-          <div className="flex items-start gap-2">
-            <h4 className="text-sm font-bold leading-snug flex-1">
-              {program.work_id ? (
-                <Link href={`/works/${program.work_id}`} className="hover:underline">
-                  {program.name}
-                </Link>
-              ) : (
-                program.name
-              )}
-            </h4>
-            <div className="flex gap-1 shrink-0">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6"
-                onClick={handleCopy}
-                title="作品タイトルをコピー"
-              >
-                {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
-              </Button>
+          <div className="flex flex-col">
+            {/* チャンネル名 */}
+            <span className="text-xs text-muted-foreground mb-0.5">{program.channel_name}</span>
+
+            {/* 作品タイトル・コピーボタン */}
+            <div className="flex items-start gap-2">
+              <h4 className="text-sm font-bold leading-snug flex-1">
+                {program.work_id ? (
+                  <Link href={`/works/${program.work_id}`} className="hover:underline">
+                    {program.name}
+                  </Link>
+                ) : (
+                  program.name
+                )}
+              </h4>
+              <div className="flex gap-1 shrink-0">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={handleCopy}
+                  title="作品タイトルをコピー"
+                >
+                  {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+                </Button>
+              </div>
             </div>
           </div>
 
