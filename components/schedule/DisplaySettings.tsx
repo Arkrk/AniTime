@@ -1,12 +1,14 @@
 "use client";
 
-import { Settings } from "lucide-react";
+import { Settings, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { ViewSelector } from "./ViewSelector";
+import { VisibilitySettings } from "@/components/schedule/VisibilitySettings";
 
 export function DisplaySettings() {
   const router = useRouter();
@@ -70,6 +72,29 @@ export function DisplaySettings() {
               </Label>
               <Switch checked={isSavedOnly} className="pointer-events-none" />
             </div>
+            <div className="h-px bg-border" />
+            <Dialog>
+              <DialogTrigger asChild>
+                <div 
+                  className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                >
+                  <Label className="w-full cursor-pointer pointer-events-none">
+                    列の表示オプション
+                  </Label>
+                  <div className="flex h-[1.15rem] items-center">
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                </div>
+              </DialogTrigger>
+              <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>列の表示オプション</DialogTitle>
+                </DialogHeader>
+                <div className="py-2">
+                  <VisibilitySettings />
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </PopoverContent>

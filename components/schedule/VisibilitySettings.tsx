@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAreasAndChannels } from "@/lib/actions";
 import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Loader2, ChevronDown } from "lucide-react";
+import { Loader2, ChevronDown, Map, RadioTower } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Accordion,
   AccordionContent,
@@ -35,23 +36,30 @@ export function VisibilitySettings() {
     return (
       <div className="flex items-center gap-2 text-gray-500 p-4">
         <Loader2 className="h-4 w-4 animate-spin" />
-        設定を読み込み中...
+        読み込み中...
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <section>
-        <h2 className="text-xl font-bold mb-1">表示するエリア</h2>
-        <p className="text-sm text-gray-500 mb-4">
-          エリア別レイアウトで表示するエリアを選択できます。
-        </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+    <Tabs defaultValue="area" className="w-full">
+      <TabsList className="grid w-full grid-cols-2 mb-4">
+        <TabsTrigger value="area" className="flex items-center gap-2">
+          <Map className="w-4 h-4" />
+          エリア
+        </TabsTrigger>
+        <TabsTrigger value="channel" className="flex items-center gap-2">
+          <RadioTower className="w-4 h-4" />
+          チャンネル
+        </TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="area">
+        <div className="border rounded-lg bg-white overflow-hidden">
           {areas.map((area) => (
             <div 
               key={area.id} 
-              className="flex items-center space-x-3 p-3 border rounded-md bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+              className="flex items-center gap-3 px-4 py-3 border-b last:border-b-0 hover:bg-gray-50 transition-colors cursor-pointer bg-white"
               onClick={() => toggleArea(area.id)}
             >
               <Checkbox
@@ -61,27 +69,23 @@ export function VisibilitySettings() {
               />
               <Label 
                 htmlFor={`area-${area.id}`} 
-                className="text-sm font-medium flex-1 pointer-events-none"
+                className="text-sm font-medium flex-1 pointer-events-none cursor-pointer"
               >
                 {area.name}
               </Label>
             </div>
           ))}
         </div>
-      </section>
+      </TabsContent>
 
-      <section>
-        <h2 className="text-xl font-bold mb-1">表示するチャンネル</h2>
-        <p className="text-sm text-gray-500 mb-4">
-          チャンネル別レイアウトで表示するチャンネルを選択できます。
-        </p>
+      <TabsContent value="channel">
         <div className="border rounded-lg bg-white overflow-hidden">
           <Accordion type="multiple">
             {areas.map((area) => {
               const areaChannels = channels.filter((c) => c.area_id === area.id);
               if (areaChannels.length === 0) return null;
 
-              // Check if all channels in this area are visible
+              // そのエリアのすべてのチャンネルが表示されているかどうかを確認
               const allVisible = areaChannels.every(c => !hiddenChannelIds.includes(c.id));
               const someVisible = areaChannels.some(c => !hiddenChannelIds.includes(c.id));
               const isIndeterminate = someVisible && !allVisible;
@@ -89,17 +93,17 @@ export function VisibilitySettings() {
               const handleAreaToggle = () => {
                 const ids = areaChannels.map(c => c.id);
                 if (allVisible) {
-                  // Hide all
+                  // すべて非表示
                   setChannelVisibility(ids, false);
                 } else {
-                  // Show all
+                  // すべて表示
                   setChannelVisibility(ids, true);
                 }
               };
 
               return (
-                <AccordionItem key={area.id} value={`area-${area.id}`} className="border-b last:border-b-0">
-                  <div className="flex items-center bg-gray-50/50 border-b -mb-px">
+                <AccordionItem key={area.id} value={`area-${area.id}`} className="border-b last:border-b-0 group overflow-hidden">
+                  <div className="flex items-center bg-gray-50/50 border-b -mb-px group-data-[state=open]:mb-0 relative z-10">
                     <div className="flex items-center pl-4 py-3 pr-3">
                       <Checkbox
                         id={`area-group-${area.id}`}
@@ -119,12 +123,12 @@ export function VisibilitySettings() {
                       </AccordionPrimitive.Trigger>
                     </AccordionPrimitive.Header>
                   </div>
-                  <AccordionContent className="p-4">
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  <AccordionContent className="p-0">
+                    <div className="flex flex-col">
                       {areaChannels.map((channel) => (
                         <div 
                           key={channel.id} 
-                          className="flex items-center space-x-3 p-3 border rounded-md bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+                          className="flex items-center gap-3 px-4 py-3 border-b last:border-b-0 hover:bg-gray-50 transition-colors cursor-pointer bg-white pl-8"
                           onClick={() => toggleChannel(channel.id)}
                         >
                           <Checkbox
@@ -134,7 +138,7 @@ export function VisibilitySettings() {
                           />
                           <Label 
                             htmlFor={`channel-${channel.id}`} 
-                            className="text-sm font-medium flex-1 pointer-events-none"
+                            className="text-sm font-medium flex-1 pointer-events-none cursor-pointer"
                           >
                             {channel.name}
                           </Label>
@@ -147,7 +151,7 @@ export function VisibilitySettings() {
             })}
           </Accordion>
         </div>
-      </section>
-    </div>
+      </TabsContent>
+    </Tabs>
   );
 }
