@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { ja } from "date-fns/locale";
-import { Copy, Check, Tv, Calendar, Bookmark, Globe, Clock } from "lucide-react";
+import { Copy, Check, Clock, Calendar, Bookmark, Globe } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
 import { LayoutProgram, LayoutMode } from "@/types/schedule";
 import { formatTime30, COL_WIDTH, getProgramColorClass } from "@/lib/schedule-utils";
@@ -87,17 +87,22 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
         </div>
       </HoverCardTrigger>
 
-      {/* Hover Card */}
+      {/* ホバーカード */}
       <HoverCardContent className="w-80 p-4 shadow-xl z-100" side="right" align="start">
         <div className="flex flex-col gap-3">
-          {/* 放送日時 */}
           <div className="flex items-center justify-between text-xs text-muted-foreground border-b pb-2">
-            <div className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              <span>
-                {program.start_date && format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}
-              </span>
-            </div>
+            {/* 放送開始日 */}
+            {program.start_date ? (
+              <div className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                <span>
+                  {format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}
+                </span>
+              </div>
+            ) : (
+              <div />
+            )}
+            {/* 放送時間 */}
             <div className="flex items-center gap-1 font-mono">
               <Clock className="h-3 w-3" />
               <span>
@@ -168,7 +173,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
             </div>
           )}
 
-          {/* 各種リンク & 保存ボタン */}
+          {/* 各種リンク・保存ボタン */}
           <div className="flex items-center justify-between pt-2 border-t mt-1">
             <div className="flex gap-2">
               {program.website_url && (
