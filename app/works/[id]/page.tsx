@@ -3,7 +3,7 @@ import { Globe } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
 
 import { getWorkById } from "@/lib/get-work";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { BackButton } from "@/components/layout/BackButton";
 import { Button } from "@/components/ui/button";
 import { WorkProgramManager } from "@/components/works/WorkProgramManager";
 import { WorkEditor } from "@/components/works/WorkEditor";
@@ -28,12 +28,12 @@ export default async function WorkPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col h-full bg-white overflow-y-auto">
-      <PageHeader title="作品ページ" />
+      <BackButton />
 
-      <div className="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full">
+      <div className="flex-1 p-4 md:px-8 pt-16 max-w-4xl mx-auto w-full">
         {/* 作品情報 */}
         <div className="mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold my-4">{work.name}</h2>
+          <h1 className="text-2xl md:text-3xl font-bold my-4">{work.name}</h1>
           
           <div className="flex flex-wrap gap-2">
             {work.website_url && (
@@ -70,7 +70,7 @@ export default async function WorkPage({ params }: PageProps) {
 
         {/* 番組一覧 */}
         <div>
-          <h3 className="text-xl font-bold mb-4">放送スケジュール</h3>
+          <h2 className="text-xl font-bold mb-4">放送スケジュール</h2>
           <WorkProgramManager workId={workId} initialPrograms={work.programs} />
         </div>
       </div>

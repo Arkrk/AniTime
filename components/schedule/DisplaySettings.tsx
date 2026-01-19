@@ -90,7 +90,7 @@ export function DisplaySettings() {
                 <DialogHeader>
                   <DialogTitle>列の表示オプション</DialogTitle>
                 </DialogHeader>
-                <div className="py-2">
+                <div className="pt-2">
                   <VisibilitySettings />
                 </div>
               </DialogContent>
