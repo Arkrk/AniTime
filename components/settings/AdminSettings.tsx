@@ -21,7 +21,7 @@ export function AdminSettings() {
 
   return (
     <div className="rounded-md border bg-white overflow-hidden">
-      <div className="flex items-center justify-between p-4">
+      <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
           <div>
             <h3 className="font-medium text-base text-gray-900">管理者アカウント</h3>

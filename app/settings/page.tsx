@@ -1,6 +1,5 @@
 "use client";
 
-import { BackButton } from "@/components/layout/BackButton";
 import { PersonalDataSettings } from "@/components/settings/PersonalDataSettings";
 import { AdminSettings } from "@/components/settings/AdminSettings";
 

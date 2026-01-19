@@ -108,7 +108,7 @@ export function PersonalDataSettings() {
 
   return (
     <div className="rounded-md border bg-white overflow-hidden">
-      <div className="border-b p-4 flex items-center justify-between">
+      <div className="border-b p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h3 className="font-medium text-base text-gray-900">
             データをインポート
@@ -125,16 +125,13 @@ export function PersonalDataSettings() {
             className="hidden"
             onChange={handleImport}
           />
-          <Button
-            onClick={() => fileInputRef.current?.click()}
-            variant="outline"
-          >
+          <Button onClick={() => fileInputRef.current?.click()} variant="outline">
             インポート
           </Button>
         </div>
       </div>
 
-      <div className="border-b p-4 flex items-center justify-between">
+      <div className="border-b p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h3 className="font-medium text-base text-gray-900">
             データをエクスポート
@@ -143,40 +140,44 @@ export function PersonalDataSettings() {
             バックアップファイルをJSON形式で出力します。
           </p>
         </div>
-        <Button onClick={handleExport} variant="outline">
-          エクスポート
-        </Button>
+        <div>
+          <Button onClick={handleExport} variant="outline">
+            エクスポート
+          </Button>
+        </div>
       </div>
 
-      <div className="p-4 flex items-center justify-between shadow-none">
+      <div className="p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between shadow-none">
         <div>
           <h3 className="font-medium text-base text-gray-900">データをリセット</h3>
           <p className="text-sm text-gray-500 mt-1">
             保存した番組や設定をすべて削除します。
           </p>
         </div>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive">リセット</Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>すべてリセットしますか？</AlertDialogTitle>
-              <AlertDialogDescription>
-                保存した番組やチャンネル設定など、すべてのデータがブラウザから削除されます。この操作は取り消せません。
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>キャンセル</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleReset}
-                className="bg-red-600 hover:bg-red-700"
-              >
-                リセット
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <div>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive">リセット</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>データをリセットしますか？</AlertDialogTitle>
+                <AlertDialogDescription>
+                  保存した番組やチャンネル設定など、すべての個人データがブラウザから削除されます。この操作は取り消せません。
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleReset}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  リセット
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </div>
     </div>
   );
