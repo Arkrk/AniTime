@@ -33,7 +33,7 @@ export function VisibilitySettings() {
 
   if (!loaded || loadingData) {
     return (
-      <div className="flex items-center gap-2 text-gray-500 px-4">
+      <div className="flex items-center gap-2 text-gray-500 p-4">
         <Loader2 className="h-4 w-4 animate-spin" />
         読み込み中...
       </div>
@@ -41,7 +41,7 @@ export function VisibilitySettings() {
   }
 
   return (
-    <div className="flex flex-col gap-6 px-4 pb-4">
+    <div className="flex flex-col gap-6 p-4 overflow-y-auto">
       <div className="space-y-3">
         <h3 className="font-medium flex items-center gap-2">
           <Map className="w-4 h-4" />

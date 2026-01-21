@@ -3,14 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLogin } from "@/hooks/login";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Pencil, Trash2, Loader2, Plus } from "lucide-react";
@@ -121,8 +114,8 @@ export function WorkEditor({ work }: WorkEditorProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
         {work ? (
           <Button variant="outline" size="sm">
             <Pencil className="h-4 w-4" />
@@ -134,75 +127,77 @@ export function WorkEditor({ work }: WorkEditorProps) {
             新規
           </Button>
         )}
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{work ? "作品を編集" : "作品を追加"}</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="name">タイトル</Label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="website_url">公式サイトのURL</Label>
-            <Input
-              id="website_url"
-              name="website_url"
-              value={formData.website_url}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="x_username">Xのユーザー名</Label>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">@</span>
+      </SheetTrigger>
+      <SheetContent className="flex flex-col w-screen sm:w-150">
+        <SheetHeader>
+          <SheetTitle>{work ? "作品を編集" : "作品を追加"}</SheetTitle>
+        </SheetHeader>
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="name">タイトル</Label>
               <Input
-                id="x_username"
-                name="x_username"
-                value={formData.x_username}
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="website_url">公式サイトのURL</Label>
+              <Input
+                id="website_url"
+                name="website_url"
+                value={formData.website_url}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="x_username">Xのユーザー名</Label>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">@</span>
+                <Input
+                  id="x_username"
+                  name="x_username"
+                  value={formData.x_username}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="wikipedia_url">WikipediaのURL</Label>
+              <Input
+                id="wikipedia_url"
+                name="wikipedia_url"
+                value={formData.wikipedia_url}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="annict_url">AnnictのURL</Label>
+              <Input
+                id="annict_url"
+                name="annict_url"
+                value={formData.annict_url}
                 onChange={handleChange}
               />
             </div>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="wikipedia_url">WikipediaのURL</Label>
-            <Input
-              id="wikipedia_url"
-              name="wikipedia_url"
-              value={formData.wikipedia_url}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="annict_url">AnnictのURL</Label>
-            <Input
-              id="annict_url"
-              name="annict_url"
-              value={formData.annict_url}
-              onChange={handleChange}
-            />
-          </div>
         </div>
-        <DialogFooter className={`flex ${work ? "justify-between" : "justify-end"}`}>
+        <SheetFooter className={`flex flex-row items-center ${work ? "justify-between w-full" : "justify-end"}`}>
           {work && (
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={isDeleting || isSaving}
-          >
-            {isDeleting ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Trash2 className="h-4 w-4" />
-            )}
-            削除
-          </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting || isSaving}
+            >
+              {isDeleting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="h-4 w-4" />
+              )}
+              削除
+            </Button>
           )}
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>
@@ -213,8 +208,8 @@ export function WorkEditor({ work }: WorkEditorProps) {
               {work ? "保存" : "追加"}
             </Button>
           </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }

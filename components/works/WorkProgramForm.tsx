@@ -15,6 +15,7 @@ import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SheetFooter } from "@/components/ui/sheet";
 
 type Program = Database["public"]["Tables"]["programs"]["Row"] & {
   programs_seasons?: { season_id: number }[];
@@ -83,102 +84,106 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="channel_id">チャンネル</Label>
-          <ChannelSelect
-            channels={channels}
-            value={formData.channel_id}
-            onValueChange={(val) => handleChange("channel_id", val)}
-            className="w-full"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="day_of_the_week">曜日</Label>
-          <Select 
-            value={formData.day_of_the_week?.toString()} 
-            onValueChange={(val) => handleChange("day_of_the_week", Number(val))}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="曜日を選択" />
-            </SelectTrigger>
-            <SelectContent>
-              {DAYS.map(day => (
-                <SelectItem key={day.id} value={day.id.toString()}>
-                  {day.label}曜日
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2 flex flex-col">
-          <Label htmlFor="start_date">開始日（任意）</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full pl-3 text-left font-normal",
-                  !formData.start_date && "text-muted-foreground"
-                )}
-              >
-                {formData.start_date ? (
-                  format(new Date(formData.start_date), "yyyy年MM月dd日", { locale: ja })
-                ) : (
-                  <span>日付を選択</span>
-                )}
-                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={formData.start_date ? new Date(formData.start_date) : undefined}
-                onSelect={(date) => handleChange("start_date", date ? format(date, "yyyy-MM-dd") : "")}
-                initialFocus
-                locale={ja}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="color">色</Label>
-          <div className="flex flex-wrap gap-2">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map(color => (
-              <button
-                key={color}
-                type="button"
-                onClick={() => handleChange("color", color)}
-                className={`w-8 h-8 rounded-full border-2 ${getProgramColorClass(color)} ${formData.color === color ? "ring-2 ring-offset-2 ring-black" : ""}`}
-              />
-            ))}
+    <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="channel_id">チャンネル</Label>
+            <ChannelSelect
+              channels={channels}
+              value={formData.channel_id}
+              onValueChange={(val) => handleChange("channel_id", val)}
+              className="w-full"
+            />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="start_time">開始時間</Label>
-          <Input 
-            id="start_time" 
-            type="time" 
-            value={formData.start_time || ""} 
-            onChange={(e) => handleChange("start_time", e.target.value)}
-            required
-          />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="day_of_the_week">曜日</Label>
+            <Select 
+              value={formData.day_of_the_week?.toString()} 
+              onValueChange={(val) => handleChange("day_of_the_week", Number(val))}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="曜日を選択" />
+              </SelectTrigger>
+              <SelectContent>
+                {DAYS.map(day => (
+                  <SelectItem key={day.id} value={day.id.toString()}>
+                    {day.label}曜日
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2 flex flex-col">
+            <Label htmlFor="start_date">開始日</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-full pl-3 text-left font-normal",
+                    !formData.start_date && "text-muted-foreground"
+                  )}
+                >
+                  {formData.start_date ? (
+                    format(new Date(formData.start_date), "yyyy年MM月dd日", { locale: ja })
+                  ) : (
+                    <span>日付を選択</span>
+                  )}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start" zIndex={350}>
+                <Calendar
+                  mode="single"
+                  selected={formData.start_date ? new Date(formData.start_date) : undefined}
+                  onSelect={(date) => handleChange("start_date", date ? format(date, "yyyy-MM-dd") : "")}
+                  locale={ja}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="end_time">終了時間</Label>
-          <Input 
-            id="end_time" 
-            type="time" 
-            value={formData.end_time || ""} 
-            onChange={(e) => handleChange("end_time", e.target.value)}
-            required
-          />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="start_time">開始時間</Label>
+            <Input 
+              id="start_time" 
+              type="time" 
+              value={formData.start_time || ""} 
+              onChange={(e) => handleChange("start_time", e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="end_time">終了時間</Label>
+            <Input 
+              id="end_time" 
+              type="time" 
+              value={formData.end_time || ""} 
+              onChange={(e) => handleChange("end_time", e.target.value)}
+              required
+            />
+          </div>
+        </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="color">色</Label>
+        <div className="flex flex-wrap gap-2">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map(color => (
+            <button
+              key={color}
+              type="button"
+              onClick={() => handleChange("color", color)}
+              className={`w-8 h-8 rounded-full border-2 ${getProgramColorClass(color)} ${formData.color === color ? "ring-2 ring-offset-2 ring-black" : ""}`}
+            />
+          ))}
         </div>
       </div>
 
@@ -223,7 +228,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="version">バージョン（任意）</Label>
+        <Label htmlFor="version">バージョン</Label>
         <Input 
           id="version" 
           value={formData.version || ""} 
@@ -232,22 +237,25 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="note">備考（任意）</Label>
+        <Label htmlFor="note">備考</Label>
         <Textarea 
           id="note" 
           value={formData.note || ""} 
           onChange={(e) => handleChange("note", e.target.value)}
         />
       </div>
-
-      <div className="flex justify-end gap-2 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          キャンセル
-        </Button>
-        <Button type="submit">
-          保存
-        </Button>
       </div>
+
+      <SheetFooter>
+        <div className="flex justify-end gap-2 w-full">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            キャンセル
+          </Button>
+          <Button type="submit">
+            保存
+          </Button>
+        </div>
+      </SheetFooter>
     </form>
   );
 }

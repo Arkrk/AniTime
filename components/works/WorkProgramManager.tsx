@@ -5,11 +5,11 @@ import { useWorkPrograms } from "@/hooks/use-work-programs";
 import { WorkProgramForm } from "./WorkProgramForm";
 import { Badge } from "@/components/ui/badge";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import {
   Empty,
   EmptyHeader,
@@ -366,11 +366,11 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
         </DndContext>
       )}
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingProgram?.id ? "番組を編集" : "番組を追加"}</DialogTitle>
-          </DialogHeader>
+      <Sheet open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <SheetContent className="flex flex-col w-screen sm:w-150">
+          <SheetHeader>
+            <SheetTitle>{editingProgram?.id ? "番組を編集" : "番組を追加"}</SheetTitle>
+          </SheetHeader>
           <WorkProgramForm
             initialData={editingProgram || {}}
             channels={channels}
@@ -379,8 +379,8 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
             onSubmit={handleSubmit}
             onCancel={() => setIsDialogOpen(false)}
           />
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
