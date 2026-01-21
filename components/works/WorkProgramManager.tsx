@@ -221,7 +221,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
     // 閲覧モード
     return (
       <div className="space-y-4">
-        <div className="rounded-2xl border overflow-hidden bg-white">
+        <div className="rounded-md border overflow-hidden bg-white">
           {displayPrograms.length > 0 ? (
             displayPrograms.map((program, index) => {
               const dayLabel = DAYS.find(d => d.id === program.day_of_the_week)?.label || "?";
@@ -330,7 +330,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
             items={programs.map(p => p.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="rounded-2xl border overflow-hidden bg-white">
+            <div className="rounded-md border overflow-hidden bg-white">
               {programs.length > 0 ? (
                 programs.map((program) => (
                   <SortableItem

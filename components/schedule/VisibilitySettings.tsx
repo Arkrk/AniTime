@@ -41,7 +41,7 @@ export function VisibilitySettings() {
   }
 
   return (
-    <div className="flex flex-col gap-6 px-4">
+    <div className="flex flex-col gap-6 px-4 pb-4">
       <div className="space-y-3">
         <h3 className="font-medium flex items-center gap-2">
           <Map className="w-4 h-4" />

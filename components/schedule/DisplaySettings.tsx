@@ -86,7 +86,7 @@ export function DisplaySettings() {
                   </div>
                 </div>
               </SheetTrigger>
-              <SheetContent className="w-100 sm:w-135 overflow-y-auto">
+              <SheetContent className="overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle>列の表示オプション</SheetTitle>
                 </SheetHeader>
