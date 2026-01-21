@@ -3,7 +3,7 @@
 import { Settings, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -73,8 +73,8 @@ export function DisplaySettings() {
               <Switch checked={isSavedOnly} className="pointer-events-none" />
             </div>
             <div className="h-px bg-border" />
-            <Dialog>
-              <DialogTrigger asChild>
+            <Sheet>
+              <SheetTrigger asChild>
                 <div 
                   className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer"
                 >
@@ -85,16 +85,14 @@ export function DisplaySettings() {
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </div>
                 </div>
-              </DialogTrigger>
-              <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>列の表示オプション</DialogTitle>
-                </DialogHeader>
-                <div className="pt-2">
-                  <VisibilitySettings />
-                </div>
-              </DialogContent>
-            </Dialog>
+              </SheetTrigger>
+              <SheetContent className="w-100 sm:w-135 overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>列の表示オプション</SheetTitle>
+                </SheetHeader>
+                <VisibilitySettings />
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </PopoverContent>

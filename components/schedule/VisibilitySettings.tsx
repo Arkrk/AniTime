@@ -6,7 +6,6 @@ import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Loader2, ChevronDown, Map, RadioTower } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Accordion,
   AccordionContent,
@@ -34,7 +33,7 @@ export function VisibilitySettings() {
 
   if (!loaded || loadingData) {
     return (
-      <div className="flex items-center gap-2 text-gray-500 p-4">
+      <div className="flex items-center gap-2 text-gray-500 px-4">
         <Loader2 className="h-4 w-4 animate-spin" />
         読み込み中...
       </div>
@@ -42,20 +41,13 @@ export function VisibilitySettings() {
   }
 
   return (
-    <Tabs defaultValue="area" className="w-full">
-      <TabsList className="grid w-full grid-cols-2 mb-4">
-        <TabsTrigger value="area" className="flex items-center gap-2">
+    <div className="flex flex-col gap-6 px-4">
+      <div className="space-y-3">
+        <h3 className="font-medium flex items-center gap-2">
           <Map className="w-4 h-4" />
-          エリア
-        </TabsTrigger>
-        <TabsTrigger value="channel" className="flex items-center gap-2">
-          <RadioTower className="w-4 h-4" />
-          チャンネル
-        </TabsTrigger>
-      </TabsList>
-
-      <TabsContent value="area">
-        <div className="border rounded-lg bg-white overflow-hidden">
+          エリア別レイアウト
+        </h3>
+        <div className="border rounded-md bg-white overflow-hidden">
           {areas.map((area) => (
             <div 
               key={area.id} 
@@ -76,10 +68,14 @@ export function VisibilitySettings() {
             </div>
           ))}
         </div>
-      </TabsContent>
+      </div>
 
-      <TabsContent value="channel">
-        <div className="border rounded-lg bg-white overflow-hidden">
+      <div className="space-y-3">
+        <h3 className="font-medium flex items-center gap-2">
+          <RadioTower className="w-4 h-4"/>
+          チャンネル別レイアウト
+        </h3>
+        <div className="border rounded-md bg-white overflow-hidden">
           <Accordion type="multiple">
             {areas.map((area) => {
               const areaChannels = channels.filter((c) => c.area_id === area.id);
@@ -151,7 +147,7 @@ export function VisibilitySettings() {
             })}
           </Accordion>
         </div>
-      </TabsContent>
-    </Tabs>
+      </div>
+    </div>
   );
 }
