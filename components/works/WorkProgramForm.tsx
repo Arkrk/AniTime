@@ -130,14 +130,14 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
                   )}
                 >
                   {formData.start_date ? (
-                    format(new Date(formData.start_date), "yyyy年MM月dd日", { locale: ja })
+                    format(new Date(formData.start_date), "y年M月d日", { locale: ja })
                   ) : (
                     <span>日付を選択</span>
                   )}
                   <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start" zIndex={350}>
+              <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
                   selected={formData.start_date ? new Date(formData.start_date) : undefined}
@@ -174,7 +174,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
         </div>
 
       <div className="space-y-2">
-        <Label htmlFor="color">色</Label>
+        <Label htmlFor="color">背景色</Label>
         <div className="flex flex-wrap gap-2">
           {[1, 2, 3, 4, 5, 6, 7, 8].map(color => (
             <button

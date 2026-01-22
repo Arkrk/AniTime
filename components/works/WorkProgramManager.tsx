@@ -248,10 +248,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
                         <>
                           <div className="flex items-center gap-1">
                             <Calendar className="h-4 w-4 shrink-0" />
-                            <span>
-                              {format(parseISO(program.start_date), "yyyy/MM/dd", { locale: ja })}
-                              <span className="ml-1">スタート</span>
-                            </span>
+                            <span>{format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}</span>
                           </div>
                           <div className="h-3 w-px bg-black/20" />
                         </>

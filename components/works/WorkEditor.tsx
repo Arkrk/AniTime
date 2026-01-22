@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Pencil, Trash2, Loader2, Plus } from "lucide-react";
+import { Pencil, Trash2, Loader2, Plus, AtSign } from "lucide-react";
 import { updateWork, deleteWork, createWork } from "@/lib/actions";
 
 interface Work {
@@ -154,13 +154,14 @@ export function WorkEditor({ work }: WorkEditorProps) {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="x_username">Xのユーザー名</Label>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">@</span>
+              <div className="relative">
+                <AtSign className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="x_username"
                   name="x_username"
                   value={formData.x_username}
                   onChange={handleChange}
+                  className="pl-9"
                 />
               </div>
             </div>
