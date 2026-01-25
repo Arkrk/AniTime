@@ -23,10 +23,10 @@ export default async function SavedPage({ searchParams }: PageProps) {
   const programs = await getScheduleByDay(0, currentSeasonId);
 
   return (
-    <div className="flex flex-col h-full w-full bg-white">
+    <div className="flex flex-col h-full w-full">
       
       {/* コントロールバー */}
-      <div className="shrink-0 p-4 border-b bg-white z-10 sticky top-0">
+      <div className="shrink-0 p-4 border-b z-10 sticky top-0">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold">保存済み</h1>

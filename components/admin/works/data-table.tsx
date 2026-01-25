@@ -87,7 +87,7 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="sticky top-0 bg-white z-10 border-b">
+                    <TableHead key={header.id} className="sticky top-0 bg-background z-10 border-b">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -130,7 +130,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </table>
       </div>
-      <div className="flex items-center justify-between py-4 shrink-0 border-t bg-white px-4">
+      <div className="flex items-center justify-between py-4 shrink-0 border-t px-4">
         <WorkEditor />
         <div className="flex items-center space-x-2">
           <Button

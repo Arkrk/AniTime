@@ -103,7 +103,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
   const totalWidth = channels.reduce((acc, ch) => acc + ch.width, 0) + TIME_COL_WIDTH;
 
   return (
-    <div className="flex flex-col h-full w-full bg-white">
+    <div className="flex flex-col h-full w-full">
       {/* スクロールエリア */}
       <div className="flex-1 overflow-auto relative">
         <div
@@ -115,12 +115,12 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
         >
           {/* --- ヘッダー行（チャンネル/エリア名） --- */}
           <div 
-            className="flex sticky top-0 z-98 bg-white border-b shadow-sm"
+            className="flex sticky top-0 z-98 bg-background border-b shadow-sm"
             style={{ height: HEADER_HEIGHT }}
           >
             {/* 左上の空白部分 (時間軸の上) も固定 */}
             <div
-              className="sticky left-0 z-98 bg-gray-50 border-r border-b shrink-0"
+              className="sticky left-0 z-98 bg-primary-foreground border-r border-b shrink-0"
               style={{ width: TIME_COL_WIDTH, height: HEADER_HEIGHT }}
             />
 
@@ -128,7 +128,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
             {channels.map((channel) => (
               <div
                 key={channel.id}
-                className="flex items-center justify-center border-r border-b bg-white font-bold text-sm text-gray-700 truncate px-2"
+                className="flex items-center justify-center border-r border-b font-bold text-sm text-muted-foreground truncate px-2"
                 style={{ width: channel.width, height: HEADER_HEIGHT }}
               >
                 {channel.name}
@@ -141,7 +141,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
             
             {/* 時間軸 */}
             <div
-              className="sticky left-0 z-20 bg-gray-50 border-r text-xs text-gray-500 font-mono"
+              className="sticky left-0 z-97 bg-primary-foreground border-r text-xs text-muted-foreground"
               style={{ width: TIME_COL_WIDTH, height: totalHeight }}
             >
               {/* 時間ラベル */}
@@ -150,7 +150,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
                 return (
                   <div
                     key={hour}
-                    className="absolute w-full border-b border-gray-200 flex items-start justify-center pt-1"
+                    className="absolute w-full border-b flex items-start justify-center pt-1"
                     style={{ 
                       top: top, 
                       height: HOUR_HEIGHT 
@@ -167,7 +167,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
               {channels.map((channel) => (
                 <div
                   key={channel.id}
-                  className="relative border-r border-gray-200"
+                  className="relative border-r"
                   style={{ width: channel.width, height: "100%" }}
                 >
                   {/* 補助線 (1時間ごと) */}
@@ -176,7 +176,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
                     return (
                       <div
                         key={hour}
-                        className="absolute w-full border-b border-gray-200 pointer-events-none"
+                        className="absolute w-full border-b pointer-events-none"
                         style={{ top: top, height: HOUR_HEIGHT }}
                       />
                     );

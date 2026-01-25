@@ -27,7 +27,7 @@ export default async function WorkPage({ params }: PageProps) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-white overflow-y-auto">
+    <div className="flex flex-col h-full overflow-y-auto">
       <BackButton />
 
       <div className="flex-1 p-4 md:px-8 pt-16 max-w-4xl mx-auto w-full">

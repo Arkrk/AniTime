@@ -24,7 +24,7 @@ export const Bottombar = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t flex items-center justify-around md:hidden pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 left-0 z-50 w-full h-16 border-t flex items-center justify-around md:hidden pb-[env(safe-area-inset-bottom)]">
       {navItems.map((item) => (
         <Link
           key={item.label}
@@ -32,8 +32,8 @@ export const Bottombar = () => {
           className={cn(
             "flex flex-col items-center justify-center w-full h-full transition-colors",
             pathname === item.href
-              ? "text-slate-900"
-              : "text-gray-400 hover:text-slate-900 active:text-slate-900"
+              ? "text-foreground"
+              : "text-gray-400 hover:text-slate-900 dark:text-gray-500 dark:hover:text-white"
           )}
           title={item.label}
         >

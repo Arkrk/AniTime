@@ -20,13 +20,13 @@ export function AdminSettings() {
   }, [message]);
 
   return (
-    <div className="rounded-md border bg-white overflow-hidden">
+    <div className="rounded-md border overflow-hidden">
       <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
           <div>
-            <h3 className="font-medium text-base text-gray-900">管理者アカウント</h3>
-            <p className="text-sm text-gray-500 mt-1">
-              {loading ? "確認中..." : user ? `ログイン中: ${user.email}` : "未ログイン"}
+            <h3 className="font-medium text-base">管理者アカウント</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              {loading ? "処理中..." : user ? `ログイン済み: ${user.email}` : "未ログイン"}
             </p>
           </div>
         </div>

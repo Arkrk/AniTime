@@ -54,7 +54,7 @@ export function DisplaySettings() {
           <div className="h-px bg-border" />
           <div className="flex flex-col">
             <div 
-              className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent cursor-pointer"
               onClick={toggleAllDay}
             >
               <Label className="w-full cursor-pointer pointer-events-none">
@@ -64,7 +64,7 @@ export function DisplaySettings() {
             </div>
             <div className="h-px bg-border" />
             <div 
-              className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent cursor-pointer"
               onClick={toggleSavedOnly}
             >
               <Label className="w-full cursor-pointer pointer-events-none">
@@ -76,7 +76,7 @@ export function DisplaySettings() {
             <Sheet>
               <SheetTrigger asChild>
                 <div 
-                  className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                  className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent cursor-pointer"
                 >
                   <Label className="w-full cursor-pointer pointer-events-none">
                     列の表示オプション

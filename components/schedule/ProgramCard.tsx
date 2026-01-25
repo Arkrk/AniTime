@@ -50,7 +50,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
             // ホバー時の拡張設定
             "hover:h-auto! hover:z-50 hover:shadow-2xl hover:scale-[1.02]",
             getProgramColorClass(program.color),
-            saved ? "border-red-500 border-2" : "border",
+            saved ? "border-red-500 dark:border-white border-2" : "border",
             className
           )}
           style={{
@@ -65,18 +65,18 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
           <div className="flex flex-col h-full">
             {/* チャンネル名（エリア別表示時のみ） */}
             {mode === "area" && (
-              <span className="text-xs font-semibold text-black truncate leading-none shrink-0">
+              <span className="text-xs font-semibold truncate leading-none shrink-0">
                 {program.channel_name}
               </span>
             )}
             {/* 放送開始日 */}
             {program.start_date && (
-              <span className="text-xs text-black w-fit rounded shrink-0">
+              <span className="text-xs w-fit rounded shrink-0">
                 {format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}
               </span>
             )}
             {/* 放送時間 */}
-            <span className="font-mono text-xs opacity-70 leading-none my-0.5 tracking-tight shrink-0">
+            <span className="text-xs opacity-70 leading-none my-0.5 tracking-tight shrink-0">
               {formatTime30(program.start_time)}～{formatTime30(program.end_time)}
             </span>
             {/* 番組名 */}
@@ -103,7 +103,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
               <div />
             )}
             {/* 放送時間 */}
-            <div className="flex items-center gap-1 font-mono">
+            <div className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
               <span>
                 <span>{dayLabel}曜</span>
@@ -181,7 +181,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
                   href={program.website_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs px-3 h-8 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs px-3 h-8 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-neutral-700 dark:hover:bg-neutral-800 dark:text-gray-100 transition-colors"
                 >
                   <Globe className="h-4 w-4" />
                   公式サイト
@@ -192,7 +192,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
                   href={`https://x.com/${program.x_username}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center h-8 w-8 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 transition-colors"
+                  className="flex items-center justify-center h-8 w-8 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 dark:bg-neutral-700 dark:hover:bg-neutral-800 dark:text-gray-100 transition-colors"
                   title="X"
                 >
                   <FaXTwitter className="h-4 w-4" />
@@ -203,7 +203,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
                   href={program.wikipedia_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center h-8 w-8 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 transition-colors"
+                  className="flex items-center justify-center h-8 w-8 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 dark:bg-neutral-700 dark:hover:bg-neutral-800 dark:text-gray-100 transition-colors"
                   title="Wikipedia"
                 >
                   <FaWikipediaW className="h-4 w-4" />
@@ -215,7 +215,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
               pressed={saved}
               onPressedChange={() => toggleSaved(String(program.id))}
               size="sm"
-              className="h-8 w-8 p-0 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded data-[state=on]:bg-red-500 data-[state=on]:text-white data-[state=on]:hover:bg-red-600"
+              className="h-8 w-8 p-0 bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-neutral-700 dark:hover:bg-neutral-800 dark:text-gray-100 rounded data-[state=on]:bg-red-500! data-[state=on]:text-white! data-[state=on]:hover:bg-red-600!"
               title={saved ? "削除" : "保存"}
             >
               <Bookmark className={cn("h-4 w-4", saved && "fill-current")} />

@@ -64,18 +64,18 @@ function SortableItem({ program, onEdit, onDuplicate, onDelete }: SortableItemPr
   const colorClass = getProgramColorClass(program.color);
 
   return (
-    <div ref={setNodeRef} style={style} className={`p-4 flex flex-col gap-3 ${colorClass} border-b border-black/10 relative group`}>
-      <div className="absolute right-2 top-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 rounded p-1">
-        <button {...attributes} {...listeners} className="p-1 hover:bg-gray-200 rounded cursor-grab active:cursor-grabbing">
-          <GripVertical className="h-4 w-4 text-gray-500" />
+    <div ref={setNodeRef} style={style} className={`p-4 flex flex-col gap-3 ${colorClass} border-b relative group`}>
+      <div className="absolute right-2 top-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 dark:bg-neutral-900/80 rounded p-1">
+        <button {...attributes} {...listeners} className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded cursor-grab active:cursor-grabbing">
+          <GripVertical className="h-4 w-4 text-gray-500 dark:text-neutral-400" />
         </button>
-        <button onClick={() => onDuplicate(program)} className="p-1 hover:bg-gray-200 rounded">
+        <button onClick={() => onDuplicate(program)} className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded">
           <Copy className="h-4 w-4 text-green-500" />
         </button>
-        <button onClick={() => onEdit(program)} className="p-1 hover:bg-gray-200 rounded">
+        <button onClick={() => onEdit(program)} className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded">
           <Pencil className="h-4 w-4 text-blue-500" />
         </button>
-        <button onClick={() => onDelete(program.id)} className="p-1 hover:bg-gray-200 rounded">
+        <button onClick={() => onDelete(program.id)} className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded">
           <Trash2 className="h-4 w-4 text-red-500" />
         </button>
       </div>
@@ -86,7 +86,7 @@ function SortableItem({ program, onEdit, onDuplicate, onDelete }: SortableItemPr
             {program.channels?.name || "未定"}
           </span>
           {program.programs_seasons?.map((ps: any) => (
-             ps.seasons && <Badge key={ps.seasons.id} variant="secondary" className="bg-white/50 hover:bg-white/70 text-xs font-normal">{ps.seasons.name}</Badge>
+             ps.seasons && <Badge key={ps.seasons.id} variant="secondary" className="bg-white/50 dark:bg-white/30 text-xs font-normal">{ps.seasons.name}</Badge>
           ))}
         </div>
         
@@ -97,7 +97,7 @@ function SortableItem({ program, onEdit, onDuplicate, onDelete }: SortableItemPr
                 <Calendar className="h-4 w-4 shrink-0" />
                 <span>{format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}</span>
               </div>
-              <div className="h-3 w-px bg-black/20" />
+              <div className="h-3 w-px bg-black/20 dark:bg-white/20" />
             </>
           )}
           <div className="flex items-center gap-1">
@@ -111,7 +111,7 @@ function SortableItem({ program, onEdit, onDuplicate, onDelete }: SortableItemPr
       </div>
 
       {program.version && (
-        <div className="text-sm text-blue-600 font-medium">
+        <div className="text-sm text-blue-600 dark:text-blue-300 font-medium">
           {program.version}
         </div>
       )}
@@ -122,7 +122,7 @@ function SortableItem({ program, onEdit, onDuplicate, onDelete }: SortableItemPr
             pt.tags && (
               <span
                 key={pt.tags.id}
-                className="px-1.5 py-0.5 bg-white/50 text-muted-foreground text-xs rounded-sm border border-black/5"
+                className="px-1.5 py-0.5 bg-white/50 dark:bg-white/30 text-primary text-xs rounded-sm border border-black/5"
               >
                 {pt.tags.name}
               </span>
@@ -221,7 +221,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
     // 閲覧モード
     return (
       <div className="space-y-4">
-        <div className="rounded-md border overflow-hidden bg-white">
+        <div className="rounded-md border overflow-hidden">
           {displayPrograms.length > 0 ? (
             displayPrograms.map((program, index) => {
               const dayLabel = DAYS.find(d => d.id === program.day_of_the_week)?.label || "?";
@@ -231,7 +231,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
               return (
                 <div 
                   key={program.id} 
-                  className={`p-4 flex flex-col gap-3 ${colorClass} ${!isLast ? "border-b border-black/10" : ""}`}
+                  className={`p-4 flex flex-col gap-3 ${colorClass} ${!isLast ? "border-b" : ""}`}
                 >
                   <div className="flex flex-col md:flex-row md:items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
@@ -239,7 +239,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
                         {program.channels?.name || "未定"}
                       </span>
                       {program.programs_seasons?.map((ps: any) => (
-                         ps.seasons && <Badge key={ps.seasons.id} variant="secondary" className="bg-white/50 hover:bg-white/70 text-xs font-normal">{ps.seasons.name}</Badge>
+                         ps.seasons && <Badge key={ps.seasons.id} variant="secondary" className="bg-white/50 dark:bg-white/30 text-xs font-normal">{ps.seasons.name}</Badge>
                       ))}
                     </div>
                     
@@ -250,7 +250,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
                             <Calendar className="h-4 w-4 shrink-0" />
                             <span>{format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}</span>
                           </div>
-                          <div className="h-3 w-px bg-black/20" />
+                          <div className="h-3 w-px bg-black/20 dark:bg-white/20" />
                         </>
                       )}
                       <div className="flex items-center gap-1">
@@ -264,7 +264,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
                   </div>
 
                   {program.version && (
-                    <div className="text-sm text-blue-600 font-medium">
+                    <div className="text-sm text-blue-600 dark:text-blue-300 font-medium">
                       {program.version}
                     </div>
                   )}
@@ -275,7 +275,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
                         pt.tags && (
                           <span
                             key={pt.tags.id}
-                            className="px-1.5 py-0.5 bg-white/50 text-muted-foreground text-xs rounded-sm border border-black/5"
+                            className="px-1.5 py-0.5 bg-white/50 dark:bg-white/30 text-primary text-xs rounded-sm border border-black/5"
                           >
                             {pt.tags.name}
                           </span>
@@ -315,7 +315,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
     <div className="space-y-4">
       {loading ? (
         <div className="flex justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+          <Loader2 className="h-6 w-6 animate-spin text-gray-400 dark:text-neutral-500" />
         </div>
       ) : (
         <DndContext 
@@ -327,7 +327,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
             items={programs.map(p => p.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="rounded-md border overflow-hidden bg-white">
+            <div className="rounded-md border overflow-hidden">
               {programs.length > 0 ? (
                 programs.map((program) => (
                   <SortableItem
@@ -353,7 +353,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
               )}
               <button
                 onClick={handleAdd}
-                className="w-full p-4 flex items-center justify-center gap-2 text-muted-foreground hover:bg-gray-50 hover:text-foreground transition-colors border-t border-black/10 font-medium text-sm"
+                className="w-full p-4 flex items-center justify-center gap-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors border-t font-medium text-sm"
               >
                 <Plus className="h-4 w-4" />
                 番組を追加

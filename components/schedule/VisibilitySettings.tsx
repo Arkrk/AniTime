@@ -33,7 +33,7 @@ export function VisibilitySettings() {
 
   if (!loaded || loadingData) {
     return (
-      <div className="flex items-center gap-2 text-gray-500 p-4">
+      <div className="flex items-center gap-2 text-gray-500 dark:text-neutral-400 p-4">
         <Loader2 className="h-4 w-4 animate-spin" />
         読み込み中...
       </div>
@@ -47,11 +47,11 @@ export function VisibilitySettings() {
           <Map className="w-4 h-4" />
           エリア別レイアウト
         </h3>
-        <div className="border rounded-md bg-white overflow-hidden">
+        <div className="border rounded-md overflow-hidden">
           {areas.map((area) => (
             <div 
               key={area.id} 
-              className="flex items-center gap-3 px-4 py-3 border-b last:border-b-0 hover:bg-gray-50 transition-colors cursor-pointer bg-white"
+              className="flex items-center gap-3 px-4 py-3 border-b last:border-b-0 hover:bg-accent transition-colors cursor-pointer"
               onClick={() => toggleArea(area.id)}
             >
               <Checkbox
@@ -75,7 +75,7 @@ export function VisibilitySettings() {
           <RadioTower className="w-4 h-4"/>
           チャンネル別レイアウト
         </h3>
-        <div className="border rounded-md bg-white overflow-hidden">
+        <div className="border rounded-md overflow-hidden">
           <Accordion type="multiple">
             {areas.map((area) => {
               const areaChannels = channels.filter((c) => c.area_id === area.id);
@@ -99,7 +99,7 @@ export function VisibilitySettings() {
 
               return (
                 <AccordionItem key={area.id} value={`area-${area.id}`} className="border-b last:border-b-0 group overflow-hidden">
-                  <div className="flex items-center bg-gray-50/50 border-b -mb-px group-data-[state=open]:mb-0 relative z-10">
+                  <div className="flex items-center bg-gray-50/50 dark:bg-neutral-900/50 border-b -mb-px group-data-[state=open]:mb-0 relative z-10">
                     <div className="flex items-center pl-4 py-3 pr-3">
                       <Checkbox
                         id={`area-group-${area.id}`}
@@ -110,7 +110,7 @@ export function VisibilitySettings() {
                     <AccordionPrimitive.Header className="flex flex-1">
                       <AccordionPrimitive.Trigger
                         className={cn(
-                          "flex flex-1 items-center justify-between py-3 pr-4 font-bold text-gray-700 transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+                          "flex flex-1 items-center justify-between py-3 pr-4 font-bold transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
                           "text-left text-sm"
                         )}
                       >
@@ -124,7 +124,7 @@ export function VisibilitySettings() {
                       {areaChannels.map((channel) => (
                         <div 
                           key={channel.id} 
-                          className="flex items-center gap-3 px-4 py-3 border-b last:border-b-0 hover:bg-gray-50 transition-colors cursor-pointer bg-white pl-8"
+                          className="flex items-center gap-3 px-4 py-3 border-b last:border-b-0 hover:bg-accent transition-colors cursor-pointer pl-8"
                           onClick={() => toggleChannel(channel.id)}
                         >
                           <Checkbox

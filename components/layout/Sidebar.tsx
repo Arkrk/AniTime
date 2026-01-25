@@ -32,7 +32,7 @@ export const Sidebar = () => {
   ];
 
   return (
-    <aside className="hidden md:flex w-18 h-screen border-r bg-white flex-col items-center py-6 shrink-0 z-50">
+    <aside className="hidden md:flex w-18 h-screen border-r flex-col items-center py-6 shrink-0 z-50">
       {/* ロゴ */}
       <div className="mb-auto">
         <Link href="/" className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-900 text-white font-bold hover:bg-slate-700 transition-colors">
@@ -51,8 +51,8 @@ export const Sidebar = () => {
                   className={cn(
                     "group flex flex-col items-center gap-1 transition-colors",
                     pathname === item.href
-                      ? "text-slate-900"
-                      : "text-gray-400 hover:text-slate-900"
+                      ? "text-foreground"
+                      : "text-gray-400 hover:text-slate-900 dark:text-gray-500 dark:hover:text-white"
                   )}
                 >
                   <item.icon className="w-7 h-7 group-hover:scale-110 transition-transform stroke-[1.5]" />
@@ -74,7 +74,7 @@ export const Sidebar = () => {
             <TooltipTrigger asChild>
               <button 
                 onClick={() => setSearchOpen(true)}
-                className="text-gray-400 hover:text-slate-900 transition-colors"
+                className="text-gray-400 hover:text-slate-900 dark:text-gray-500 dark:hover:text-white transition-colors"
               >
                 <Search className="w-7 h-7 stroke-[1.5]" />
               </button>

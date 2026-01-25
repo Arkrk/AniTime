@@ -107,13 +107,11 @@ export function PersonalDataSettings() {
   }
 
   return (
-    <div className="rounded-md border bg-white overflow-hidden">
+    <div className="rounded-md border overflow-hidden">
       <div className="border-b p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h3 className="font-medium text-base text-gray-900">
-            データをインポート
-          </h3>
-          <p className="text-sm text-gray-500 mt-1">
+          <h3 className="font-medium text-base">データをインポート</h3>
+          <p className="text-sm text-muted-foreground mt-1">
             バックアップファイルから設定を復元します。
           </p>
         </div>
@@ -133,10 +131,8 @@ export function PersonalDataSettings() {
 
       <div className="border-b p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h3 className="font-medium text-base text-gray-900">
-            データをエクスポート
-          </h3>
-          <p className="text-sm text-gray-500 mt-1">
+          <h3 className="font-medium text-base">データをエクスポート</h3>
+          <p className="text-sm text-muted-foreground mt-1">
             バックアップファイルをJSON形式で出力します。
           </p>
         </div>
@@ -149,8 +145,8 @@ export function PersonalDataSettings() {
 
       <div className="p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between shadow-none">
         <div>
-          <h3 className="font-medium text-base text-gray-900">データをリセット</h3>
-          <p className="text-sm text-gray-500 mt-1">
+          <h3 className="font-medium text-base">データをリセット</h3>
+          <p className="text-sm text-muted-foreground mt-1">
             保存した番組や設定をすべて削除します。
           </p>
         </div>
@@ -168,10 +164,7 @@ export function PersonalDataSettings() {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>キャンセル</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleReset}
-                  className="bg-red-600 hover:bg-red-700"
-                >
+                <AlertDialogAction variant="destructive" onClick={handleReset}>
                   リセット
                 </AlertDialogAction>
               </AlertDialogFooter>

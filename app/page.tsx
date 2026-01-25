@@ -63,7 +63,7 @@ export default async function Home({ searchParams }: PageProps) {
   return (
     <div className="flex flex-col h-full w-full">
       {/* コントロールバー */}
-      <div className="shrink-0 p-4 border-b bg-white z-10">
+      <div className="shrink-0 p-4 border-b z-10">
         <div className="flex items-center justify-between gap-4">
           <div className="hidden sm:flex items-center gap-4">
             <h1 className="text-lg font-bold">番組表</h1>
@@ -94,7 +94,7 @@ export default async function Home({ searchParams }: PageProps) {
 
 function LoadingSkeleton() {
   return (
-    <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-400 animate-pulse">
+    <div className="w-full h-full flex items-center justify-center animate-pulse">
       読み込み中...
     </div>
   );

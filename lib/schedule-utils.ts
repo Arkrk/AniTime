@@ -166,14 +166,14 @@ export const formatTime30 = (timeStr: string) => {
  */
 export const getProgramColorClass = (colorId?: number | null) => {
   const colors = [
-    "bg-purple-100 border-purple-200 text-purple-900", // 1: 紫色
-    "bg-red-100 border-red-200 text-red-900",          // 2: 赤色
-    "bg-orange-100 border-orange-200 text-orange-900", // 3: オレンジ色
-    "bg-yellow-100 border-yellow-200 text-yellow-900", // 4: 黄色
-    "bg-green-100 border-green-200 text-green-900",    // 5: 緑色
-    "bg-blue-100 border-blue-200 text-blue-900",       // 6: 青色
-    "bg-gray-200 border-gray-200 text-gray-800",       // 7: 灰色
-    "bg-pink-100 border-pink-200 text-pink-900",       // 8: ピンク色
+    "bg-purple-100 border-purple-200 text-purple-900 dark:bg-purple-900 dark:border-purple-700 dark:text-purple-100", // 1: 紫色
+    "bg-red-100 border-red-200 text-red-900 dark:bg-red-900 dark:border-red-700 dark:text-red-100",          // 2: 赤色
+    "bg-orange-100 border-orange-200 text-orange-900 dark:bg-orange-900 dark:border-orange-700 dark:text-orange-100", // 3: オレンジ色
+    "bg-yellow-100 border-yellow-200 text-yellow-900 dark:bg-yellow-900 dark:border-yellow-700 dark:text-yellow-100", // 4: 黄色
+    "bg-green-100 border-green-200 text-green-900 dark:bg-green-900 dark:border-green-700 dark:text-green-100",    // 5: 緑色
+    "bg-blue-100 border-blue-200 text-blue-900 dark:bg-blue-900 dark:border-blue-700 dark:text-blue-100",       // 6: 青色
+    "bg-gray-200 border-gray-300 text-gray-800 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100",       // 7: 灰色
+    "bg-pink-100 border-pink-200 text-pink-900 dark:bg-pink-900 dark:border-pink-700 dark:text-pink-100",       // 8: ピンク色
   ];
   return colors[(colorId || 1) - 1] || colors[6];
 };

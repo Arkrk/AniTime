@@ -36,8 +36,8 @@ export function AdminPageContent({ works, pageCount }: AdminPageContentProps) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-white relative">
-      <div className="shrink-0 p-4 border-b bg-white z-10 sticky top-0">
+    <div className="flex flex-col h-full relative">
+      <div className="shrink-0 p-4 border-b z-10 sticky top-0">
         <div className="flex items-center justify-center sm:justify-between gap-4">
           <div className="hidden sm:flex items-center gap-4">
             <h1 className="text-lg font-bold">データ管理</h1>

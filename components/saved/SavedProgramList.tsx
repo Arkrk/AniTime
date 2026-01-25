@@ -100,17 +100,17 @@ export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
     <div className="p-4 space-y-8 pb-20">
       {/* 統計情報 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <div className="bg-gray-50 p-4 rounded-lg border text-center">
-          <div className="text-xs text-gray-500 mb-1 font-bold">保存済み数</div>
-          <div className="text-2xl font-bold text-slate-900">{stats.count}</div>
+        <div className="bg-muted p-4 rounded-lg border text-center">
+          <div className="text-xs text-muted-foreground mb-1 font-bold">保存済み数</div>
+          <div className="text-2xl font-bold">{stats.count}</div>
         </div>
-        <div className="bg-gray-50 p-4 rounded-lg border text-center">
-          <div className="text-xs text-gray-500 mb-1 font-bold">1週間の合計視聴時間</div>
-          <div className="text-2xl font-bold text-slate-900">{stats.totalTime}</div>
+        <div className="bg-muted p-4 rounded-lg border text-center">
+          <div className="text-xs text-muted-foreground mb-1 font-bold">1週間の合計視聴時間</div>
+          <div className="text-2xl font-bold">{stats.totalTime}</div>
         </div>
-        <div className="bg-gray-50 p-4 rounded-lg border text-center">
-          <div className="text-xs text-gray-500 mb-1 font-bold">1日の最大視聴時間</div>
-          <div className="text-2xl font-bold text-slate-900">{stats.maxTime}</div>
+        <div className="bg-muted p-4 rounded-lg border text-center">
+          <div className="text-xs text-muted-foreground mb-1 font-bold">1日の最大視聴時間</div>
+          <div className="text-2xl font-bold">{stats.maxTime}</div>
         </div>
       </div>
 
