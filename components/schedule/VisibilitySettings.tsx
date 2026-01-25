@@ -5,6 +5,7 @@ import { getAreasAndChannels } from "@/lib/actions";
 import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2, ChevronDown, Map, RadioTower } from "lucide-react";
 import {
   Accordion,
@@ -41,113 +42,115 @@ export function VisibilitySettings() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4 overflow-y-auto">
-      <div className="space-y-3">
-        <h3 className="font-medium flex items-center gap-2">
-          <Map className="w-4 h-4" />
-          エリア別レイアウト
-        </h3>
-        <div className="border rounded-md overflow-hidden">
-          {areas.map((area) => (
-            <div 
-              key={area.id} 
-              className="flex items-center gap-3 px-4 py-3 border-b last:border-b-0 hover:bg-accent transition-colors cursor-pointer"
-              onClick={() => toggleArea(area.id)}
-            >
-              <Checkbox
-                id={`area-${area.id}`}
-                checked={!hiddenAreaIds.includes(area.id)}
-                className="pointer-events-none"
-              />
-              <Label 
-                htmlFor={`area-${area.id}`} 
-                className="text-sm font-medium flex-1 pointer-events-none cursor-pointer"
+    <ScrollArea className="h-full">
+      <div className="flex flex-col gap-6 p-4">
+        <div className="space-y-3">
+          <h3 className="font-medium flex items-center gap-2">
+            <Map className="w-4 h-4" />
+            エリア別レイアウト
+          </h3>
+          <div className="border rounded-md overflow-hidden">
+            {areas.map((area) => (
+              <div
+                key={area.id}
+                className="flex items-center gap-3 px-4 py-3 border-b last:border-b-0 hover:bg-accent transition-colors cursor-pointer"
+                onClick={() => toggleArea(area.id)}
               >
-                {area.name}
-              </Label>
-            </div>
-          ))}
+                <Checkbox
+                  id={`area-${area.id}`}
+                  checked={!hiddenAreaIds.includes(area.id)}
+                  className="pointer-events-none"
+                />
+                <Label
+                  htmlFor={`area-${area.id}`}
+                  className="text-sm font-medium flex-1 pointer-events-none cursor-pointer"
+                >
+                  {area.name}
+                </Label>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="space-y-3">
-        <h3 className="font-medium flex items-center gap-2">
-          <RadioTower className="w-4 h-4"/>
-          チャンネル別レイアウト
-        </h3>
-        <div className="border rounded-md overflow-hidden">
-          <Accordion type="multiple">
-            {areas.map((area) => {
-              const areaChannels = channels.filter((c) => c.area_id === area.id);
-              if (areaChannels.length === 0) return null;
+        <div className="space-y-3">
+          <h3 className="font-medium flex items-center gap-2">
+            <RadioTower className="w-4 h-4" />
+            チャンネル別レイアウト
+          </h3>
+          <div className="border rounded-md overflow-hidden">
+            <Accordion type="multiple">
+              {areas.map((area) => {
+                const areaChannels = channels.filter((c) => c.area_id === area.id);
+                if (areaChannels.length === 0) return null;
 
-              // そのエリアのすべてのチャンネルが表示されているかどうかを確認
-              const allVisible = areaChannels.every(c => !hiddenChannelIds.includes(c.id));
-              const someVisible = areaChannels.some(c => !hiddenChannelIds.includes(c.id));
-              const isIndeterminate = someVisible && !allVisible;
-              
-              const handleAreaToggle = () => {
-                const ids = areaChannels.map(c => c.id);
-                if (allVisible) {
-                  // すべて非表示
-                  setChannelVisibility(ids, false);
-                } else {
-                  // すべて表示
-                  setChannelVisibility(ids, true);
-                }
-              };
+                // そのエリアのすべてのチャンネルが表示されているかどうかを確認
+                const allVisible = areaChannels.every(c => !hiddenChannelIds.includes(c.id));
+                const someVisible = areaChannels.some(c => !hiddenChannelIds.includes(c.id));
+                const isIndeterminate = someVisible && !allVisible;
 
-              return (
-                <AccordionItem key={area.id} value={`area-${area.id}`} className="border-b last:border-b-0 group overflow-hidden">
-                  <div className="flex items-center bg-gray-50/50 dark:bg-neutral-900/50 border-b -mb-px group-data-[state=open]:mb-0 relative z-10">
-                    <div className="flex items-center pl-4 py-3 pr-3">
-                      <Checkbox
-                        id={`area-group-${area.id}`}
-                        checked={isIndeterminate ? "indeterminate" : allVisible}
-                        onCheckedChange={handleAreaToggle}
-                      />
-                    </div>
-                    <AccordionPrimitive.Header className="flex flex-1">
-                      <AccordionPrimitive.Trigger
-                        className={cn(
-                          "flex flex-1 items-center justify-between py-3 pr-4 font-bold transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
-                          "text-left text-sm"
-                        )}
-                      >
-                        {area.name}
-                        <ChevronDown className="text-muted-foreground size-4 shrink-0 transition-transform duration-200 ml-2" />
-                      </AccordionPrimitive.Trigger>
-                    </AccordionPrimitive.Header>
-                  </div>
-                  <AccordionContent className="p-0">
-                    <div className="flex flex-col">
-                      {areaChannels.map((channel) => (
-                        <div 
-                          key={channel.id} 
-                          className="flex items-center gap-3 px-4 py-3 border-b last:border-b-0 hover:bg-accent transition-colors cursor-pointer pl-8"
-                          onClick={() => toggleChannel(channel.id)}
+                const handleAreaToggle = () => {
+                  const ids = areaChannels.map(c => c.id);
+                  if (allVisible) {
+                    // すべて非表示
+                    setChannelVisibility(ids, false);
+                  } else {
+                    // すべて表示
+                    setChannelVisibility(ids, true);
+                  }
+                };
+
+                return (
+                  <AccordionItem key={area.id} value={`area-${area.id}`} className="border-b last:border-b-0 group overflow-hidden">
+                    <div className="flex items-center bg-gray-50/50 dark:bg-neutral-900/50 border-b -mb-px group-data-[state=open]:mb-0 relative z-10">
+                      <div className="flex items-center pl-4 py-3 pr-3">
+                        <Checkbox
+                          id={`area-group-${area.id}`}
+                          checked={isIndeterminate ? "indeterminate" : allVisible}
+                          onCheckedChange={handleAreaToggle}
+                        />
+                      </div>
+                      <AccordionPrimitive.Header className="flex flex-1">
+                        <AccordionPrimitive.Trigger
+                          className={cn(
+                            "flex flex-1 items-center justify-between py-3 pr-4 font-bold transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+                            "text-left text-sm"
+                          )}
                         >
-                          <Checkbox
-                            id={`channel-${channel.id}`}
-                            checked={!hiddenChannelIds.includes(channel.id)}
-                            className="pointer-events-none"
-                          />
-                          <Label 
-                            htmlFor={`channel-${channel.id}`} 
-                            className="text-sm font-medium flex-1 pointer-events-none cursor-pointer"
-                          >
-                            {channel.name}
-                          </Label>
-                        </div>
-                      ))}
+                          {area.name}
+                          <ChevronDown className="text-muted-foreground size-4 shrink-0 transition-transform duration-200 ml-2" />
+                        </AccordionPrimitive.Trigger>
+                      </AccordionPrimitive.Header>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
+                    <AccordionContent className="p-0">
+                      <div className="flex flex-col">
+                        {areaChannels.map((channel) => (
+                          <div
+                            key={channel.id}
+                            className="flex items-center gap-3 px-4 py-3 border-b last:border-b-0 hover:bg-accent transition-colors cursor-pointer pl-8"
+                            onClick={() => toggleChannel(channel.id)}
+                          >
+                            <Checkbox
+                              id={`channel-${channel.id}`}
+                              checked={!hiddenChannelIds.includes(channel.id)}
+                              className="pointer-events-none"
+                            />
+                            <Label
+                              htmlFor={`channel-${channel.id}`}
+                              className="text-sm font-medium flex-1 pointer-events-none cursor-pointer"
+                            >
+                              {channel.name}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </div>
         </div>
       </div>
-    </div>
+    </ScrollArea>
   );
 }
