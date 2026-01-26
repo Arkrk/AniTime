@@ -1,8 +1,11 @@
-"use client";
-
+import type { Metadata } from "next";
 import { PersonalDataSettings } from "@/components/settings/PersonalDataSettings";
 import { AdminSettings } from "@/components/settings/AdminSettings";
 import { AppearanceSettings } from "@/components/settings/AppearanceSettings";
+
+export const metadata: Metadata = {
+  title: "設定",
+};
 
 export default function SettingsPage() {
   return (

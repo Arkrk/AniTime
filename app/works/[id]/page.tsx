@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { Globe } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
 
@@ -11,6 +12,18 @@ import { WorkEditor } from "@/components/works/WorkEditor";
 type PageProps = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const workId = Number(id);
+
+  if (isNaN(workId)) return {};
+
+  const work = await getWorkById(workId);
+  return {
+    title: work?.name,
+  };
+}
 
 export default async function WorkPage({ params }: PageProps) {
   const { id } = await params;

@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import { getWorks } from "@/lib/get-work";
 import { AdminPageContent } from "@/components/admin/AdminPageContent";
+
+export const metadata: Metadata = {
+  title: "データ管理",
+};
 
 export default async function AdminPage({
   searchParams,

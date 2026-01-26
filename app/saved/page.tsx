@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getScheduleByDay } from "@/lib/get-schedule";
 import { getSeasons } from "@/lib/get-seasons";
@@ -6,6 +7,10 @@ import { SavedProgramList } from "@/components/saved/SavedProgramList";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export const metadata: Metadata = {
+  title: "保存済み",
 };
 
 export default async function SavedPage({ searchParams }: PageProps) {
