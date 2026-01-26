@@ -13,15 +13,29 @@ import {
 import { useState, useEffect } from "react";
 import { SearchDialog } from "@/components/search/SearchDialog";
 import { useLogin } from "@/hooks/login";
+import { Kbd } from "@/components/ui/kbd";
+import { useOs } from "@/hooks/use-os";
 
 export const Sidebar = () => {
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
   const { user } = useLogin();
   const [mounted, setMounted] = useState(false);
+  const os = useOs();
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setSearchOpen((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
   }, []);
 
   const navItems = [
@@ -79,8 +93,11 @@ export const Sidebar = () => {
                 <Search className="w-7 h-7 stroke-[1.5]" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="right" className="font-medium">
+            <TooltipContent side="right" className="font-medium flex items-center gap-2">
               <p>検索</p>
+              <Kbd>
+                <span className="text-xs">{os === "mac" ? "⌘" : "Ctrl + "}</span>K
+              </Kbd>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
