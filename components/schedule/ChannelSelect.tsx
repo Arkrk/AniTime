@@ -4,7 +4,10 @@ import * as React from "react";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -63,17 +66,18 @@ export function ChannelSelect({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        {groupedChannels.map((group) => (
-          <div key={group.name}>
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50">
-              {group.name}
-            </div>
-            {group.channels.map(channel => (
-              <SelectItem key={channel.id} value={channel.id.toString()}>
-                {channel.name}
-              </SelectItem>
-            ))}
-          </div>
+        {groupedChannels.map((group, index) => (
+          <React.Fragment key={group.name}>
+            {index > 0 && <SelectSeparator />}
+            <SelectGroup>
+              <SelectLabel>{group.name}</SelectLabel>
+              {group.channels.map((channel) => (
+                <SelectItem key={channel.id} value={channel.id.toString()}>
+                  {channel.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </React.Fragment>
         ))}
       </SelectContent>
     </Select>
