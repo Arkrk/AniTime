@@ -135,7 +135,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
                   onClick={handleCopy}
                   title="作品タイトルをコピー"
                 >
-                  {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+                  {copied ? <Check className="h-3 w-3 text-green-600 dark:text-green-300" /> : <Copy className="h-3 w-3" />}
                 </Button>
               </div>
             </div>
@@ -146,7 +146,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
             <div className="flex flex-col gap-1">
               
               {program.version && (
-                <span className="text-sm text-blue-600 font-medium w-fit">
+                <span className="text-sm text-blue-600 dark:text-blue-300 font-medium w-fit">
                   {program.version}
                 </span>
               )}

@@ -60,7 +60,7 @@ export const columns: ColumnDef<Work>[] = [
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-500 hover:underline truncate max-w-50 block"
+          className="text-blue-600 dark:text-blue-300 hover:underline truncate max-w-50 block"
         >
           {url}
         </a>
@@ -79,7 +79,7 @@ export const columns: ColumnDef<Work>[] = [
           href={`https://x.com/${username}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-500 hover:underline"
+          className="text-blue-600 dark:text-blue-300 hover:underline"
         >
           @{username}
         </a>
@@ -98,7 +98,7 @@ export const columns: ColumnDef<Work>[] = [
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-500 hover:underline truncate max-w-50 block"
+          className="text-blue-600 dark:text-blue-300 hover:underline truncate max-w-50 block"
         >
           Link
         </a>
@@ -117,7 +117,7 @@ export const columns: ColumnDef<Work>[] = [
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-500 hover:underline truncate max-w-50 block"
+          className="text-blue-600 dark:text-blue-300 hover:underline truncate max-w-50 block"
         >
           Link
         </a>

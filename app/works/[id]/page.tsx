@@ -45,7 +45,7 @@ export default async function WorkPage({ params }: PageProps) {
 
       <div className="flex-1 p-4 md:px-8 pt-16 max-w-4xl mx-auto w-full">
         {/* 作品情報 */}
-        <div className="mb-8">
+        <div className="mb-12">
           <h1 className="text-2xl md:text-3xl font-bold my-4">{work.name}</h1>
           
           <div className="flex flex-wrap gap-2">
