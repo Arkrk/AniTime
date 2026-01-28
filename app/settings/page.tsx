@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PersonalDataSettings } from "@/components/settings/PersonalDataSettings";
 import { AdminSettings } from "@/components/settings/AdminSettings";
 import { AppearanceSettings } from "@/components/settings/AppearanceSettings";
+import { ExternalLinks } from "@/components/settings/ExternalLinks";
 
 export const metadata: Metadata = {
   title: "設定",
@@ -21,6 +22,11 @@ export default function SettingsPage() {
           <section>
             <h2 className="text-xl font-bold mb-4">個人データ</h2>
             <PersonalDataSettings />
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold mb-4">関連リンク</h2>
+            <ExternalLinks />
           </section>
 
           <section>
