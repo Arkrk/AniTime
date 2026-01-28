@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Table2, Search, Bolt, Bookmark, Database } from "lucide-react";
+import icon from "@/app/icon0.svg";
 import {
   Tooltip,
   TooltipContent,
@@ -49,8 +51,8 @@ export const Sidebar = () => {
     <aside className="hidden md:flex w-18 h-screen border-r flex-col items-center py-6 shrink-0 z-50">
       {/* ロゴ */}
       <div className="mb-auto">
-        <Link href="/" className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-900 text-white font-bold hover:bg-slate-700 transition-colors">
-          AT
+        <Link href="/" className="flex items-center justify-center hover:opacity-80 transition-opacity">
+          <Image src={icon} alt="AniTime" width={28} height={28} />
         </Link>
       </div>
 
@@ -88,9 +90,9 @@ export const Sidebar = () => {
             <TooltipTrigger asChild>
               <button 
                 onClick={() => setSearchOpen(true)}
-                className="text-gray-400 hover:text-slate-900 dark:text-gray-500 dark:hover:text-white transition-colors"
+                className="group text-gray-400 hover:text-slate-900 dark:text-gray-500 dark:hover:text-white transition-colors"
               >
-                <Search className="w-7 h-7 stroke-[1.5]" />
+                <Search className="w-7 h-7 group-hover:scale-110 transition-transform stroke-[1.5]" />
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" className="font-medium flex items-center gap-2">

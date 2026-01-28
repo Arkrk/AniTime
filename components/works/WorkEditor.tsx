@@ -5,7 +5,7 @@ import { useLogin } from "@/hooks/login";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Pencil, Trash2, Loader2, Plus, AtSign } from "lucide-react";
 import { updateWork, deleteWork, createWork } from "@/lib/actions";
 
@@ -134,26 +134,26 @@ export function WorkEditor({ work }: WorkEditorProps) {
         </SheetHeader>
         <div className="flex-1 overflow-y-auto p-4">
           <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="name">タイトル</Label>
+            <Field>
+              <FieldLabel htmlFor="name">タイトル</FieldLabel>
               <Input
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="website_url">公式サイトのURL</Label>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="website_url">公式サイトのURL</FieldLabel>
               <Input
                 id="website_url"
                 name="website_url"
                 value={formData.website_url}
                 onChange={handleChange}
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="x_username">Xのユーザー名</Label>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="x_username">Xのユーザー名</FieldLabel>
               <div className="relative">
                 <AtSign className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -164,25 +164,25 @@ export function WorkEditor({ work }: WorkEditorProps) {
                   className="pl-9"
                 />
               </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="wikipedia_url">WikipediaのURL</Label>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="wikipedia_url">WikipediaのURL</FieldLabel>
               <Input
                 id="wikipedia_url"
                 name="wikipedia_url"
                 value={formData.wikipedia_url}
                 onChange={handleChange}
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="annict_url">AnnictのURL</Label>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="annict_url">AnnictのURL</FieldLabel>
               <Input
                 id="annict_url"
                 name="annict_url"
                 value={formData.annict_url}
                 onChange={handleChange}
               />
-            </div>
+            </Field>
           </div>
         </div>
         <SheetFooter className={`flex flex-row items-center ${work ? "justify-between w-full" : "justify-end"}`}>

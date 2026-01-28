@@ -42,7 +42,7 @@ export function VisibilitySettings() {
   }
 
   return (
-    <ScrollArea className="h-full">
+    <ScrollArea className="flex-1 min-h-0">
       <div className="flex flex-col gap-6 p-4">
         <div className="space-y-3">
           <h3 className="font-medium flex items-center gap-2">

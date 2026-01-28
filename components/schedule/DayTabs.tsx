@@ -60,7 +60,7 @@ export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
           <SelectTrigger>
             <SelectValue placeholder="曜日を選択" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper">
             {DAYS.map((d) => (
               <SelectItem key={d.id} value={d.id.toString()}>
                 {d.label}曜日

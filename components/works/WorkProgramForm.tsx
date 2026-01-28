@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Database } from "@/types/supabase";
@@ -87,20 +87,20 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
     <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="channel_id">チャンネル</Label>
+          <Field>
+            <FieldLabel htmlFor="channel_id">チャンネル</FieldLabel>
             <ChannelSelect
               channels={channels}
               value={formData.channel_id}
               onValueChange={(val) => handleChange("channel_id", val)}
               className="w-full"
             />
-          </div>
+          </Field>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="day_of_the_week">曜日</Label>
+          <Field>
+            <FieldLabel htmlFor="day_of_the_week">曜日</FieldLabel>
             <Select 
               value={formData.day_of_the_week?.toString()} 
               onValueChange={(val) => handleChange("day_of_the_week", Number(val))}
@@ -116,10 +116,10 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
                 ))}
               </SelectContent>
             </Select>
-          </div>
+          </Field>
 
-          <div className="space-y-2 flex flex-col">
-            <Label htmlFor="start_date">開始日</Label>
+          <Field>
+            <FieldLabel htmlFor="start_date">開始日</FieldLabel>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -146,35 +146,37 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
                 />
               </PopoverContent>
             </Popover>
-          </div>
+          </Field>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="start_time">開始時間</Label>
+          <Field>
+            <FieldLabel htmlFor="start_time">開始時間</FieldLabel>
             <Input 
               id="start_time" 
               type="time" 
               value={formData.start_time || ""} 
               onChange={(e) => handleChange("start_time", e.target.value)}
               required
+              className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
             />
-          </div>
+          </Field>
 
-          <div className="space-y-2">
-            <Label htmlFor="end_time">終了時間</Label>
+          <Field>
+            <FieldLabel htmlFor="end_time">終了時間</FieldLabel>
             <Input 
               id="end_time" 
               type="time" 
               value={formData.end_time || ""} 
               onChange={(e) => handleChange("end_time", e.target.value)}
               required
+              className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
             />
-          </div>
+          </Field>
         </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="color">背景色</Label>
+      <Field>
+        <FieldLabel htmlFor="color">背景色</FieldLabel>
         <div className="flex flex-wrap gap-2">
           {[1, 2, 3, 4, 5, 6, 7, 8].map(color => (
             <button
@@ -185,10 +187,10 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
             />
           ))}
         </div>
-      </div>
+      </Field>
 
-      <div className="space-y-2">
-        <Label>放送クール</Label>
+      <Field>
+        <FieldLabel>放送クール</FieldLabel>
         <ScrollArea className="h-32 border rounded-md p-2">
           <div className="grid grid-cols-2 gap-2">
             {seasons.map(season => (
@@ -205,10 +207,10 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
             ))}
           </div>
         </ScrollArea>
-      </div>
+      </Field>
 
-      <div className="space-y-2">
-        <Label>タグ</Label>
+      <Field>
+        <FieldLabel>タグ</FieldLabel>
         <ScrollArea className="h-32 border rounded-md p-2">
           <div className="grid grid-cols-2 gap-2">
             {tags.map(tag => (
@@ -225,25 +227,25 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
             ))}
           </div>
         </ScrollArea>
-      </div>
+      </Field>
 
-      <div className="space-y-2">
-        <Label htmlFor="version">バージョン</Label>
+      <Field>
+        <FieldLabel htmlFor="version">バージョン</FieldLabel>
         <Input 
           id="version" 
           value={formData.version || ""} 
           onChange={(e) => handleChange("version", e.target.value)}
         />
-      </div>
+      </Field>
 
-      <div className="space-y-2">
-        <Label htmlFor="note">備考</Label>
+      <Field>
+        <FieldLabel htmlFor="note">備考</FieldLabel>
         <Textarea 
           id="note" 
           value={formData.note || ""} 
           onChange={(e) => handleChange("note", e.target.value)}
         />
-      </div>
+      </Field>
       </div>
 
       <SheetFooter>

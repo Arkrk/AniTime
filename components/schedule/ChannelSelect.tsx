@@ -65,7 +65,7 @@ export function ChannelSelect({
       <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent position="popper">
         {groupedChannels.map((group, index) => (
           <React.Fragment key={group.name}>
             {index > 0 && <SelectSeparator />}
