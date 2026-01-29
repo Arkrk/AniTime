@@ -24,23 +24,25 @@ export const Bottombar = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 z-50 w-full h-16 border-t flex items-center justify-around md:hidden pb-[env(safe-area-inset-bottom)]">
-      {navItems.map((item) => (
-        <Link
-          key={item.label}
-          href={item.href}
-          className={cn(
-            "flex flex-col items-center justify-center w-full h-full transition-colors",
-            pathname === item.href
-              ? "text-foreground"
-              : "text-gray-400 hover:text-slate-900 dark:text-gray-500 dark:hover:text-white"
-          )}
-          title={item.label}
-        >
-          <item.icon className="w-6 h-6 mb-1" />
-          <span className="text-[10px] font-medium">{item.label}</span>
-        </Link>
-      ))}
+    <nav className="fixed bottom-0 left-0 z-100 w-full border-t bg-background md:hidden pb-[env(safe-area-inset-bottom)]">
+      <div className="flex h-16 items-center justify-around">
+        {navItems.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            className={cn(
+              "flex flex-col items-center justify-center w-full h-full transition-colors",
+              pathname === item.href
+                ? "text-foreground"
+                : "text-gray-400 hover:text-slate-900 dark:text-gray-500 dark:hover:text-white"
+            )}
+            title={item.label}
+          >
+            <item.icon className="w-6 h-6 mb-1" />
+            <span className="text-[10px] font-medium">{item.label}</span>
+          </Link>
+        ))}
+      </div>
     </nav>
   );
 };
