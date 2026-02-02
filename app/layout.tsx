@@ -22,6 +22,10 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "oklch(1 0 0)" },
+    { media: "(prefers-color-scheme: dark)", color: "oklch(0.145 0 0)" },
+  ],
 };
 
 export default function RootLayout({
@@ -34,7 +38,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {/* アプリ全体のコンテナ */}
-          <div className="flex h-[100dvh] md:h-screen w-full bg-background overflow-hidden">
+          <div className="flex h-dvh md:h-screen w-full bg-background overflow-hidden">
             
             {/* 1. サイドバー (PC用) */}
           <Sidebar />
