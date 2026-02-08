@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { getWorks } from "@/lib/get-work";
 import { AdminPageContent } from "@/components/admin/AdminPageContent";
+import { defaultOpenGraph } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "データ管理",
+  openGraph: { ...defaultOpenGraph, title: "データ管理", url: "/admin" },
+  twitter: { title: "データ管理" },
 };
 
 export default async function AdminPage({

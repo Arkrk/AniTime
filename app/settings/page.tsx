@@ -3,9 +3,12 @@ import { PersonalDataSettings } from "@/components/settings/PersonalDataSettings
 import { AdminSettings } from "@/components/settings/AdminSettings";
 import { AppearanceSettings } from "@/components/settings/AppearanceSettings";
 import { ExternalLinks } from "@/components/settings/ExternalLinks";
+import { defaultOpenGraph } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "設定",
+  openGraph: { ...defaultOpenGraph, title: "設定", url: "/settings" },
+  twitter: { title: "設定" },
 };
 
 export default function SettingsPage() {

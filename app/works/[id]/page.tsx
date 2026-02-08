@@ -8,6 +8,7 @@ import { BackButton } from "@/components/layout/BackButton";
 import { Button } from "@/components/ui/button";
 import { WorkProgramManager } from "@/components/works/WorkProgramManager";
 import { WorkEditor } from "@/components/works/WorkEditor";
+import { defaultOpenGraph } from "@/lib/metadata";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -22,6 +23,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const work = await getWorkById(workId);
   return {
     title: work?.name,
+    openGraph: { ...defaultOpenGraph, title: work?.name, url: `/works/${id}` },
+    twitter: { title: work?.name },
   };
 }
 

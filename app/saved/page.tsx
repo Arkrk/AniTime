@@ -4,6 +4,7 @@ import { getScheduleByDay } from "@/lib/get-schedule";
 import { getSeasons } from "@/lib/get-seasons";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 import { SavedProgramList } from "@/components/saved/SavedProgramList";
+import { defaultOpenGraph } from "@/lib/metadata";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -11,6 +12,8 @@ type PageProps = {
 
 export const metadata: Metadata = {
   title: "保存済み",
+  openGraph: { ...defaultOpenGraph, title: "保存済み", url: "/saved" },
+  twitter: { title: "保存済み" },
 };
 
 export default async function SavedPage({ searchParams }: PageProps) {

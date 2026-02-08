@@ -6,15 +6,26 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { Bottombar } from "@/components/layout/Bottombar";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeColorManager } from "@/components/theme-color-manager";
+import { defaultOpenGraph } from "@/lib/metadata";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: {
-    default: "AniTime",
-    template: `%s - AniTime`,
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
+  title: { default: "AniTime", template: `%s - AniTime`},
+  description: "TVアニメ番組表",
+  openGraph: {
+    ...defaultOpenGraph,
+    title: { default: "AniTime", template: `%s - AniTime` },
+    description: "TVアニメ番組表",
+    url: "/",
   },
-  description: "アニメ番組表",
+  twitter: {
+    card: "summary_large_image",
+    title: { default: "AniTime", template: `%s - AniTime` },
+    description: "TVアニメ番組表",
+    images: "/opengraph-image.png",
+  },
 };
 
 export const viewport: Viewport = {
