@@ -20,7 +20,7 @@ export function AppearanceSettings() {
   }, [])
 
   return (
-    <div className="rounded-md border overflow-hidden">
+    <div className="bg-primary-foreground rounded-md border overflow-hidden">
       <div className="p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h3 className="font-medium text-base">外観</h3>
@@ -29,7 +29,7 @@ export function AppearanceSettings() {
         <div>
           {mounted ? (
             <Select value={theme} onValueChange={setTheme}>
-              <SelectTrigger className="w-32.5">
+              <SelectTrigger className="bg-background w-32.5">
                 <SelectValue placeholder="テーマを選択" />
               </SelectTrigger>
               <SelectContent>
@@ -54,7 +54,7 @@ export function AppearanceSettings() {
               </SelectContent>
             </Select>
           ) : (
-            <div className="w-32.5 h-9 rounded-md border border-input bg-transparent" />
+            <div className="w-32.5 h-9 rounded-md border border-input bg-background" />
           )}
         </div>
       </div>
