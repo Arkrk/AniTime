@@ -201,7 +201,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
                   onCheckedChange={() => handleSeasonToggle(season.id)}
                 />
                 <label htmlFor={`season-${season.id}`} className="text-sm cursor-pointer">
-                  {season.name}
+                  {season.year}年{season.month}月
                 </label>
               </div>
             ))}

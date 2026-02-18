@@ -86,7 +86,7 @@ function SortableItem({ program, onEdit, onDuplicate, onDelete }: SortableItemPr
             {program.channels?.name || "未定"}
           </span>
           {program.programs_seasons?.map((ps: any) => (
-             ps.seasons && <Badge key={ps.seasons.id} variant="secondary" className="bg-white/50 dark:bg-white/30 text-xs font-normal">{ps.seasons.name}</Badge>
+             ps.seasons && <Badge key={ps.seasons.id} variant="secondary" className="bg-white/50 dark:bg-white/30 text-xs font-normal">{ps.seasons.year}年{ps.seasons.month}月</Badge>
           ))}
         </div>
         

@@ -206,15 +206,18 @@ export type Database = {
       seasons: {
         Row: {
           id: number
-          name: string
+          year: number
+          month: number
         }
         Insert: {
           id?: number
-          name: string
+          year: number
+          month: number
         }
         Update: {
           id?: number
-          name?: string
+          year?: number
+          month?: number
         }
         Relationships: []
       }

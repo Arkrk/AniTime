@@ -6,7 +6,7 @@ import { arrayMove } from "@dnd-kit/sortable";
 
 type Program = Database["public"]["Tables"]["programs"]["Row"] & {
   channels: { name: string } | null;
-  programs_seasons: { season_id: number; seasons: { id: number; name: string } | null }[];
+  programs_seasons: { season_id: number; seasons: { id: number; year: number; month: number } | null }[];
   programs_tags: { tag_id: number; tags: { id: number; name: string } | null }[];
 };
 type Channel = Database["public"]["Tables"]["channels"]["Row"] & {
@@ -31,7 +31,7 @@ export function useWorkPrograms(workId: number) {
       .select(`
         *,
         channels ( name ),
-        programs_seasons ( season_id, seasons ( id, name ) ),
+        programs_seasons ( season_id, seasons ( id, year, month ) ),
         programs_tags ( tag_id, tags ( id, name ) )
       `)
       .eq("work_id", workId)

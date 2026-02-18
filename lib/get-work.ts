@@ -5,7 +5,7 @@ import { Database } from "@/types/supabase";
 type WorkDetail = Database["public"]["Tables"]["works"]["Row"] & {
   programs: (Database["public"]["Tables"]["programs"]["Row"] & {
     channels: { name: string } | null;
-    programs_seasons: { seasons: Pick<Database["public"]["Tables"]["seasons"]["Row"], "id" | "name"> | null }[];
+    programs_seasons: { seasons: Pick<Database["public"]["Tables"]["seasons"]["Row"], "id" | "year" | "month"> | null }[];
     programs_tags: { tags: Pick<Database["public"]["Tables"]["tags"]["Row"], "id" | "name"> | null }[];
   })[];
 };
@@ -21,7 +21,7 @@ export const getWorkById = cache(async (id: number) => {
         *,
         channels (name),
         programs_seasons (
-          seasons (id, name)
+          seasons (id, year, month)
         ),
         programs_tags (
           tags (id, name)

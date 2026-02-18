@@ -2,6 +2,8 @@ import { createClient } from "@/utils/client";
 
 export type Season = {
   id: number;
+  year: number;
+  month: number;
   name: string;
 };
 
@@ -11,7 +13,7 @@ export async function getSeasons(): Promise<Season[]> {
   // IDの降順（新しい順）で取得
   const { data, error } = await supabase
     .from("seasons")
-    .select("id, name")
+    .select("id, year, month")
     .order("id", { ascending: false });
 
   if (error) {
@@ -19,5 +21,8 @@ export async function getSeasons(): Promise<Season[]> {
     return [];
   }
 
-  return data || [];
+  return (data || []).map((season) => ({
+    ...season,
+    name: `${season.year}年${season.month}月`,
+  }));
 }
