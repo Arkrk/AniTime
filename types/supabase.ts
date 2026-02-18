@@ -205,16 +205,19 @@ export type Database = {
       }
       seasons: {
         Row: {
+          active: boolean
           id: number
           year: number
           month: number
         }
         Insert: {
+          active?: boolean
           id?: number
           year: number
           month: number
         }
         Update: {
+          active?: boolean
           id?: number
           year?: number
           month?: number
