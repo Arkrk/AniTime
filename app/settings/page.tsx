@@ -20,7 +20,7 @@ export default function SettingsPage() {
         <div className="space-y-8 pt-4">
           <InstallApp />
           <section>
-            <h2 className="text-lg font-bold mb-4">一般</h2>
+            <h2 className="text-lg font-bold mb-4">外観</h2>
             <AppearanceSettings />
           </section>
 

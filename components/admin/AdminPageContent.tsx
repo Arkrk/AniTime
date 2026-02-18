@@ -4,6 +4,7 @@ import { useLogin } from "@/hooks/login";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DataTable } from "@/components/admin/works/data-table";
 import { columns } from "@/components/admin/works/columns";
 import { Database } from "@/types/supabase";
@@ -37,12 +38,27 @@ export function AdminPageContent({ works, pageCount }: AdminPageContentProps) {
 
   return (
     <div className="flex flex-col h-full relative">
-      <div className="shrink-0 p-4 border-b z-10 sticky top-0">
-        <div className="flex items-center justify-center sm:justify-between gap-4">
-          <div className="hidden sm:flex items-center gap-4">
+      <div className="shrink-0 p-4 border-b z-10 sticky top-0 bg-background">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold">データ管理</h1>
           </div>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+
+          <div className="sm:hidden ml-auto">
+            <Select value={activeTab} onValueChange={setActiveTab}>
+              <SelectTrigger className="w-30">
+                <SelectValue placeholder="選択してください" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="works">作品</SelectItem>
+                <SelectItem value="areas_channels">チャンネル</SelectItem>
+                <SelectItem value="seasons">クール</SelectItem>
+                <SelectItem value="tags">タグ</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="hidden sm:block">
             <TabsList>
               <TabsTrigger value="works">作品</TabsTrigger>
               <TabsTrigger value="areas_channels">チャンネル</TabsTrigger>

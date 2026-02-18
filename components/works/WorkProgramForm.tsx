@@ -108,10 +108,10 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="曜日を選択" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent position="popper">
                 {DAYS.map(day => (
                   <SelectItem key={day.id} value={day.id.toString()}>
-                    {day.label}曜日
+                    {day.label}曜
                   </SelectItem>
                 ))}
               </SelectContent>

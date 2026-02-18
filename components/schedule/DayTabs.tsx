@@ -63,7 +63,7 @@ export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
           <SelectContent position="popper">
             {DAYS.map((d) => (
               <SelectItem key={d.id} value={d.id.toString()}>
-                {d.label}曜日
+                {d.label}曜
               </SelectItem>
             ))}
           </SelectContent>

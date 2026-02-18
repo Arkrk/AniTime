@@ -7,7 +7,6 @@ import {
   useReactTable,
   SortingState,
 } from "@tanstack/react-table";
-
 import {
   TableBody,
   TableCell,
@@ -19,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { WorkEditor } from "@/components/works/WorkEditor";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -135,22 +135,22 @@ export function DataTable<TData, TValue>({
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
-            size="sm"
+            size="icon-sm"
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage <= 1}
           >
-            Prev
+            <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="text-sm">
-            Page {currentPage} of {pageCount}
+            {currentPage} / {pageCount}
           </div>
           <Button
             variant="outline"
-            size="sm"
+            size="icon-sm"
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage >= pageCount}
           >
-            Next
+            <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
       </div>
