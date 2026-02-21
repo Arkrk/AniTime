@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { WorkProgramManager } from "@/components/works/WorkProgramManager";
 import { WorkEditor } from "@/components/works/WorkEditor";
 import { defaultOpenGraph } from "@/lib/metadata";
+import { ProgramOGPreview } from "@/components/schedule/ProgramOGPreview";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -48,7 +49,7 @@ export default async function WorkPage({ params }: PageProps) {
 
       <div className="flex-1 p-4 md:px-8 pt-16 max-w-4xl mx-auto w-full">
         {/* 作品情報 */}
-        <div className="mb-12">
+        <div className="mb-6">
           <h1 className="text-2xl md:text-3xl font-bold my-4">{work.name}</h1>
           
           <div className="flex flex-wrap gap-2">
@@ -86,7 +87,12 @@ export default async function WorkPage({ params }: PageProps) {
 
         {/* 番組一覧 */}
         <div>
-          <h2 className="text-xl font-bold mb-4">放送スケジュール</h2>
+          {work.website_url && (
+            <div className="mb-8 w-full">
+              <ProgramOGPreview url={work.website_url} />
+            </div>
+          )}
+          <h2 className="text-lg font-bold mb-4">放送スケジュール</h2>
           <WorkProgramManager workId={workId} initialPrograms={work.programs} />
         </div>
       </div>

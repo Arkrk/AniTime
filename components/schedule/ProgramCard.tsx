@@ -14,6 +14,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
+import { ProgramOGPreview } from "./ProgramOGPreview";
 
 type ProgramCardProps = {
   program: LayoutProgram;
@@ -171,6 +172,11 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
                 </span>
               ))}
             </div>
+          )}
+          
+          {/* OGプレビュー */}
+          {program.website_url && (
+            <ProgramOGPreview url={program.website_url} />
           )}
 
           {/* 各種リンク・保存ボタン */}
