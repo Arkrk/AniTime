@@ -47,7 +47,7 @@ export default async function WorkPage({ params }: PageProps) {
     <div className="flex flex-col h-full overflow-y-auto">
       <BackButton />
 
-      <div className="flex-1 p-4 md:px-8 pt-16 max-w-4xl mx-auto w-full">
+      <div className="flex-1 p-4 md:px-8 py-16 max-w-4xl mx-auto w-full">
         {/* 作品情報 */}
         <div className="mb-6">
           <h1 className="text-2xl md:text-3xl font-bold my-4">{work.name}</h1>
