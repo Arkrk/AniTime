@@ -101,6 +101,9 @@ export function useWorkPrograms(workId: number) {
         );
       }
       
+      // Update work updated_at
+      await supabase.from("works").update({ updated_at: new Date().toISOString() }).eq("id", workId);
+
       await fetchPrograms();
     }
   };
@@ -124,8 +127,7 @@ export function useWorkPrograms(workId: number) {
 
     if (error) throw error;
 
-    // Update relations
-    // Simple strategy: delete all and re-insert
+    // Update relations (delete all and re-insert)
     if (season_ids !== undefined) {
       await supabase.from("programs_seasons").delete().eq("program_id", id);
       if (season_ids.length > 0) {
@@ -143,6 +145,9 @@ export function useWorkPrograms(workId: number) {
         );
       }
     }
+
+    // Update work updated_at
+    await supabase.from("works").update({ updated_at: new Date().toISOString() }).eq("id", workId);
 
     await fetchPrograms();
   };

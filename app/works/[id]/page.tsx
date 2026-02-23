@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { Globe } from "lucide-react";
+import { Globe, History } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
+import { format } from "date-fns";
+import { ja } from "date-fns/locale";
 
 import { getWorkById } from "@/lib/get-work";
 import { BackButton } from "@/components/layout/BackButton";
@@ -95,6 +97,13 @@ export default async function WorkPage({ params }: PageProps) {
           <h2 className="text-lg font-bold mb-4">放送スケジュール</h2>
           <WorkProgramManager workId={workId} initialPrograms={work.programs} />
         </div>
+
+        {work.updated_at && (
+          <div className="mt-8 text-right text-sm text-muted-foreground flex items-center justify-end gap-1">
+            <History className="h-4 w-4" />
+            {format(new Date(work.updated_at), "yyyy/MM/dd HH:mm", { locale: ja })} に更新
+          </div>
+        )}
       </div>
     </div>
   );

@@ -250,6 +250,7 @@ export type Database = {
           website_url: string | null
           wikipedia_url: string | null
           x_username: string | null
+          updated_at: string | null
         }
         Insert: {
           annict_url?: string | null
@@ -258,6 +259,7 @@ export type Database = {
           website_url?: string | null
           wikipedia_url?: string | null
           x_username: string | null
+          updated_at?: string | null
         }
         Update: {
           annict_url?: string | null
@@ -266,6 +268,7 @@ export type Database = {
           website_url?: string | null
           wikipedia_url?: string | null
           x_username: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }

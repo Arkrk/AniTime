@@ -52,7 +52,7 @@ export async function updateWork(id: number, data: {
   const supabase = await createClient();
   const { error } = await supabase
     .from("works")
-    .update(data)
+    .update({ ...data, updated_at: new Date().toISOString() })
     .eq("id", id);
 
   if (error) {
@@ -73,7 +73,7 @@ export async function createWork(data: {
   const supabase = await createClient();
   const { data: newWork, error } = await supabase
     .from("works")
-    .insert(data)
+    .insert({ ...data, updated_at: new Date().toISOString() })
     .select("id")
     .single();
 
