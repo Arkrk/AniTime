@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Globe, History } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
-import { format } from "date-fns";
+import { format, toZonedTime } from "date-fns-tz";
 import { ja } from "date-fns/locale";
 
 import { getWorkById } from "@/lib/get-work";
@@ -101,7 +101,7 @@ export default async function WorkPage({ params }: PageProps) {
         {work.updated_at && (
           <div className="mt-8 text-right text-sm text-muted-foreground flex items-center justify-end gap-1">
             <History className="h-4 w-4" />
-            {format(new Date(work.updated_at), "yyyy/MM/dd HH:mm", { locale: ja })} に更新
+            {format(toZonedTime(new Date(work.updated_at), "Asia/Tokyo"), "yyyy/MM/dd HH:mm", { locale: ja })} に更新
           </div>
         )}
       </div>
