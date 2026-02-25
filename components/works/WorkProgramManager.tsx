@@ -38,6 +38,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface ProgramItemProps {
   program: any;
@@ -62,15 +63,18 @@ function ProgramItem({
 }: ProgramItemProps) {
   const dayLabel = DAYS.find(d => d.id === program.day_of_the_week)?.label || "?";
   const colorClass = getProgramColorClass(program.color);
+  const isHoverable = useMediaQuery("(hover: hover)");
+  const [isTapped, setIsTapped] = useState(false);
 
   return (
     <div
       ref={dragRef}
       style={style}
       className={`p-4 flex flex-col gap-3 ${colorClass} border-b relative group`}
+      onClick={() => !isHoverable && setIsTapped(!isTapped)}
     >
       {isEditable && (
-        <div className="absolute right-2 top-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 dark:bg-neutral-900/80 rounded p-1 z-10">
+        <div className={`absolute right-2 top-2 flex gap-1 transition-opacity bg-white/80 dark:bg-neutral-900/80 rounded p-1 z-10 ${isHoverable ? 'opacity-0 group-hover:opacity-100' : (isTapped ? 'opacity-100' : 'opacity-0')}`}>
           <button
             {...dragHandleProps}
             className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded cursor-grab active:cursor-grabbing"
