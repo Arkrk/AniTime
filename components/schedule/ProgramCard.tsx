@@ -88,7 +88,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
     </div>
   );
 
-  const ProgramDetails = () => (
+  const programDetails = (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between text-xs text-muted-foreground border-b pb-2">
         {/* 放送開始日 */}
@@ -236,7 +236,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
           {triggerElement}
         </HoverCardTrigger>
         <HoverCardContent className="w-80 p-4 shadow-xl z-100" side="right" align="start">
-          <ProgramDetails />
+          {programDetails}
         </HoverCardContent>
       </HoverCard>
     );
@@ -248,7 +248,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
         {triggerElement}
       </PopoverTrigger>
       <PopoverContent className="w-80 p-4 shadow-xl z-100" side="bottom" align="center">
-        <ProgramDetails />
+        {programDetails}
       </PopoverContent>
     </Popover>
   );
