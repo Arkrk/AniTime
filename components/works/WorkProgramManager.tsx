@@ -120,14 +120,14 @@ function ProgramItem({
                   {lastSeason.seasons.year}年{lastSeason.seasons.month}月
                 </Badge>
                 {remainingCount > 0 && (
-                  <span className="text-xs text-muted-foreground">+{remainingCount}</span>
+                  <span className="text-xs">+{remainingCount}</span>
                 )}
               </>
             );
           })()}
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground font-mono shrink-0">
+        <div className="flex flex-wrap items-center gap-3 text-sm font-mono shrink-0">
           {program.start_date && (
             <>
               <div className="flex items-center gap-1">
@@ -154,7 +154,7 @@ function ProgramItem({
       )}
 
       {program.note && (
-        <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
+        <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
           {program.note}
         </p>
       )}
@@ -165,7 +165,7 @@ function ProgramItem({
             pt.tags && (
               <span
                 key={pt.tags.id}
-                className="px-1.5 py-0.5 bg-white/50 dark:bg-white/30 text-primary text-xs rounded-sm border border-black/5"
+                className="px-1.5 py-0.5 bg-white/60 dark:bg-white/30 text-foreground text-xs rounded-sm border border-black/5"
               >
                 {pt.tags.name}
               </span>
@@ -304,9 +304,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
           </EmptyMedia>
           <EmptyHeader>
             <EmptyTitle>放送スケジュールがありません</EmptyTitle>
-            <EmptyDescription>
-              登録されている放送スケジュールはありません。
-            </EmptyDescription>
+            <EmptyDescription>公式からの発表をお待ちください</EmptyDescription>
           </EmptyHeader>
         </Empty>
       );

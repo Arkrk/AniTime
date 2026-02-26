@@ -128,7 +128,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
             {channels.map((channel) => (
               <div
                 key={channel.id}
-                className="flex items-center justify-center border-r border-b font-bold text-sm text-muted-foreground truncate px-2"
+                className="flex items-center justify-center border-r font-bold text-sm text-muted-foreground truncate px-2"
                 style={{ width: channel.width, height: HEADER_HEIGHT }}
               >
                 {channel.name}
