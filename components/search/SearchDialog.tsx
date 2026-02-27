@@ -12,7 +12,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { searchWorks } from "@/lib/actions";
-import { Table2, Bookmark, Bolt } from "lucide-react";
+import { Table2, Bookmark, History, Bolt } from "lucide-react";
 
 interface SearchDialogProps {
   open: boolean;
@@ -62,6 +62,10 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           <CommandItem onSelect={() => { onOpenChange(false); router.push("/saved"); }}>
             <Bookmark />
             <span>保存済み</span>
+          </CommandItem>
+          <CommandItem onSelect={() => { onOpenChange(false); router.push("/updates"); }}>
+            <History />
+            <span>更新履歴</span>
           </CommandItem>
           <CommandItem onSelect={() => { onOpenChange(false); router.push("/settings"); }}>
             <Bolt />

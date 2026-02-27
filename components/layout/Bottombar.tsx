@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Table2, Bookmark, Bolt, Database } from "lucide-react";
+import { Table2, Bookmark, History, Database, Bolt } from "lucide-react";
 import { useLogin } from "@/hooks/login";
 import { useEffect, useState } from "react";
 
@@ -19,6 +19,7 @@ export const Bottombar = () => {
   const navItems = [
     { label: "番組表", icon: Table2, href: "/" },
     { label: "保存済み", icon: Bookmark, href: "/saved" },
+    { label: "更新履歴", icon: History, href: "/updates" },
     ...(mounted && user ? [{ label: "データ管理", icon: Database, href: "/admin" }] : []),
     { label: "設定", icon: Bolt, href: "/settings" },
   ];

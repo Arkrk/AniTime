@@ -3,12 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { getOGImage } from "@/lib/get-opengraph";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ImageOff } from "lucide-react";
 
-interface ProgramOGPreviewProps {
+interface OGPreviewClientProps {
   url: string;
 }
 
-export const ProgramOGPreview: React.FC<ProgramOGPreviewProps> = ({ url }) => {
+export const OGPreviewClient: React.FC<OGPreviewClientProps> = ({ url }) => {
   const [ogImage, setOgImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -70,7 +71,7 @@ export const ProgramOGPreview: React.FC<ProgramOGPreviewProps> = ({ url }) => {
         className="w-full flex items-center justify-center bg-muted text-muted-foreground text-xs rounded-md border"
         style={{ aspectRatio: "1.91 / 1" }}
       >
-        画像を取得できません
+        <ImageOff className="w-6 h-6" />
       </div>
     );
   }

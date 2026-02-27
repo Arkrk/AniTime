@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { WorkProgramManager } from "@/components/works/WorkProgramManager";
 import { WorkEditor } from "@/components/works/WorkEditor";
 import { defaultOpenGraph } from "@/lib/metadata";
-import { ProgramOGPreview } from "@/components/schedule/ProgramOGPreview";
+import { OGPreviewServer } from "@/components/works/OGPreviewServer";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -90,7 +90,7 @@ export default async function WorkPage({ params }: PageProps) {
         <div>
           {work.website_url && (
             <div className="mb-8 w-full">
-              <ProgramOGPreview url={work.website_url} />
+              <OGPreviewServer url={work.website_url} />
             </div>
           )}
           <h2 className="text-lg font-bold mb-4">放送スケジュール</h2>

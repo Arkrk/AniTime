@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { ProgramOGPreview } from "./ProgramOGPreview";
+import { OGPreviewClient } from "./OGPreviewClient";
 
 type ProgramCardProps = {
   program: LayoutProgram;
@@ -175,7 +175,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       
       {/* OGプレビュー */}
       {program.website_url && (
-        <ProgramOGPreview url={program.website_url} />
+        <OGPreviewClient url={program.website_url} />
       )}
 
       {/* 各種リンク・保存ボタン */}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Table2, Search, Bolt, Bookmark, Database } from "lucide-react";
+import { Table2, Bookmark, History, Database, Bolt, Search } from "lucide-react";
 import icon from "@/app/icon0.svg";
 import {
   Tooltip,
@@ -43,6 +43,7 @@ export const Sidebar = () => {
   const navItems = [
     { label: "番組表", icon: Table2, href: "/" },
     { label: "保存済み", icon: Bookmark, href: "/saved" },
+    { label: "更新履歴", icon: History, href: "/updates" },
     ...(mounted && user ? [{ label: "データ管理", icon: Database, href: "/admin" }] : []),
     { label: "設定", icon: Bolt, href: "/settings" },
   ];
