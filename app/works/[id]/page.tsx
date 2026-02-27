@@ -97,10 +97,12 @@ export default async function WorkPage({ params }: PageProps) {
           <WorkProgramManager workId={workId} initialPrograms={work.programs} />
         </div>
 
-        {work.updated_at && (
+        {(work.updated_at || work.created_at) && (
           <div className="mt-8 text-right text-sm text-muted-foreground flex items-center justify-end gap-1">
             <History className="h-4 w-4" />
-            {formatRelativeTime(work.updated_at)}に更新
+            {work.updated_at
+              ? `${formatRelativeTime(work.updated_at)}に更新`
+              : work.created_at && `${formatRelativeTime(work.created_at)}に追加`}
           </div>
         )}
       </div>
