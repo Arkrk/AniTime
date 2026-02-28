@@ -26,7 +26,7 @@ export default async function UpdatesPage() {
         <h1 className="text-3xl md:text-4xl font-bold my-4">更新履歴</h1>
         
         <div className="space-y-8 pt-4">
-          <div className="relative border-l border-dashed border-border ml-4 md:ml-6">
+          <div className="relative border-l border-dashed border-border ml-3">
             {displayEvents.map((event) => {
               return (
                 <div key={event.id} className="mb-10 ml-8 md:ml-10 relative">
