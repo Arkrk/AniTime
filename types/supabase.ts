@@ -32,21 +32,6 @@ export type Database = {
         }
         Relationships: []
       }
-      blocks: {
-        Row: {
-          id: number
-          name: string
-        }
-        Insert: {
-          id?: number
-          name: string
-        }
-        Update: {
-          id?: number
-          name?: string
-        }
-        Relationships: []
-      }
       channels: {
         Row: {
           area_id: number
@@ -78,7 +63,6 @@ export type Database = {
       }
       programs: {
         Row: {
-          block_id: number | null
           channel_id: number
           color: number | null
           day_of_the_week: number
@@ -92,7 +76,6 @@ export type Database = {
           work_id: number
         }
         Insert: {
-          block_id?: number | null
           channel_id: number
           color?: number | null
           day_of_the_week: number
@@ -100,13 +83,12 @@ export type Database = {
           id?: number
           note?: string | null
           order: number
-          start_date: string | null
+          start_date?: string | null
           start_time: string
           version?: string | null
           work_id: number
         }
         Update: {
-          block_id?: number | null
           channel_id?: number
           color?: number | null
           day_of_the_week?: number
@@ -120,13 +102,6 @@ export type Database = {
           work_id?: number
         }
         Relationships: [
-          {
-            foreignKeyName: "programs_block_id_fkey"
-            columns: ["block_id"]
-            isOneToOne: false
-            referencedRelation: "blocks"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "programs_channel_id_fkey"
             columns: ["channel_id"]
@@ -207,20 +182,20 @@ export type Database = {
         Row: {
           active: boolean
           id: number
-          year: number
           month: number
+          year: number
         }
         Insert: {
           active?: boolean
           id?: number
-          year: number
           month: number
+          year: number
         }
         Update: {
           active?: boolean
           id?: number
-          year?: number
           month?: number
+          year?: number
         }
         Relationships: []
       }
@@ -245,33 +220,33 @@ export type Database = {
       works: {
         Row: {
           annict_url: string | null
+          created_at: string | null
           id: number
           name: string
+          updated_at: string | null
           website_url: string | null
           wikipedia_url: string | null
           x_username: string | null
-          updated_at: string | null
-          created_at: string | null
         }
         Insert: {
           annict_url?: string | null
+          created_at?: string | null
           id?: number
           name: string
+          updated_at?: string | null
           website_url?: string | null
           wikipedia_url?: string | null
-          x_username: string | null
-          updated_at?: string | null
-          created_at?: string | null
+          x_username?: string | null
         }
         Update: {
           annict_url?: string | null
+          created_at?: string | null
           id?: number
           name?: string
+          updated_at?: string | null
           website_url?: string | null
           wikipedia_url?: string | null
-          x_username: string | null
-          updated_at?: string | null
-          created_at?: string | null
+          x_username?: string | null
         }
         Relationships: []
       }
