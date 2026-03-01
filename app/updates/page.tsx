@@ -29,9 +29,9 @@ export default async function UpdatesPage() {
           <div className="relative border-l border-dashed border-border ml-3">
             {displayEvents.map((event) => {
               return (
-                <div key={event.id} className="mb-10 ml-8 md:ml-10 relative">
+                <div key={event.id} className="mb-10 ml-7 md:ml-10 relative">
                   <div className="flex items-center mb-3 text-sm text-muted-foreground">
-                    <span className="absolute flex items-center justify-center w-8 h-8 bg-background rounded-full -left-12 md:-left-14 ring-8 ring-background text-muted-foreground">
+                    <span className="absolute flex items-center justify-center w-8 h-8 bg-background rounded-full -left-11 md:-left-14 ring-8 ring-background text-muted-foreground">
                       {event.type === "create" ? (
                         <PlusCircle className="w-5 h-5" />
                       ) : (
@@ -41,13 +41,13 @@ export default async function UpdatesPage() {
                     <span className="font-medium">
                       {event.type === "create" ? "作品を追加しました" : "放送スケジュールを更新しました"}
                     </span>
-                    <span className="ml-3 px-2.5 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-medium">
+                    <span className="ml-3 px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-medium">
                       {formatRelativeTime(event.date)}
                     </span>
                   </div>
                   
                   <Link href={`/works/${event.work.id}`} className="block group">
-                    <div className="p-4 border border-b rounded-md hover:bg-accent transition-colors">
+                    <div className="p-4 border border-b rounded-md bg-primary-foreground hover:bg-accent transition-colors">
                       <div className="flex items-center gap-4">
                         <div className="w-28 shrink-0">
                           <OGPreviewServer url={event.work.website_url || ""} />
