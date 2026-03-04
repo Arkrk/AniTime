@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Pencil, Trash2, Loader2, Plus, AtSign } from "lucide-react";
+import { Spinner } from "../ui/spinner";
+import { Pencil, Trash2, Plus, AtSign } from "lucide-react";
 import { updateWork, deleteWork, createWork } from "@/lib/actions";
 
 interface Work {
@@ -193,7 +194,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
               disabled={isDeleting || isSaving}
             >
               {isDeleting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Spinner />
               ) : (
                 <Trash2 className="h-4 w-4" />
               )}
@@ -205,7 +206,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
               キャンセル
             </Button>
             <Button onClick={handleSave} disabled={isDeleting || isSaving}>
-              {isSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              {isSaving && <Spinner className="mr-2" />}
               {work ? "保存" : "追加"}
             </Button>
           </div>

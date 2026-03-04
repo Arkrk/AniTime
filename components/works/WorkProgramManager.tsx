@@ -17,7 +17,8 @@ import {
   EmptyDescription,
   EmptyMedia,
 } from "@/components/ui/empty";
-import { Loader2, Plus, Pencil, Trash2, GripVertical, Calendar, Clock, Copy } from "lucide-react";
+import { Spinner } from "../ui/spinner";
+import { Plus, Pencil, Trash2, GripVertical, Calendar, Clock, Copy } from "lucide-react";
 import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
 import { DAYS } from "@/lib/get-schedule";
 import { format, parseISO } from "date-fns";
@@ -290,7 +291,7 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
   if (loading && isEditable) {
     return (
       <div className="flex justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-gray-400 dark:text-neutral-500" />
+        <Spinner className="size-8 text-muted-foreground" />
       </div>
     );
   }

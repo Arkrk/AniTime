@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Spinner } from "../ui/spinner";
 import { useLogin } from "@/hooks/login";
 import { toast } from "sonner";
 
@@ -34,7 +34,7 @@ export function AdminSettings() {
         <div>
           {loading ? (
             <Button variant="ghost" disabled>
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              <Spinner className="mr-2" />
               読み込み中
             </Button>
           ) : user ? (

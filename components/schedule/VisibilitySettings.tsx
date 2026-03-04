@@ -6,13 +6,10 @@ import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, ChevronDown, Map, RadioTower } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { Spinner } from "../ui/spinner";
+import { ChevronDown, Map, RadioTower } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Area = { id: number; name: string; order: number };
@@ -34,8 +31,8 @@ export function VisibilitySettings() {
 
   if (!loaded || loadingData) {
     return (
-      <div className="flex items-center gap-2 text-gray-500 dark:text-neutral-400 p-4">
-        <Loader2 className="h-4 w-4 animate-spin" />
+      <div className="flex items-center gap-2 text-muted-foreground p-4">
+        <Spinner />
         読み込み中...
       </div>
     );
