@@ -11,7 +11,7 @@ export const Toolbar: React.FC = () => {
 
   return (
     <>
-      <div className="fixed bottom-20 right-4 md:bottom-8 md:right-8 z-50">
+      <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 md:bottom-8 md:right-8 z-50">
         <div className="flex items-center bg-background/80 backdrop-blur-md text-foreground border shadow-lg rounded-md">
           {/* モバイル用の検索ボタン */}
           <div className="md:hidden flex items-center">
