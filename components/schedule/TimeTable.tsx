@@ -11,6 +11,7 @@ import {
   MIN_HEIGHT,
 } from "@/lib/schedule-utils";
 import { ProgramCard } from "./ProgramCard";
+import { Toolbar } from "./Toolbar";
 import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
 
@@ -103,7 +104,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
   const totalWidth = channels.reduce((acc, ch) => acc + ch.width, 0) + TIME_COL_WIDTH;
 
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex flex-col h-full w-full relative">
       {/* スクロールエリア */}
       <div className="flex-1 overflow-auto relative">
         <div
@@ -208,7 +209,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
                     const startMinInHour = displayStartMin % 60;
                     
                     const baseY = hourToY.get(startHour);
-                    if (baseY === undefined) return null; // 安全策
+                    if (baseY === undefined) return null; // 表示範囲外の時間帯は非表示
 
                     const newTop = baseY + startMinInHour * MIN_HEIGHT;
 
@@ -230,6 +231,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
           </div>
         </div>
       </div>
+      <Toolbar />
     </div>
   );
 };
