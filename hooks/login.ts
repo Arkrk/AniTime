@@ -11,12 +11,38 @@ export function useLogin() {
   const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
   useEffect(() => {
+    // URLのエラーパラメータをチェック
+    const checkErrorFromUrl = () => {
+      const hash = window.location.hash;
+      if (hash && hash.includes("error_description")) {
+        const params = new URLSearchParams(hash.substring(1));
+        const errorDesc = params.get("error_description");
+        if (errorDesc) {
+          const decode = decodeURIComponent(errorDesc).replace(/\+/g, " ");
+          if (decode.includes("Database error saving new user") || decode.includes("アクセス権限")) {
+            setMessage("このアカウントにはアクセス権限がありません。");
+          } else {
+            setMessage(decode);
+          }
+        }
+      }
+    };
+
     const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      checkErrorFromUrl();
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
+      if (sessionError) {
+        console.error("Session error:", sessionError);
+      }
+
       if (session?.user) {
         if (ADMIN_EMAIL && session.user.email !== ADMIN_EMAIL) {
-          await supabase.auth.signOut();
+          try {
+            await supabase.auth.signOut();
+          } catch (e) {
+            console.error(e);
+          }
           setUser(null);
           setMessage("このアカウントにはアクセス権限がありません。");
         } else {
@@ -29,19 +55,25 @@ export function useLogin() {
       setLoading(false);
     };
 
+    // 初期化時に一度だけ実行
     checkUser();
 
+    // 認証状態の変更を監視
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
+      if (event === "SIGNED_IN" && session?.user) {
         if (ADMIN_EMAIL && session.user.email !== ADMIN_EMAIL) {
-          await supabase.auth.signOut();
+          try {
+            await supabase.auth.signOut();
+          } catch (e) {
+            console.error(e);
+          }
           setUser(null);
           setMessage("このアカウントにはアクセス権限がありません。");
         } else {
           setUser(session.user);
           setMessage("");
         }
-      } else if (event === 'SIGNED_OUT') {
+      } else if (event === "SIGNED_OUT") {
         setUser(null);
       }
       setLoading(false);
