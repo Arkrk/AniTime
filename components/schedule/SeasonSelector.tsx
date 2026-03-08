@@ -28,6 +28,13 @@ export const SeasonSelector = ({ seasons, currentSeasonId }: SeasonSelectorProps
     const params = new URLSearchParams(searchParams.toString());
     // seasonのみを更新
     params.set("season", value);
+
+    // オーバーレイ用のイベントを発火
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("season-change-start", { detail: params.toString() }));
+      window.dispatchEvent(new CustomEvent("schedule-change-start", { detail: params.toString() }));
+    }
+
     router.push(`${pathname}?${params.toString()}`);
   };
 

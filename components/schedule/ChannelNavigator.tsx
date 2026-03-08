@@ -21,6 +21,9 @@ export function ChannelNavigator({ channels, currentChannelId }: ChannelNavigato
   const handleChannelChange = (value: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("channel", value.toString());
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("schedule-change-start", { detail: params.toString() }));
+    }
     router.push(`${pathname}?${params.toString()}`);
   };
 

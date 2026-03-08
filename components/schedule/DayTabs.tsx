@@ -28,6 +28,9 @@ export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
   const handleValueChange = (value: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set("day", value);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("schedule-change-start", { detail: newParams.toString() }));
+    }
     router.push(`/?${newParams.toString()}`, { scroll: false });
   };
 

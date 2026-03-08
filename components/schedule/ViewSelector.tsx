@@ -14,6 +14,10 @@ export const ViewSelector = () => {
     const params = new URLSearchParams(searchParams.toString());
     // viewパラメータのみを更新
     params.set("view", value);
+    // オーバーレイ用のイベントを発火
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("schedule-change-start", { detail: params.toString() }));
+    }
     router.push(`/?${params.toString()}`);
   };
 

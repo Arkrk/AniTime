@@ -6,6 +6,8 @@ import { DayTabs } from "@/components/schedule/DayTabs";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 import { DisplaySettings } from "@/components/schedule/DisplaySettings";
 import { ChannelNavigator } from "@/components/schedule/ChannelNavigator";
+import { LoadingOverlay } from "@/components/layout/LoadingOverlay";
+import { Spinner } from "@/components/ui/spinner";
 import { LayoutMode, ProgramData } from "@/types/schedule";
 
 type PageProps = {
@@ -30,10 +32,10 @@ export default async function Home({ searchParams }: PageProps) {
   const showAllDay = params.allDay === "true";
   const showSavedOnly = params.savedOnly === "true";
   
-  // 1. シーズン一覧を取得
+  // シーズン一覧を取得
   const seasons = await getSeasons();
   
-  // 2. シーズンIDの決定
+  // シーズンIDの決定
   // URLパラメータがあるか？ なければ最新(配列の0番目)のIDを使う
   const latestSeasonId = seasons.length > 0 ? seasons[0].id : 0;
   const seasonParam = params.season;
@@ -51,14 +53,23 @@ export default async function Home({ searchParams }: PageProps) {
     const defaultChannelId = channels.length > 0 ? channels[0].id : 0;
     const channelParam = params.channel;
     currentChannelId = channelParam ? Number(channelParam) : defaultChannelId;
-    programs = await getWeekScheduleByChannel(currentSeasonId, currentChannelId);
   } else {
     // 通常モード
     const dayParam = params.day;
     const currentDay = dayParam ? Number(dayParam) : 1;
     validDay = (currentDay >= 1 && currentDay <= 7) ? currentDay : 1;
-    programs = await getScheduleByDay(validDay, currentSeasonId);
   }
+
+  // renderKeyを生成
+  const sp = new URLSearchParams();
+  for (const [key, val] of Object.entries(params)) {
+    if (Array.isArray(val)) {
+      val.forEach(v => sp.append(key, v));
+    } else if (val !== undefined) {
+      sp.append(key, val);
+    }
+  }
+  const currentParamsKey = sp.toString();
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -84,18 +95,59 @@ export default async function Home({ searchParams }: PageProps) {
 
       {/* 番組表エリア  */}
       <div className="flex-1 overflow-hidden relative">
-        <Suspense fallback={<LoadingSkeleton />}>
-          <TimeTable programs={programs} mode={layoutMode} showAllDay={showAllDay} showSavedOnly={showSavedOnly} />
-        </Suspense>
+        <LoadingOverlay currentParamsKey={currentParamsKey} eventName="schedule-change-start">
+          <Suspense fallback={<LoaderScreen />}>
+            <ScheduleDataWrapper
+              layoutMode={layoutMode}
+              currentSeasonId={currentSeasonId}
+              currentChannelId={currentChannelId}
+              validDay={validDay}
+              showAllDay={showAllDay}
+              showSavedOnly={showSavedOnly}
+            />
+          </Suspense>
+        </LoadingOverlay>
       </div>
     </div>
   );
 }
 
-function LoadingSkeleton() {
+async function ScheduleDataWrapper({ 
+  layoutMode, 
+  currentSeasonId, 
+  currentChannelId, 
+  validDay, 
+  showAllDay, 
+  showSavedOnly 
+}: {
+  layoutMode: LayoutMode;
+  currentSeasonId: number;
+  currentChannelId: number;
+  validDay: number;
+  showAllDay: boolean;
+  showSavedOnly: boolean;
+}) {
+  let programs: ProgramData[] = [];
+  if (layoutMode === "week") {
+    programs = await getWeekScheduleByChannel(currentSeasonId, currentChannelId);
+  } else {
+    programs = await getScheduleByDay(validDay, currentSeasonId);
+  }
+  
   return (
-    <div className="w-full h-full flex items-center justify-center animate-pulse">
-      読み込み中...
+    <TimeTable 
+      programs={programs} 
+      mode={layoutMode} 
+      showAllDay={showAllDay} 
+      showSavedOnly={showSavedOnly} 
+    />
+  );
+}
+
+function LoaderScreen() {
+  return (
+    <div className="w-full h-full flex items-center justify-center">
+      <Spinner className="size-8 text-muted-foreground" />
     </div>
   );
 }

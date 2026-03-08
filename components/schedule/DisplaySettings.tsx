@@ -25,6 +25,9 @@ export function DisplaySettings() {
     } else {
       params.set("allDay", "true");
     }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("schedule-change-start", { detail: params.toString() }));
+    }
     router.push(pathname + "?" + params.toString());
   };
 
@@ -34,6 +37,9 @@ export function DisplaySettings() {
       params.delete("savedOnly");
     } else {
       params.set("savedOnly", "true");
+    }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("schedule-change-start", { detail: params.toString() }));
     }
     router.push(pathname + "?" + params.toString());
   };
