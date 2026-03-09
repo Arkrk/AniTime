@@ -10,7 +10,7 @@ import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/
 import { Bookmark } from "lucide-react";
 
 export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
-  const { isSaved } = useSavedPrograms();
+  const { isSaved, isLoaded } = useSavedPrograms();
 
   const savedPrograms = useMemo(() => {
     return programs.filter(p => isSaved(String(p.id)));
@@ -77,6 +77,10 @@ export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
       maxTime: formatDuration(maxMinutes)
     };
   }, [savedPrograms]);
+
+  if (!isLoaded) {
+    return null;
+  }
 
   if (savedPrograms.length === 0) {
     return (

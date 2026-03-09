@@ -9,6 +9,7 @@ const eventTarget = new EventTarget();
 
 export function useSavedPrograms() {
   const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const readFromStorage = useCallback(() => {
     if (typeof window === "undefined") return [];
@@ -23,6 +24,7 @@ export function useSavedPrograms() {
 
   useEffect(() => {
     setSavedIds(readFromStorage());
+    setIsLoaded(true);
 
     const handleStorageChange = () => {
       setSavedIds(readFromStorage());
@@ -56,5 +58,5 @@ export function useSavedPrograms() {
 
   const isSaved = useCallback((id: string) => savedIds.includes(id), [savedIds]);
 
-  return { savedIds, toggleSaved, isSaved };
+  return { savedIds, toggleSaved, isSaved, isLoaded };
 }
