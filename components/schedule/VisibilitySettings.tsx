@@ -40,7 +40,7 @@ export function VisibilitySettings() {
 
   return (
     <ScrollArea className="flex-1 min-h-0">
-      <div className="flex flex-col gap-6 p-4">
+      <div className="flex flex-col gap-6 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <div className="space-y-3">
           <h3 className="font-medium flex items-center gap-2">
             <Map className="w-4 h-4" />

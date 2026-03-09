@@ -16,6 +16,7 @@ import { ja } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SheetFooter } from "@/components/ui/sheet";
+import { Spinner } from "../ui/spinner";
 
 type Program = Database["public"]["Tables"]["programs"]["Row"] & {
   programs_seasons?: { season_id: number }[];
@@ -34,11 +35,12 @@ interface WorkProgramFormProps {
   channels: Channel[];
   tags: Tag[];
   seasons: Season[];
-  onSubmit: (data: any) => void;
+  onSubmit: (data: any) => Promise<void> | void;
   onCancel: () => void;
 }
 
 export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit, onCancel }: WorkProgramFormProps) {
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
     channel_id: 0,
     day_of_the_week: 1,
@@ -75,12 +77,17 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit({
-      ...formData,
-      start_date: formData.start_date || null,
-    });
+    setIsSaving(true);
+    try {
+      await onSubmit({
+        ...formData,
+        start_date: formData.start_date || null,
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -250,11 +257,12 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
 
       <SheetFooter>
         <div className="flex justify-end gap-2 w-full">
-          <Button type="button" variant="outline" onClick={onCancel}>
+          <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>
             キャンセル
           </Button>
-          <Button type="submit">
-            保存
+          <Button type="submit" disabled={isSaving}>
+            {isSaving && <Spinner className="mr-2" />}
+            {initialData?.id ? "保存" : "追加"}
           </Button>
         </div>
       </SheetFooter>
