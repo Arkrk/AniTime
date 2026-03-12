@@ -18,7 +18,7 @@ import {
   EmptyMedia,
 } from "@/components/ui/empty";
 import { Spinner } from "../ui/spinner";
-import { Plus, Pencil, Trash2, GripVertical, Calendar, Clock, Copy } from "lucide-react";
+import { Plus, Pencil, Trash2, GripVertical, Calendar, Clock, Copy, TvMinimal } from "lucide-react";
 import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
 import { DAYS } from "@/lib/get-schedule";
 import { format, parseISO } from "date-fns";
@@ -301,10 +301,10 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
       return (
         <Empty className="border-0">
           <EmptyMedia variant="icon">
-            <Calendar className="h-5 w-5" />
+            <TvMinimal className="h-5 w-5" />
           </EmptyMedia>
           <EmptyHeader>
-            <EmptyTitle>放送スケジュールがありません</EmptyTitle>
+            <EmptyTitle>放送情報がありません</EmptyTitle>
             <EmptyDescription>公式からの発表をお待ちください</EmptyDescription>
           </EmptyHeader>
         </Empty>

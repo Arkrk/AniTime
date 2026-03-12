@@ -11,7 +11,7 @@ export type TimelineEvent = {
   };
 };
 
-export async function getTimelineEvents(limit = 20): Promise<{ events: TimelineEvent[], error: any }> {
+export async function getTimelineEvents(limit = 30): Promise<{ events: TimelineEvent[], error: any }> {
   const supabase = await createClient();
 
   // 最新の作成イベントを取得

@@ -93,7 +93,7 @@ export default async function WorkPage({ params }: PageProps) {
               <OGPreviewServer url={work.website_url} />
             </div>
           )}
-          <h2 className="text-lg font-bold mb-4">放送スケジュール</h2>
+          <h2 className="text-lg font-bold mb-4">放送情報</h2>
           <WorkProgramManager workId={workId} initialPrograms={work.programs} />
         </div>
 
