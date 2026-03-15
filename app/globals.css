@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin "@iconify/tailwind4" {
+  collections: ["svg-spinners"];
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
