@@ -69,11 +69,16 @@ export async function createWork(data: {
   x_username?: string | null;
   wikipedia_url?: string | null;
   annict_url?: string | null;
-}) {
+}, skipInsertTimestamp?: boolean) {
   const supabase = await createClient();
+  const insertData: any = { ...data };
+  if (!skipInsertTimestamp) {
+    insertData.created_at = new Date().toISOString();
+  }
+
   const { data: newWork, error } = await supabase
     .from("works")
-    .insert({ ...data, created_at: new Date().toISOString() })
+    .insert(insertData)
     .select("id")
     .single();
 

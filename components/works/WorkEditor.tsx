@@ -7,7 +7,9 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "../ui/spinner";
-import { Pencil, Trash2, Plus, AtSign } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Pencil, Trash2, Plus, AtSign, Globe, Lock } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { updateWork, deleteWork, createWork } from "@/lib/actions";
 
 interface Work {
@@ -34,6 +36,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
   const [open, setOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [skipInsertTimestamp, setSkipInsertTimestamp] = useState(false);
   const [formData, setFormData] = useState({
     name: work?.name || "",
     website_url: work?.website_url || "",
@@ -86,7 +89,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
           x_username: formData.x_username || null,
           wikipedia_url: formData.wikipedia_url || null,
           annict_url: formData.annict_url || null,
-        });
+        }, skipInsertTimestamp);
       }
       setOpen(false);
     } catch (error) {
@@ -186,8 +189,18 @@ export function WorkEditor({ work }: WorkEditorProps) {
             </Field>
           </div>
         </div>
-        <SheetFooter className={`flex flex-row items-center ${work ? "justify-between w-full" : "justify-end"}`}>
-          {work && (
+        <SheetFooter className={`flex flex-row items-center justify-between w-full`}>
+          {!work ? (
+            <div className="flex items-center space-x-2">
+              <Globe className={cn("h-4 w-4 transition-colors", !skipInsertTimestamp ? "text-white" : "text-muted-foreground")} />
+              <Switch
+                id="skip-insert-timestamp"
+                checked={skipInsertTimestamp}
+                onCheckedChange={setSkipInsertTimestamp}
+              />
+              <Lock className={cn("h-4 w-4 transition-colors", skipInsertTimestamp ? "text-white" : "text-muted-foreground")} />
+            </div>
+          ) : (
             <Button
               variant="destructive"
               onClick={handleDelete}

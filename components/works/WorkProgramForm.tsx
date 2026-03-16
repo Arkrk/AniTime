@@ -7,16 +7,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Database } from "@/types/supabase";
 import { DAYS } from "@/lib/get-schedule";
 import { getProgramColorClass } from "@/lib/schedule-utils";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Toggle } from "@/components/ui/toggle";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Globe, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SheetFooter } from "@/components/ui/sheet";
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
+import { ChannelSelect } from "@/components/schedule/ChannelSelect";
 
 type Program = Database["public"]["Tables"]["programs"]["Row"] & {
   programs_seasons?: { season_id: number }[];
@@ -27,8 +29,6 @@ type Channel = Database["public"]["Tables"]["channels"]["Row"] & {
 };
 type Tag = Database["public"]["Tables"]["tags"]["Row"];
 type Season = Database["public"]["Tables"]["seasons"]["Row"];
-
-import { ChannelSelect } from "@/components/schedule/ChannelSelect";
 
 interface WorkProgramFormProps {
   initialData?: Partial<Program>;
@@ -41,6 +41,7 @@ interface WorkProgramFormProps {
 
 export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit, onCancel }: WorkProgramFormProps) {
   const [isSaving, setIsSaving] = useState(false);
+  const [skipUpdateTimestamp, setSkipUpdateTimestamp] = useState(false);
   const [formData, setFormData] = useState({
     channel_id: 0,
     day_of_the_week: 1,
@@ -84,6 +85,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
       await onSubmit({
         ...formData,
         start_date: formData.start_date || null,
+        skipUpdateTimestamp,
       });
     } finally {
       setIsSaving(false);
@@ -198,19 +200,18 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
 
       <Field>
         <FieldLabel>放送クール</FieldLabel>
-        <ScrollArea className="h-32 border rounded-md p-2">
-          <div className="grid grid-cols-2 gap-2">
+        <ScrollArea className="h-40 border rounded-md">
+          <div className="p-3 flex flex-wrap gap-2">
             {seasons.map(season => (
-              <div key={season.id} className="flex items-center space-x-2">
-                <Checkbox 
-                  id={`season-${season.id}`} 
-                  checked={formData.season_ids.includes(season.id)}
-                  onCheckedChange={() => handleSeasonToggle(season.id)}
-                />
-                <label htmlFor={`season-${season.id}`} className="text-sm cursor-pointer">
-                  {season.year}年{season.month}月
-                </label>
-              </div>
+              <Toggle
+                key={season.id}
+                variant="outline"
+                size="default"
+                pressed={formData.season_ids.includes(season.id)}
+                onPressedChange={() => handleSeasonToggle(season.id)}
+              >
+                {season.year}年{season.month}月
+              </Toggle>
             ))}
           </div>
         </ScrollArea>
@@ -218,19 +219,18 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
 
       <Field>
         <FieldLabel>タグ</FieldLabel>
-        <ScrollArea className="h-32 border rounded-md p-2">
-          <div className="grid grid-cols-2 gap-2">
+        <ScrollArea className="h-40 border rounded-md">
+          <div className="p-3 flex flex-wrap gap-2">
             {tags.map(tag => (
-              <div key={tag.id} className="flex items-center space-x-2">
-                <Checkbox 
-                  id={`tag-${tag.id}`} 
-                  checked={formData.tag_ids.includes(tag.id)}
-                  onCheckedChange={() => handleTagToggle(tag.id)}
-                />
-                <label htmlFor={`tag-${tag.id}`} className="text-sm cursor-pointer">
-                  {tag.name}
-                </label>
-              </div>
+              <Toggle
+                key={tag.id}
+                variant="outline"
+                size="default"
+                pressed={formData.tag_ids.includes(tag.id)}
+                onPressedChange={() => handleTagToggle(tag.id)}
+              >
+                {tag.name}
+              </Toggle>
             ))}
           </div>
         </ScrollArea>
@@ -256,14 +256,25 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
       </div>
 
       <SheetFooter>
-        <div className="flex justify-end gap-2 w-full">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>
-            キャンセル
-          </Button>
-          <Button type="submit" disabled={isSaving}>
-            {isSaving && <Spinner className="mr-2" />}
-            {initialData?.id ? "保存" : "追加"}
-          </Button>
+        <div className="flex justify-between items-center w-full">
+          <div className="flex items-center space-x-2">
+            <Globe className={cn("h-4 w-4 transition-colors", !skipUpdateTimestamp ? "text-foreground" : "text-muted-foreground")} />
+            <Switch
+              id="skip-update-timestamp"
+              checked={skipUpdateTimestamp}
+              onCheckedChange={setSkipUpdateTimestamp}
+            />
+            <Lock className={cn("h-4 w-4 transition-colors", skipUpdateTimestamp ? "text-foreground" : "text-muted-foreground")} />
+          </div>
+          <div className="flex gap-2">
+            <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>
+              キャンセル
+            </Button>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving && <Spinner className="mr-2" />}
+              {initialData?.id ? "保存" : "追加"}
+            </Button>
+          </div>
         </div>
       </SheetFooter>
     </form>

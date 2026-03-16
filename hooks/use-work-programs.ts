@@ -74,6 +74,7 @@ export function useWorkPrograms(workId: number) {
       channels, 
       programs_seasons, 
       programs_tags, 
+      skipUpdateTimestamp,
       ...program 
     } = programData;
 
@@ -102,7 +103,9 @@ export function useWorkPrograms(workId: number) {
       }
       
       // Update work updated_at
-      await supabase.from("works").update({ updated_at: new Date().toISOString() }).eq("id", workId);
+      if (!skipUpdateTimestamp) {
+        await supabase.from("works").update({ updated_at: new Date().toISOString() }).eq("id", workId);
+      }
 
       await fetchPrograms();
     }
@@ -117,6 +120,7 @@ export function useWorkPrograms(workId: number) {
       channels, 
       programs_seasons, 
       programs_tags, 
+      skipUpdateTimestamp,
       ...program 
     } = programData;
 
@@ -147,7 +151,9 @@ export function useWorkPrograms(workId: number) {
     }
 
     // Update work updated_at
-    await supabase.from("works").update({ updated_at: new Date().toISOString() }).eq("id", workId);
+    if (!skipUpdateTimestamp) {
+      await supabase.from("works").update({ updated_at: new Date().toISOString() }).eq("id", workId);
+    }
 
     await fetchPrograms();
   };
