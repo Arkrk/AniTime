@@ -35,7 +35,7 @@ export default function UpdatesPage() {
 function UpdatesSkeleton() {
   return (
     <>
-      {Array.from({ length: 5 }).map((_, i) => (
+      {Array.from({ length: 10 }).map((_, i) => (
         <div key={i} className="mb-10 ml-7 md:ml-10 relative">
           <div className="flex items-center mb-3 text-sm">
             <Skeleton className="absolute w-8 h-8 rounded-full -left-11 md:-left-14 ring-8 ring-background" />

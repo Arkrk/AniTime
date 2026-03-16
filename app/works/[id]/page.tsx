@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Globe, History } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
-
 import { getWorkById } from "@/lib/get-work";
 import { formatRelativeTime } from "@/lib/date-utils";
 import { BackButton } from "@/components/layout/BackButton";
@@ -94,7 +93,7 @@ export default async function WorkPage({ params }: PageProps) {
             </div>
           )}
           <h2 className="text-lg font-bold mb-4">放送情報</h2>
-          <WorkProgramManager workId={workId} initialPrograms={work.programs} />
+          <WorkProgramManager workId={workId} />
         </div>
 
         {(work.updated_at || work.created_at) && (

@@ -4,19 +4,8 @@ import { useState, useEffect } from "react";
 import { useWorkPrograms } from "@/hooks/use-work-programs";
 import { WorkProgramForm } from "./WorkProgramForm";
 import { Badge } from "@/components/ui/badge";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import {
-  Empty,
-  EmptyHeader,
-  EmptyTitle,
-  EmptyDescription,
-  EmptyMedia,
-} from "@/components/ui/empty";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Spinner } from "../ui/spinner";
 import { Plus, Pencil, Trash2, GripVertical, Calendar, Clock, Copy, TvMinimal } from "lucide-react";
 import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
@@ -44,6 +33,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 interface ProgramItemProps {
   program: any;
   isEditable?: boolean;
+  isLast?: boolean;
   dragHandleProps?: any;
   dragRef?: (node: HTMLElement | null) => void;
   style?: React.CSSProperties;
@@ -55,6 +45,7 @@ interface ProgramItemProps {
 function ProgramItem({
   program,
   isEditable = false,
+  isLast = false,
   dragHandleProps,
   dragRef,
   style,
@@ -71,7 +62,7 @@ function ProgramItem({
     <div
       ref={dragRef}
       style={style}
-      className={`p-4 flex flex-col gap-3 ${colorClass} border-b relative group`}
+      className={`p-4 flex flex-col gap-3 ${colorClass} ${(!isEditable && isLast) ? "" : "border-b"} relative group`}
       onClick={() => !isHoverable && setIsTapped(!isTapped)}
     >
       {isEditable && (
@@ -213,7 +204,7 @@ function SortableItem({ program, onEdit, onDuplicate, onDelete }: SortableItemPr
   );
 }
 
-export function WorkProgramManager({ workId, initialPrograms }: { workId: number, initialPrograms: any[] }) {
+export function WorkProgramManager({ workId }: { workId: number }) {
   const {
     user,
     programs,
@@ -285,10 +276,10 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
     }
   };
 
-  const displayPrograms = (mounted && user && !loading) ? programs : initialPrograms;
+  const displayPrograms = programs;
   const isEditable = mounted && !!user;
 
-  if (loading && isEditable) {
+  if (!mounted || loading) {
     return (
       <div className="flex justify-center py-8">
         <Spinner className="size-8 text-muted-foreground" />
@@ -338,11 +329,12 @@ export function WorkProgramManager({ workId, initialPrograms }: { workId: number
 
     return (
       <>
-        {displayPrograms.map((program) => (
+        {displayPrograms.map((program, index) => (
           <ProgramItem
             key={program.id}
             program={program}
             isEditable={false}
+            isLast={index === displayPrograms.length - 1}
           />
         ))}
       </>
