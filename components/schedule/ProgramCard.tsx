@@ -31,7 +31,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
   const { isSaved, toggleSaved } = useSavedPrograms();
   const isHoverable = useMediaQuery("(hover: hover)");
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const { detailsViewMode, showOgPreview } = useProgramCardSettings();
+  const { hoverDetails, showOgPreview } = useProgramCardSettings();
   const saved = isSaved(String(program.id));
   const dayLabel = DAYS.find(d => d.id === program.day_of_the_week)?.label || "?";
 
@@ -235,7 +235,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
     </div>
   );
 
-  if (isHoverable && detailsViewMode === "hover") {
+  if (isHoverable && hoverDetails) {
     return (
       <HoverCard openDelay={300} closeDelay={50}>
         <HoverCardTrigger asChild>

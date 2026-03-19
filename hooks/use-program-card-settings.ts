@@ -1,21 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type DetailsViewMode = 'hover' | 'popover';
-
-const STORAGE_KEY_MODE = 'program_card_details_view_mode';
+const STORAGE_KEY_HOVER = 'program_card_hover_details';
 const STORAGE_KEY_OG = 'program_card_show_og_preview';
 const EVENT_KEY = 'program_card_settings_changed';
 
 export function useProgramCardSettings() {
-  const [detailsViewMode, setDetailsViewMode] = useState<DetailsViewMode>('hover');
+  const [hoverDetails, setHoverDetails] = useState<boolean>(true);
   const [showOgPreview, setShowOgPreview] = useState<boolean>(true);
   const [loaded, setLoaded] = useState(false);
 
   const loadSettings = useCallback(() => {
     if (typeof window !== 'undefined') {
-      const storedMode = localStorage.getItem(STORAGE_KEY_MODE);
-      if (storedMode === 'popover' || storedMode === 'hover') {
-        setDetailsViewMode(storedMode);
+      const storedHover = localStorage.getItem(STORAGE_KEY_HOVER);
+      if (storedHover !== null) {
+        setHoverDetails(storedHover === 'true');
       }
       const storedOg = localStorage.getItem(STORAGE_KEY_OG);
       if (storedOg !== null) {
@@ -31,7 +29,7 @@ export function useProgramCardSettings() {
     const handleStorageChange = (e: StorageEvent | Event) => {
       if (e.type === 'storage') {
         const key = (e as StorageEvent).key;
-        if (key !== STORAGE_KEY_MODE && key !== STORAGE_KEY_OG) {
+        if (key !== STORAGE_KEY_HOVER && key !== STORAGE_KEY_OG) {
           return;
         }
       }
@@ -47,10 +45,10 @@ export function useProgramCardSettings() {
     };
   }, [loadSettings]);
 
-  const updateDetailsViewMode = (mode: DetailsViewMode) => {
-    setDetailsViewMode(mode);
+  const updateHoverDetails = (hover: boolean) => {
+    setHoverDetails(hover);
     setTimeout(() => {
-      localStorage.setItem(STORAGE_KEY_MODE, mode);
+      localStorage.setItem(STORAGE_KEY_HOVER, String(hover));
       window.dispatchEvent(new Event(EVENT_KEY));
     }, 0);
   };
@@ -63,5 +61,5 @@ export function useProgramCardSettings() {
     }, 0);
   };
 
-  return { detailsViewMode, updateDetailsViewMode, showOgPreview, updateShowOgPreview, loaded };
+  return { hoverDetails, updateHoverDetails, showOgPreview, updateShowOgPreview, loaded };
 }
