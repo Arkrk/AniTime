@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PersonalDataSettings } from "@/components/settings/PersonalDataSettings";
 import { AdminSettings } from "@/components/settings/AdminSettings";
 import { AppearanceSettings } from "@/components/settings/AppearanceSettings";
+import { ProgramCardSettings } from "@/components/settings/ProgramCardSettings";
 import { InstallApp } from "@/components/settings/InstallApp";
 import { ExternalLinks } from "@/components/settings/ExternalLinks";
 import { defaultOpenGraph } from "@/lib/metadata";
@@ -22,6 +23,11 @@ export default function SettingsPage() {
           <section>
             <h2 className="text-lg font-bold mb-4">外観</h2>
             <AppearanceSettings />
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold mb-4">番組カード</h2>
+            <ProgramCardSettings />
           </section>
 
           <section>

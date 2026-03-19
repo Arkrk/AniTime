@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useProgramCardSettings } from "@/hooks/use-program-card-settings";
 import { OGPreviewClient } from "./OGPreviewClient";
 
 type ProgramCardProps = {
@@ -29,8 +30,13 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
   const [copied, setCopied] = useState(false);
   const { isSaved, toggleSaved } = useSavedPrograms();
   const isHoverable = useMediaQuery("(hover: hover)");
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { detailsViewMode, showOgPreview } = useProgramCardSettings();
   const saved = isSaved(String(program.id));
   const dayLabel = DAYS.find(d => d.id === program.day_of_the_week)?.label || "?";
+
+  const popupSide = isDesktop ? "right" : "bottom";
+  const popupAlign = isDesktop ? "start" : "center";
 
   // クリップボードコピー機能
   const handleCopy = async () => {
@@ -174,7 +180,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       )}
       
       {/* OGプレビュー */}
-      {program.website_url && (
+      {program.website_url && showOgPreview && (
         <OGPreviewClient url={program.website_url} />
       )}
 
@@ -229,13 +235,13 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
     </div>
   );
 
-  if (isHoverable) {
+  if (isHoverable && detailsViewMode === "hover") {
     return (
       <HoverCard openDelay={300} closeDelay={50}>
         <HoverCardTrigger asChild>
           {triggerElement}
         </HoverCardTrigger>
-        <HoverCardContent className="w-80 p-4 shadow-xl z-100" side="right" align="start">
+        <HoverCardContent className="w-80 p-4 shadow-xl z-100" side={popupSide} align={popupAlign}>
           {programDetails}
         </HoverCardContent>
       </HoverCard>
@@ -247,7 +253,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       <PopoverTrigger asChild>
         {triggerElement}
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4 shadow-xl z-100" side="bottom" align="center">
+      <PopoverContent className="w-80 p-4 shadow-xl z-100" side={popupSide} align={popupAlign}>
         {programDetails}
       </PopoverContent>
     </Popover>
