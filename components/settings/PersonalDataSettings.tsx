@@ -14,6 +14,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { FileOutput, FileInput, Trash2 } from "lucide-react"
 
 export function PersonalDataSettings() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -110,6 +111,21 @@ export function PersonalDataSettings() {
     <div className="bg-primary-foreground rounded-md border overflow-hidden">
       <div className="border-b p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
+          <h3 className="font-medium text-base">データをエクスポート</h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            バックアップファイルをJSON形式で出力します。
+          </p>
+        </div>
+        <div>
+          <Button onClick={handleExport} variant="outline">
+            <FileOutput />
+            エクスポート
+          </Button>
+        </div>
+      </div>
+
+      <div className="border-b p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
           <h3 className="font-medium text-base">データをインポート</h3>
           <p className="text-sm text-muted-foreground mt-1">
             バックアップファイルから設定を復元します。
@@ -124,21 +140,8 @@ export function PersonalDataSettings() {
             onChange={handleImport}
           />
           <Button onClick={() => fileInputRef.current?.click()} variant="outline">
+            <FileInput />
             インポート
-          </Button>
-        </div>
-      </div>
-
-      <div className="border-b p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h3 className="font-medium text-base">データをエクスポート</h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            バックアップファイルをJSON形式で出力します。
-          </p>
-        </div>
-        <div>
-          <Button onClick={handleExport} variant="outline">
-            エクスポート
           </Button>
         </div>
       </div>
@@ -153,7 +156,10 @@ export function PersonalDataSettings() {
         <div>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive">リセット</Button>
+              <Button variant="destructive">
+                <Trash2 />
+                リセット
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -165,6 +171,7 @@ export function PersonalDataSettings() {
               <AlertDialogFooter>
                 <AlertDialogCancel>キャンセル</AlertDialogCancel>
                 <AlertDialogAction variant="destructive" onClick={handleReset}>
+                  <Trash2 />
                   リセット
                 </AlertDialogAction>
               </AlertDialogFooter>

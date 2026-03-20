@@ -2,9 +2,11 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
 import { useLogin } from "@/hooks/login";
 import { toast } from "sonner";
+import { FaGoogle } from "react-icons/fa6";
+import { LogOut } from "lucide-react"
 
 export function AdminSettings() {
   const { user, loading, message, handleLogin, handleLogout } = useLogin();
@@ -34,15 +36,17 @@ export function AdminSettings() {
         <div>
           {loading ? (
             <Button variant="ghost" disabled>
-              <Spinner className="mr-2" />
+              <Spinner />
               読み込み中
             </Button>
           ) : user ? (
             <Button onClick={handleLogout} variant="outline">
+              <LogOut />
               ログアウト
             </Button>
           ) : (
             <Button onClick={handleLogin} variant="outline">
+              <FaGoogle />
               Googleでログイン
             </Button>
           )}
