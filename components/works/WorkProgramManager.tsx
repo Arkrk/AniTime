@@ -157,7 +157,7 @@ function ProgramItem({
             pt.tags && (
               <span
                 key={pt.tags.id}
-                className="px-1.5 py-0.5 bg-white/60 dark:bg-white/30 text-foreground text-xs rounded-sm border border-black/5"
+                className="px-1.5 py-0.5 bg-white/60 dark:bg-white/30 text-foreground text-xs rounded-sm border"
               >
                 {pt.tags.name}
               </span>

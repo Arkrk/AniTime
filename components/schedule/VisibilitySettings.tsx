@@ -9,7 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronDown, Map, RadioTower } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Area = { id: number; name: string; order: number };
@@ -35,13 +35,12 @@ export function VisibilitySettings() {
         <div className="flex flex-col gap-6 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
           <div className="border rounded-md overflow-hidden">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="flex items-center bg-gray-50/50 dark:bg-neutral-900/50 border-b last:border-b-0 h-11.25">
+              <div key={i} className="flex items-center bg-gray-50/50 dark:bg-neutral-900/50 border-b last:border-b-0 h-[44.5px]">
                 <div className="flex items-center pl-4 py-3 pr-3">
                   <Skeleton className="size-4 rounded-sm" />
                 </div>
                 <div className="flex flex-1 items-center justify-between py-3 pr-4">
                   <Skeleton className="h-4 w-32" />
-                  <Skeleton className="size-4 rounded-sm" />
                 </div>
               </div>
             ))}

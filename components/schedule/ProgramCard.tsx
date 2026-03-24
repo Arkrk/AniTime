@@ -171,7 +171,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
           {program.tags.map((tag) => (
             <span
               key={tag}
-              className="px-1.5 py-0.5 bg-secondary text-secondary-foreground text-[10px] rounded-sm"
+              className="px-1.5 py-0.5 bg-secondary text-secondary-foreground text-[10px] rounded-sm border"
             >
               {tag}
             </span>
