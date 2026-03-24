@@ -3,7 +3,7 @@
 import { Settings, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -85,7 +85,7 @@ export function DisplaySettings() {
                   className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent cursor-pointer"
                 >
                   <Label className="w-full cursor-pointer pointer-events-none">
-                    列の表示オプション
+                    チャンネル表示設定
                   </Label>
                   <div className="flex h-[1.15rem] items-center">
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -94,7 +94,8 @@ export function DisplaySettings() {
               </SheetTrigger>
               <SheetContent className="w-screen sm:w-100">
                 <SheetHeader>
-                  <SheetTitle>列の表示オプション</SheetTitle>
+                  <SheetTitle>チャンネル表示設定</SheetTitle>
+                  <SheetDescription className="sr-only">チャンネルの表示・非表示を設定します</SheetDescription>
                 </SheetHeader>
                 <VisibilitySettings />
               </SheetContent>

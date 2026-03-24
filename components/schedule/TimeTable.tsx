@@ -26,7 +26,7 @@ type TimeTableProps = {
 };
 
 export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", showAllDay, showSavedOnly = false }) => {
-  const { hiddenAreaIds, hiddenChannelIds, loaded } = useVisibilitySettings();
+  const { hiddenChannelIds, loaded } = useVisibilitySettings();
   const { savedIds } = useSavedPrograms();
 
   // チャンネル・番組のレイアウト計算
@@ -36,23 +36,12 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
       filteredPrograms = programs.filter((p) => savedIds.includes(String(p.id)));
     }
 
-    const allChannels = calculateLayout(filteredPrograms, mode);
-    
-    // 週間表示(week)の場合はチャンネル/エリアのフィルタリングは行わない
-    if (mode === "week") {
-      return allChannels;
+    if (loaded && mode !== "week") {
+      filteredPrograms = filteredPrograms.filter((p) => !hiddenChannelIds.includes(p.channel_id));
     }
 
-    if (!loaded) return allChannels;
-
-    return allChannels.filter((ch) => {
-      if (mode === "area") {
-        return !hiddenAreaIds.includes(ch.id);
-      } else {
-        return !hiddenChannelIds.includes(ch.id);
-      }
-    });
-  }, [programs, mode, hiddenAreaIds, hiddenChannelIds, loaded, showSavedOnly, savedIds]);
+    return calculateLayout(filteredPrograms, mode);
+  }, [programs, mode, hiddenChannelIds, loaded, showSavedOnly, savedIds]);
 
   // 表示する時間帯（hour）のリストを計算
   const { visibleHours, hourToY, totalHeight } = useMemo(() => {
