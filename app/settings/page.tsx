@@ -45,6 +45,10 @@ export default function SettingsPage() {
             <AdminSettings />
           </section>
         </div>
+
+        <div className="mt-16 mb-8 flex justify-center">
+          <img src="/logotype.svg" alt="AniTime" className="h-8 opacity-10 dark:invert" />
+        </div>
       </main>
     </div>
   );
