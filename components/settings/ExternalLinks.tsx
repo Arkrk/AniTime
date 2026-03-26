@@ -29,7 +29,7 @@ export function ExternalLinks() {
           <div>
             <h3 className="font-medium text-base">情報提供フォーム</h3>
             <p className="text-sm text-muted-foreground mt-1">
-              番組データの提供や修正依頼を送信できます。
+              番組データの提供や修正リクエストを送信できます。
             </p>
           </div>
           <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0" />

@@ -5,6 +5,7 @@ import { AppearanceSettings } from "@/components/settings/AppearanceSettings";
 import { ProgramCardSettings } from "@/components/settings/ProgramCardSettings";
 import { InstallApp } from "@/components/settings/InstallApp";
 import { ExternalLinks } from "@/components/settings/ExternalLinks";
+import { AboutApp } from "@/components/settings/AboutApp";
 import { defaultOpenGraph } from "@/lib/metadata";
 
 export const metadata: Metadata = {
@@ -31,13 +32,18 @@ export default function SettingsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold mb-4">個人データ</h2>
+            <h2 className="text-lg font-bold mb-4">ユーザーデータ</h2>
             <PersonalDataSettings />
           </section>
 
           <section>
             <h2 className="text-lg font-bold mb-4">関連リンク</h2>
             <ExternalLinks />
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold mb-4">このアプリについて</h2>
+            <AboutApp />
           </section>
 
           <section>
