@@ -14,6 +14,8 @@ import { ProgramCard } from "./ProgramCard";
 import { Toolbar } from "./Toolbar";
 import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
+import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
+import { TvMinimal } from "lucide-react";
 
 const TIME_COL_WIDTH = 35;
 const HEADER_HEIGHT = 35;
@@ -92,6 +94,30 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
 
   // 全体の幅を計算 (各列の幅の合計 + 時間軸の幅)
   const totalWidth = channels.reduce((acc, ch) => acc + ch.width, 0) + TIME_COL_WIDTH;
+
+  // 番組が1件もない場合の表示
+  const hasPrograms = channels.some((channel) => channel.programs.length > 0);
+
+  if (!hasPrograms) {
+    return (
+      <div className="flex flex-col h-full w-full relative">
+        <div className="flex-1 flex items-center justify-center p-8">
+          <Empty>
+            <EmptyMedia variant="icon">
+              <TvMinimal className="size-6" />
+            </EmptyMedia>
+            <EmptyHeader>
+              <EmptyTitle>表示する番組がありません</EmptyTitle>
+              <EmptyDescription>
+                選択された曜日やチャンネルに<br />一致する番組がありません。
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        </div>
+        <Toolbar />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full w-full relative">
