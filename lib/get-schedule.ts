@@ -27,7 +27,7 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
       day_of_the_week,
       version,
       note,
-      works ( id, name, website_url, annict_url, wikipedia_url, x_username ),
+      works ( id, name, website_url, og_image_url, annict_url, wikipedia_url, x_username ),
       channels (
         id,
         name,
@@ -72,6 +72,7 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
     note: item.note,
     color: item.color,
     website_url: item.works?.website_url ?? null,
+    og_image_url: item.works?.og_image_url ?? null,
     annict_url: item.works?.annict_url ?? null,
     wikipedia_url: item.works?.wikipedia_url ?? null,
     x_username: item.works?.x_username ?? null,
@@ -98,7 +99,7 @@ export async function getWeekScheduleByChannel(seasonId: number, channelId: numb
       day_of_the_week,
       version,
       note,
-      works ( id, name, website_url, annict_url, wikipedia_url, x_username ),
+      works ( id, name, website_url, og_image_url, annict_url, wikipedia_url, x_username ),
       channels!inner (
         id,
         name,
@@ -139,6 +140,7 @@ export async function getWeekScheduleByChannel(seasonId: number, channelId: numb
     note: item.note,
     color: item.color,
     website_url: item.works?.website_url ?? null,
+    og_image_url: item.works?.og_image_url ?? null,
     annict_url: item.works?.annict_url ?? null,
     wikipedia_url: item.works?.wikipedia_url ?? null,
     x_username: item.works?.x_username ?? null,

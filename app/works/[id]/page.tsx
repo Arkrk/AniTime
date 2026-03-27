@@ -89,7 +89,7 @@ export default async function WorkPage({ params }: PageProps) {
         <div>
           {work.website_url && (
             <div className="mb-8 w-full">
-              <OGPreviewServer url={work.website_url} />
+              <OGPreviewServer imageUrl={work.og_image_url} />
             </div>
           )}
           <h2 className="text-lg font-bold mb-4">放送情報</h2>

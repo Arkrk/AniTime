@@ -8,6 +8,7 @@ export type TimelineEvent = {
     id: number;
     name: string;
     website_url: string | null;
+    og_image_url: string | null;
   };
 };
 
@@ -17,7 +18,7 @@ export async function getTimelineEvents(limit = 30): Promise<{ events: TimelineE
   // 最新の作成イベントを取得
   const { data: createdWorks, error: createdError } = await supabase
     .from("works")
-    .select("id, name, website_url, created_at")
+    .select("id, name, website_url, og_image_url, created_at")
     .not("created_at", "is", null)
     .order("created_at", { ascending: false })
     .limit(limit);
@@ -25,7 +26,7 @@ export async function getTimelineEvents(limit = 30): Promise<{ events: TimelineE
   // 最新の更新イベントを取得
   const { data: updatedWorks, error: updatedError } = await supabase
     .from("works")
-    .select("id, name, website_url, updated_at")
+    .select("id, name, website_url, og_image_url, updated_at")
     .not("updated_at", "is", null)
     .order("updated_at", { ascending: false })
     .limit(limit);
@@ -47,6 +48,7 @@ export async function getTimelineEvents(limit = 30): Promise<{ events: TimelineE
           id: work.id,
           name: work.name,
           website_url: work.website_url,
+          og_image_url: work.og_image_url,
         },
       });
     }
@@ -68,6 +70,7 @@ export async function getTimelineEvents(limit = 30): Promise<{ events: TimelineE
             id: work.id,
             name: work.name,
             website_url: work.website_url,
+            og_image_url: work.og_image_url,
           },
         });
       }

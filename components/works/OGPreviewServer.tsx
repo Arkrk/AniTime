@@ -1,17 +1,14 @@
 import React, { Suspense } from "react";
-import { getOGImage } from "@/lib/get-opengraph";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageOff } from "lucide-react";
 import { OGImageFallback } from "./OGImageFallback";
 
 interface OGPreviewServerProps {
-  url: string;
+  imageUrl?: string | null;
 }
 
-async function OGImageFetcher({ url }: { url: string }) {
-  const ogImage = await getOGImage(url);
-
-  if (!ogImage) {
+async function OGImageFetcher({ imageUrl }: { imageUrl?: string | null }) {
+  if (!imageUrl) {
     return (
       <div className="w-full flex items-center justify-center bg-muted text-muted-foreground rounded-md border aspect-[1.91/1]">
         <ImageOff className="w-6 h-6" />
@@ -21,21 +18,19 @@ async function OGImageFetcher({ url }: { url: string }) {
 
   return (
     <div className="w-full relative overflow-hidden rounded-md border bg-muted aspect-[1.91/1]">
-      <OGImageFallback src={ogImage} alt="Official Site Preview" />
+      <OGImageFallback src={imageUrl} alt="Official Site Preview" />
     </div>
   );
 }
 
-export const OGPreviewServer: React.FC<OGPreviewServerProps> = ({ url }) => {
-  if (!url) return null;
-
+export const OGPreviewServer: React.FC<OGPreviewServerProps> = ({ imageUrl }) => {
   return (
     <Suspense 
       fallback={
         <Skeleton className="w-full rounded-md border aspect-[1.91/1]"/>
       }
     >
-      <OGImageFetcher url={url} />
+      <OGImageFetcher imageUrl={imageUrl} />
     </Suspense>
   );
 };

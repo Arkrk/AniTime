@@ -94,7 +94,7 @@ async function UpdatesList() {
               <div className="p-2 border border-b rounded-md bg-primary-foreground hover:bg-accent transition-colors">
                 <div className="flex items-center">
                   <div className="w-24 md:w-36 shrink-0">
-                    <OGPreviewServer url={event.work.website_url || ""} />
+                    <OGPreviewServer imageUrl={event.work.og_image_url} />
                   </div>
                   <div className="flex flex-col justify-center mx-3 md:mx-4">
                     <span className="font-medium text-card-foreground text-sm md:text-base line-clamp-2 group-hover:text-primary transition-colors">{event.work.name}</span>

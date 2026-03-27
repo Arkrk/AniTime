@@ -1,4 +1,4 @@
-// DBから取得する生の番組データの型（結合済みデータを想定）
+// DBから取得する生の番組データの型
 export type ProgramData = {
   id: number;
   work_id: number;
@@ -14,6 +14,7 @@ export type ProgramData = {
   area_order: number;
   color?: number; // 1-8
   website_url: string | null;
+  og_image_url: string | null;
   annict_url: string | null;
   wikipedia_url: string | null;
   x_username: string | null;

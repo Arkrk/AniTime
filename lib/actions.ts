@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/server";
+import { getOGImage } from "@/lib/get-opengraph";
 
 export async function searchWorks(query: string) {
   if (!query || query.length < 1) return [];
@@ -50,9 +51,22 @@ export async function updateWork(id: number, data: {
   annict_url?: string | null;
 }) {
   const supabase = await createClient();
+  const updateData: any = { ...data };
+
+  if (data.website_url) {
+    // 公式サイトURLがある場合はOGP画像を取得
+    const ogImage = await getOGImage(data.website_url);
+    if (ogImage !== undefined) {
+       updateData.og_image_url = ogImage;
+    }
+  } else if (data.website_url === null) {
+    // 公式サイトURLが消されたらOGP画像も消す
+    updateData.og_image_url = null;
+  }
+
   const { error } = await supabase
     .from("works")
-    .update(data)
+    .update(updateData)
     .eq("id", id);
 
   if (error) {
@@ -74,6 +88,11 @@ export async function createWork(data: {
   const insertData: any = { ...data };
   if (!skipInsertTimestamp) {
     insertData.created_at = new Date().toISOString();
+  }
+
+  if (insertData.website_url) {
+    const ogImage = await getOGImage(insertData.website_url);
+    insertData.og_image_url = ogImage;
   }
 
   const { data: newWork, error } = await supabase
