@@ -103,13 +103,13 @@ function ProgramItem({
             const validSeasons = program.programs_seasons?.filter((ps: any) => ps.seasons) || [];
             if (validSeasons.length === 0) return null;
 
-            const lastSeason = validSeasons[validSeasons.length - 1];
+            const firstSeason = validSeasons[0];
             const remainingCount = validSeasons.length - 1;
 
             return (
               <>
                 <Badge variant="outline" className="border-black/20 dark:border-white/50 text-xs font-normal">
-                  {lastSeason.seasons.year}年{lastSeason.seasons.month}月
+                  {firstSeason.seasons.year}年{firstSeason.seasons.month}月
                 </Badge>
                 {remainingCount > 0 && (
                   <span className="text-xs">+{remainingCount}</span>
@@ -357,7 +357,7 @@ export function WorkProgramManager({ workId }: { workId: number }) {
       </div>
 
       <Sheet open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <SheetContent className="flex flex-col w-screen sm:w-150">
+        <SheetContent className="flex flex-col w-screen sm:w-150" aria-describedby={undefined}>
           <SheetHeader>
             <SheetTitle>{editingProgram?.id ? "番組を編集" : "番組を追加"}</SheetTitle>
           </SheetHeader>

@@ -132,7 +132,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
           </Button>
         )}
       </SheetTrigger>
-      <SheetContent className="flex flex-col w-screen sm:w-150">
+      <SheetContent className="flex flex-col w-screen sm:w-150" aria-describedby={undefined}>
         <SheetHeader>
           <SheetTitle>{work ? "作品を編集" : "作品を追加"}</SheetTitle>
         </SheetHeader>
