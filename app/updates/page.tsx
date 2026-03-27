@@ -62,7 +62,7 @@ function UpdatesSkeleton() {
 }
 
 async function UpdatesList() {
-  const { events: displayEvents, error } = await getTimelineEvents(30);
+  const { events: displayEvents, error } = await getTimelineEvents(50);
 
   if (error) {
     console.error(error);
