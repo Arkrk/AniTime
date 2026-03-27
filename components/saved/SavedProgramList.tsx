@@ -8,8 +8,9 @@ import { calculatePosition } from "@/lib/schedule-utils";
 import { useMemo } from "react";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Bookmark } from "lucide-react";
+import React from "react";
 
-export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
+export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramData[], ogPreviews?: Record<string, React.ReactNode> }) => {
   const { isSaved, isLoaded } = useSavedPrograms();
 
   const savedPrograms = useMemo(() => {
@@ -140,6 +141,7 @@ export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
                       isNextDay: false
                     } as LayoutProgram}
                     mode="area"
+                    ogPreview={program.website_url ? ogPreviews?.[program.website_url] : undefined}
                     className="relative! top-0! left-0! w-full! h-full!"
                     style={{ width: "100%", height: "100%" }}
                   />

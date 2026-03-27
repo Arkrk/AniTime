@@ -17,16 +17,16 @@ import { Toggle } from "@/components/ui/toggle";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useProgramCardSettings } from "@/hooks/use-program-card-settings";
-import { OGPreviewClient } from "./OGPreviewClient";
 
 type ProgramCardProps = {
   program: LayoutProgram;
   mode: LayoutMode;
   className?: string;
   style?: React.CSSProperties;
+  ogPreview?: React.ReactNode;
 };
 
-export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, className, style }) => {
+export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, className, style, ogPreview }) => {
   const [copied, setCopied] = useState(false);
   const { isSaved, toggleSaved } = useSavedPrograms();
   const isHoverable = useMediaQuery("(hover: hover)");
@@ -180,9 +180,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       )}
       
       {/* OGプレビュー */}
-      {program.website_url && showOgPreview && (
-        <OGPreviewClient url={program.website_url} />
-      )}
+      {program.website_url && showOgPreview && ogPreview}
 
       {/* 各種リンク・保存ボタン */}
       <div className="flex items-center justify-between pt-2 border-t mt-1">

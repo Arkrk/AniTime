@@ -23,9 +23,10 @@ type TimeTableProps = {
   mode?: LayoutMode;
   showAllDay: boolean;
   showSavedOnly?: boolean;
+  ogPreviews?: Record<string, React.ReactNode>;
 };
 
-export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", showAllDay, showSavedOnly = false }) => {
+export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", showAllDay, showSavedOnly = false, ogPreviews }) => {
   const { hiddenChannelIds, loaded } = useVisibilitySettings();
   const { savedIds } = useSavedPrograms();
 
@@ -207,6 +208,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
                         key={`${prog.id}-${prog.start_time}`}
                         program={prog}
                         mode={mode}
+                        ogPreview={prog.website_url ? ogPreviews?.[prog.website_url] : undefined}
                         style={{
                           top: newTop,
                           height: displayHeight - 2,

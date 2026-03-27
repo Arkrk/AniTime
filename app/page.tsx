@@ -9,6 +9,7 @@ import { ChannelNavigator } from "@/components/schedule/ChannelNavigator";
 import { LoadingOverlay } from "@/components/layout/LoadingOverlay";
 import { Spinner } from "@/components/ui/spinner";
 import { LayoutMode, ProgramData } from "@/types/schedule";
+import { OGPreviewServer } from "@/components/works/OGPreviewServer";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -134,12 +135,21 @@ async function ScheduleDataWrapper({
     programs = await getScheduleByDay(validDay, currentSeasonId);
   }
   
+  // OGP情報を一括取得
+  const ogPreviews = programs.reduce((acc, p) => {
+    if (p.website_url && !acc[p.website_url]) {
+      acc[p.website_url] = <OGPreviewServer url={p.website_url} />;
+    }
+    return acc;
+  }, {} as Record<string, React.ReactNode>);
+
   return (
     <TimeTable 
       programs={programs} 
       mode={layoutMode} 
       showAllDay={showAllDay} 
       showSavedOnly={showSavedOnly} 
+      ogPreviews={ogPreviews}
     />
   );
 }

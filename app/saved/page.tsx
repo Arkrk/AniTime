@@ -7,6 +7,7 @@ import { SavedProgramList } from "@/components/saved/SavedProgramList";
 import { defaultOpenGraph } from "@/lib/metadata";
 import { Spinner } from "@/components/ui/spinner";
 import { LoadingOverlay } from "@/components/layout/LoadingOverlay";
+import { OGPreviewServer } from "@/components/works/OGPreviewServer";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -69,7 +70,16 @@ export default async function SavedPage({ searchParams }: PageProps) {
 async function SavedProgramListWrapper({ currentSeasonId }: { currentSeasonId: number }) {
   // 全番組データ取得 (day=0 で全曜日取得)
   const programs = await getScheduleByDay(0, currentSeasonId);
-  return <SavedProgramList programs={programs} />;
+
+  // OGP情報を一括取得
+  const ogPreviews = programs.reduce((acc, p) => {
+    if (p.website_url && !acc[p.website_url]) {
+      acc[p.website_url] = <OGPreviewServer url={p.website_url} />;
+    }
+    return acc;
+  }, {} as Record<string, React.ReactNode>);
+
+  return <SavedProgramList programs={programs} ogPreviews={ogPreviews} />;
 }
 
 function LoaderScreen() {
