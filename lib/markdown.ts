@@ -21,7 +21,12 @@ export async function getMarkDownContent(fileName: string): Promise<{ contentHtm
   const processedContent = await remark()
     .use(html)
     .process(matterResult.content);
-  const contentHtml = processedContent.toString();
+
+  // リンクを新しいタブで開くようにする
+  const contentHtml = processedContent.toString().replace(
+    /<a /g,
+    '<a target="_blank" rel="noopener noreferrer" '
+  );
 
   return {
     contentHtml,
