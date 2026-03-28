@@ -36,7 +36,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
         const results = await searchWorks(query);
         setData(results);
       });
-    }, 300);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [query]);

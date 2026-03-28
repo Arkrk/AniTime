@@ -17,13 +17,17 @@ async function requireAuth() {
 }
 
 export async function searchWorks(query: string) {
-  if (!query || query.length < 1) return [];
+  if (!query || query.length < 1 || query.length > 100) return [];
 
   const supabase = await createClient();
+  
+  // ワイルドカード文字のエスケープ処理
+  const safeQuery = query.replace(/[%_\\]/g, '\\$&');
+
   const { data, error } = await supabase
     .from("works")
     .select("id, name")
-    .ilike("name", `%${query}%`)
+    .ilike("name", `%${safeQuery}%`)
     .limit(20);
   
   if (error) {
