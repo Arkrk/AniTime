@@ -1,6 +1,12 @@
 import type { MetadataRoute } from 'next'
+import { headers } from 'next/headers'
  
-export default function manifest(): MetadataRoute.Manifest {
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const headersList = await headers()
+  const userAgent = headersList.get('user-agent') || ''
+  const isMac = userAgent.includes('Macintosh') || userAgent.includes('Mac OS')
+  const suffix = isMac ? 'mac' : 'win'
+
   return {
     name: 'AniTime',
     short_name: 'AniTime',
@@ -11,12 +17,12 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#ffffff',
     icons: [
       {
-        src: '/web-app-manifest-192x192.png',
+        src: `/manifest-${suffix}-192x192.png`,
         sizes: '192x192',
         type: 'image/png',
       },
       {
-        src: '/web-app-manifest-512x512.png',
+        src: `/manifest-${suffix}-512x512.png`,
         sizes: '512x512',
         type: 'image/png',
       },
