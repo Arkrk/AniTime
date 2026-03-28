@@ -5,6 +5,17 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/server";
 import { getOGImage } from "@/lib/get-opengraph";
 
+async function requireAuth() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("権限がありません。");
+  }
+
+  return supabase;
+}
+
 export async function searchWorks(query: string) {
   if (!query || query.length < 1) return [];
 
@@ -50,7 +61,8 @@ export async function updateWork(id: number, data: {
   wikipedia_url?: string | null;
   annict_url?: string | null;
 }) {
-  const supabase = await createClient();
+  const supabase = await requireAuth();
+
   const updateData: any = { ...data };
 
   if (data.website_url) {
@@ -84,7 +96,8 @@ export async function createWork(data: {
   wikipedia_url?: string | null;
   annict_url?: string | null;
 }, skipInsertTimestamp?: boolean) {
-  const supabase = await createClient();
+  const supabase = await requireAuth();
+
   const insertData: any = { ...data };
   if (!skipInsertTimestamp) {
     insertData.created_at = new Date().toISOString();
@@ -110,7 +123,8 @@ export async function createWork(data: {
 }
 
 export async function deleteWork(id: number) {
-  const supabase = await createClient();
+  const supabase = await requireAuth();
+
   const { error } = await supabase
     .from("works")
     .delete()
