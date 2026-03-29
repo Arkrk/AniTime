@@ -93,7 +93,7 @@ export const Toolbar: React.FC = () => {
                       </tr>
                       <tr>
                         <td className="border-r p-2">
-                          <div className="w-5 h-5 mx-auto bg-pink-100 dark:bg-pink-900 border border-pink-200 dark:border-pink-700 rounded-full"></div>
+                          <div className="w-5 h-5 mx-auto bg-olive-50 dark:bg-olive-900 border border-olive-300 dark:border-olive-700 rounded-full"></div>
                         </td>
                         <td colSpan={2} className="p-1 text-[11px]">関連番組</td>
                       </tr>
