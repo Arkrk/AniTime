@@ -9,6 +9,14 @@ import {
   END_HOUR,
   HOUR_HEIGHT,
   MIN_HEIGHT,
+  COL_WIDTH,
+  TIME_COL_WIDTH,
+  HEADER_HEIGHT,
+  MOBILE_HOUR_HEIGHT,
+  MOBILE_MIN_HEIGHT,
+  MOBILE_COL_WIDTH,
+  MOBILE_TIME_COL_WIDTH,
+  MOBILE_HEADER_HEIGHT,
 } from "@/lib/schedule-utils";
 import { ProgramCard } from "./ProgramCard";
 import { Toolbar } from "./Toolbar";
@@ -16,9 +24,7 @@ import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { TvMinimal } from "lucide-react";
-
-const TIME_COL_WIDTH = 35;
-const HEADER_HEIGHT = 35;
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 type TimeTableProps = {
   programs: ProgramData[];
@@ -31,6 +37,13 @@ type TimeTableProps = {
 export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", showAllDay, showSavedOnly = false, ogPreviews }) => {
   const { hiddenChannelIds, loaded } = useVisibilitySettings();
   const { savedIds } = useSavedPrograms();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const currentHourHeight = isDesktop ? HOUR_HEIGHT : MOBILE_HOUR_HEIGHT;
+  const currentMinHeight = isDesktop ? MIN_HEIGHT : MOBILE_MIN_HEIGHT;
+  const currentColWidth = isDesktop ? COL_WIDTH : MOBILE_COL_WIDTH;
+  const currentTimeColWidth = isDesktop ? TIME_COL_WIDTH : MOBILE_TIME_COL_WIDTH;
+  const currentHeaderHeight = isDesktop ? HEADER_HEIGHT : MOBILE_HEADER_HEIGHT;
 
   // チャンネル・番組のレイアウト計算
   const channels = useMemo(() => {
@@ -43,8 +56,11 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
       filteredPrograms = filteredPrograms.filter((p) => !hiddenChannelIds.includes(p.channel_id));
     }
 
-    return calculateLayout(filteredPrograms, mode);
-  }, [programs, mode, hiddenChannelIds, loaded, showSavedOnly, savedIds]);
+    return calculateLayout(filteredPrograms, mode, {
+      minHeight: currentMinHeight,
+      colWidth: currentColWidth,
+    });
+  }, [programs, mode, hiddenChannelIds, loaded, showSavedOnly, savedIds, currentMinHeight, currentColWidth]);
 
   // 表示する時間帯（hour）のリストを計算
   const { visibleHours, hourToY, totalHeight } = useMemo(() => {
@@ -82,7 +98,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
     let currentY = 0;
     sortedHours.forEach((h) => {
       map.set(h, currentY);
-      currentY += HOUR_HEIGHT;
+      currentY += currentHourHeight;
     });
 
     return {
@@ -90,10 +106,10 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
       hourToY: map,
       totalHeight: currentY,
     };
-  }, [programs, showAllDay]);
+  }, [programs, showAllDay, currentHourHeight]);
 
   // 全体の幅を計算 (各列の幅の合計 + 時間軸の幅)
-  const totalWidth = channels.reduce((acc, ch) => acc + ch.width, 0) + TIME_COL_WIDTH;
+  const totalWidth = channels.reduce((acc, ch) => acc + ch.width, 0) + currentTimeColWidth;
 
   // 番組が1件もない場合の表示
   const hasPrograms = channels.some((channel) => channel.programs.length > 0);
@@ -127,26 +143,26 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
           className="relative min-w-full"
           style={{
             width: totalWidth,
-            height: totalHeight + HEADER_HEIGHT,
+            height: totalHeight + currentHeaderHeight,
           }}
         >
           {/* --- ヘッダー行（チャンネル/エリア名） --- */}
           <div 
             className="flex sticky top-0 z-98 bg-background border-b shadow-sm"
-            style={{ height: HEADER_HEIGHT }}
+            style={{ height: currentHeaderHeight }}
           >
             {/* 左上の空白部分 (時間軸の上) も固定 */}
             <div
               className="sticky left-0 z-98 bg-primary-foreground border-r border-b shrink-0"
-              style={{ width: TIME_COL_WIDTH, height: HEADER_HEIGHT }}
+              style={{ width: currentTimeColWidth, height: currentHeaderHeight }}
             />
 
             {/* 各チャンネル列のヘッダー */}
             {channels.map((channel) => (
               <div
                 key={channel.id}
-                className="flex items-center justify-center border-r font-bold text-sm text-muted-foreground truncate px-2"
-                style={{ width: channel.width, height: HEADER_HEIGHT }}
+                className="flex items-center justify-center border-r font-bold text-[11px] md:text-sm text-muted-foreground truncate px-1 md:px-2"
+                style={{ width: channel.width, height: currentHeaderHeight }}
               >
                 {channel.name}
               </div>
@@ -158,8 +174,8 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
             
             {/* 時間軸 */}
             <div
-              className="sticky left-0 z-97 bg-primary-foreground border-r text-xs text-muted-foreground"
-              style={{ width: TIME_COL_WIDTH, height: totalHeight }}
+              className="sticky left-0 z-97 bg-primary-foreground border-r text-[10px] md:text-xs text-muted-foreground"
+              style={{ width: currentTimeColWidth, height: totalHeight }}
             >
               {/* 時間ラベル */}
               {visibleHours.map((hour) => {
@@ -170,7 +186,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
                     className="absolute w-full border-b flex items-start justify-center pt-1"
                     style={{ 
                       top: top, 
-                      height: HOUR_HEIGHT 
+                      height: currentHourHeight 
                     }}
                   >
                     {hour}
@@ -194,7 +210,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
                       <div
                         key={hour}
                         className="absolute w-full border-b pointer-events-none"
-                        style={{ top: top, height: HOUR_HEIGHT }}
+                        style={{ top: top, height: currentHourHeight }}
                       />
                     );
                   })}
@@ -203,8 +219,8 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
                   {channel.programs.map((prog) => {
                     // プログラムの表示位置を再計算
                     // prog.top は START_HOUR(6) からの絶対位置
-                    const originalStartMin = prog.top / MIN_HEIGHT;
-                    const originalEndMin = (prog.top + prog.height) / MIN_HEIGHT;
+                    const originalStartMin = prog.top / currentMinHeight;
+                    const originalEndMin = (prog.top + prog.height) / currentMinHeight;
                     
                     // 表示範囲外（20時より前かつ全日帯OFF）の場合はクリップまたは非表示
                     let displayStartMin = originalStartMin;
@@ -216,7 +232,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
                       if (originalStartMin < min20) {
                         // 部分的に範囲外 -> クリップ
                         displayStartMin = min20;
-                        displayHeight = (originalEndMin - min20) * MIN_HEIGHT;
+                        displayHeight = (originalEndMin - min20) * currentMinHeight;
                       }
                     }
 
@@ -227,13 +243,14 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
                     const baseY = hourToY.get(startHour);
                     if (baseY === undefined) return null; // 表示範囲外の時間帯は非表示
 
-                    const newTop = baseY + startMinInHour * MIN_HEIGHT;
+                    const newTop = baseY + startMinInHour * currentMinHeight;
 
                     return (
                       <ProgramCard
                         key={`${prog.id}-${prog.start_time}`}
                         program={prog}
                         mode={mode}
+                        colWidth={currentColWidth}
                         ogPreview={prog.website_url ? ogPreviews?.[prog.website_url] : undefined}
                         style={{
                           top: newTop,

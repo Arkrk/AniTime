@@ -129,7 +129,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
               <span className="text-2xl">{day.label}</span>
               <span className="text-sm text-gray-500 font-normal">曜日</span>
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {dayPrograms.map(program => (
                 <div key={program.id} className="relative h-28">
                   <ProgramCard 
@@ -144,6 +144,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
                     ogPreview={program.website_url ? ogPreviews?.[program.website_url] : undefined}
                     className="relative! top-0! left-0! w-full! h-full!"
                     style={{ width: "100%", height: "100%" }}
+                    forceDesktopSize={true}
                   />
                 </div>
               ))}

@@ -1,11 +1,21 @@
 import { ProgramData, ChannelLayout, LayoutProgram, LayoutMode } from "@/types/schedule";
 
-// 設定
 export const START_HOUR = 6; // 6時開始
 export const END_HOUR = 30;   // 30時(翌6時)終了
+
+// デスクトップ表示用
 export const HOUR_HEIGHT = 240; // 1時間あたりの高さ(px) -> 1分 = 4px
 export const COL_WIDTH = 160;   // 1列(レーン)の幅(px)
 export const MIN_HEIGHT = 4; // 1分あたりのpx数
+export const TIME_COL_WIDTH = 35; // 時間軸列の幅
+export const HEADER_HEIGHT = 35; // ヘッダー行の高さ
+
+// モバイル表示用
+export const MOBILE_HOUR_HEIGHT = 180; 
+export const MOBILE_COL_WIDTH = 120;
+export const MOBILE_MIN_HEIGHT = 3;
+export const MOBILE_TIME_COL_WIDTH = 28;
+export const MOBILE_HEADER_HEIGHT = 28;
 
 /**
  * "HH:MM:SS" 形式の文字列を、開始時刻(6:00)からの経過分等に変換する
@@ -30,7 +40,14 @@ export const calculatePosition = (timeStr: string) => {
 /**
  * 番組データの配列を受け取り、配置計算済みのチャンネル配列を返す
  */
-export const calculateLayout = (programs: ProgramData[], mode: LayoutMode): ChannelLayout[] => {
+export const calculateLayout = (
+  programs: ProgramData[],
+  mode: LayoutMode,
+  options?: { minHeight?: number; colWidth?: number }
+): ChannelLayout[] => {
+  const minHeight = options?.minHeight ?? MIN_HEIGHT;
+  const colWidth = options?.colWidth ?? COL_WIDTH;
+
   // グループ化のキーとメタデータを保持するMap
   const groupsMap = new Map<number, ProgramData[]>();
   const metaMap = new Map<number, { name: string; order: number }>();
@@ -93,8 +110,8 @@ export const calculateLayout = (programs: ProgramData[], mode: LayoutMode): Chan
       // 終了時間が開始時間より前になってしまう場合（日またぎ計算ミス等）のガード
       const safeEndMin = endMin < startMin ? endMin + 24 * 60 : endMin;
       
-      const top = startMin * MIN_HEIGHT;
-      const height = Math.max((safeEndMin - startMin) * MIN_HEIGHT, 20);
+      const top = startMin * minHeight;
+      const height = Math.max((safeEndMin - startMin) * minHeight, 20);
 
       // レーン割当アルゴリズム
       // 空いている(startMinより前に終わっている)一番左のレーンを探す
@@ -131,7 +148,7 @@ export const calculateLayout = (programs: ProgramData[], mode: LayoutMode): Chan
       name: meta.name,
       order: meta.order,
       maxLanes: lanes.length > 0 ? lanes.length : 1, // 最低1列
-      width: (lanes.length || 1) * COL_WIDTH,
+      width: (lanes.length || 1) * colWidth,
       programs: layoutProgs,
     });
   });

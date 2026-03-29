@@ -7,7 +7,7 @@ import { ja } from "date-fns/locale";
 import { Copy, Check, Clock, Calendar, Bookmark, Globe } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
 import { LayoutProgram, LayoutMode } from "@/types/schedule";
-import { formatTime30, COL_WIDTH, getProgramColorClass } from "@/lib/schedule-utils";
+import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
 import { DAYS } from "@/lib/get-schedule";
 import { cn } from "@/lib/utils";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -24,9 +24,11 @@ type ProgramCardProps = {
   className?: string;
   style?: React.CSSProperties;
   ogPreview?: React.ReactNode;
+  colWidth?: number;
+  forceDesktopSize?: boolean;
 };
 
-export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, className, style, ogPreview }) => {
+export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, className, style, ogPreview, colWidth = 160, forceDesktopSize = false }) => {
   const [copied, setCopied] = useState(false);
   const { isSaved, toggleSaved } = useSavedPrograms();
   const isHoverable = useMediaQuery("(hover: hover)");
@@ -64,30 +66,30 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
         top: program.top,
         height: program.height - 2,
         minHeight: program.height - 2,
-        left: program.laneIndex * COL_WIDTH + 2,
-        width: COL_WIDTH - 4,
-        ...style
+        left: program.laneIndex * colWidth + 2,
+        width: colWidth - 4,
+        ...style,
       }}
     >
       <div className="flex flex-col h-full">
         {/* チャンネル名（エリア別表示時のみ） */}
         {mode === "area" && (
-          <span className="text-xs font-semibold truncate leading-none shrink-0">
+          <span className={cn(forceDesktopSize ? "text-xs" : "text-[10px] md:text-xs", "font-semibold truncate leading-none shrink-0")}>
             {program.channel_name}
           </span>
         )}
         {/* 放送開始日 */}
         {program.start_date && (
-          <span className="text-xs w-fit rounded shrink-0">
+          <span className={cn(forceDesktopSize ? "text-xs" : "text-[10px] md:text-xs", "w-fit rounded shrink-0")}>
             {format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}
           </span>
         )}
         {/* 放送時間 */}
-        <span className="text-xs opacity-70 leading-none my-0.5 tracking-tight shrink-0">
+        <span className={cn(forceDesktopSize ? "text-xs opacity-70" : "text-[10px] md:text-xs opacity-75 md:opacity-70", "leading-none my-0.5 tracking-tight shrink-0")}>
           {formatTime30(program.start_time)}～{formatTime30(program.end_time)}
         </span>
         {/* 番組名 */}
-        <span className="font-bold text-[13px] leading-tight group-hover:line-clamp-none mb-0.5">
+        <span className={cn(forceDesktopSize ? "text-[13px] leading-tight" : "text-[11px] md:text-[13px] leading-[1.15] md:leading-tight", "font-bold group-hover:line-clamp-none mb-0.5")}>
           {program.name}
         </span>
       </div>
