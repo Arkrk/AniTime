@@ -15,12 +15,23 @@ export function AboutApp() {
           <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
         </div>
       </Link>
-      <Link href="/privacy" className="block p-4 hover:bg-accent">
+      <Link href="/privacy" className="block border-b p-4 hover:bg-accent">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h3 className="font-medium text-base">プライバシーポリシー</h3>
             <p className="text-sm text-muted-foreground mt-1">
               個人情報の取り扱いに関するポリシー
+            </p>
+          </div>
+          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+        </div>
+      </Link>
+      <Link href="/releases" className="block p-4 hover:bg-accent">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h3 className="font-medium text-base">リリースノート</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              新機能や改善内容など
             </p>
           </div>
           <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
