@@ -7,6 +7,7 @@ import { Bottombar } from "@/components/layout/Bottombar";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeColorManager } from "@/components/theme-color-manager";
 import { defaultOpenGraph } from "@/lib/metadata";
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const notoSansJP = Noto_Sans_JP({ subsets: ["latin"], variable: "--font-noto-sans-jp" });
@@ -50,22 +51,23 @@ export default function RootLayout({
           {/* アプリ全体のコンテナ */}
           <div className="flex h-dvh md:h-screen w-full bg-background overflow-hidden">
             
-          {/* 1. サイドバー (PC用) */}
-          <Sidebar />
+            {/* 1. サイドバー (PC用) */}
+            <Sidebar />
 
-          {/* 2. メインコンテンツエリア */}
-          {/* flex-1: 残りの幅を占有 */}
-          {/* pb-16: モバイルでボトムバーの高さ分を確保 */}
-          {/* md:pb-0: PCではボトムバーがないのでpadding不要 */}
-          <main className="flex-1 flex flex-col min-w-0 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0 relative overflow-hidden">
-            {children}
-          </main>
+            {/* 2. メインコンテンツエリア */}
+            {/* flex-1: 残りの幅を占有 */}
+            {/* pb-16: モバイルでボトムバーの高さ分を確保 */}
+            {/* md:pb-0: PCではボトムバーがないのでpadding不要 */}
+            <main className="flex-1 flex flex-col min-w-0 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0 relative overflow-hidden">
+              {children}
+            </main>
 
-          {/* 3. ボトムバー (モバイル用) */}
-          <Bottombar />
+            {/* 3. ボトムバー (モバイル用) */}
+            <Bottombar />
           
-        </div>
-        <Toaster richColors position="top-center" />
+          </div>
+          <Toaster richColors position="top-center" />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
