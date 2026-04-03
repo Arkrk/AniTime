@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { ProgramData, LayoutMode } from "@/types/schedule";
 import {
   calculateLayout,
@@ -35,6 +35,11 @@ type TimeTableProps = {
 };
 
 export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", showAllDay, showSavedOnly = false, ogPreviews }) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const { hiddenChannelIds, loaded } = useVisibilitySettings();
   const { savedIds } = useSavedPrograms();
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -116,7 +121,10 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
 
   if (!hasPrograms) {
     return (
-      <div className="flex flex-col h-full w-full relative">
+      <div 
+        className="flex flex-col h-full w-full relative transition-opacity duration-200" 
+        style={{ opacity: mounted ? 1 : 0 }}
+      >
         <div className="flex-1 flex items-center justify-center p-8">
           <Empty>
             <EmptyMedia variant="icon">
@@ -136,7 +144,10 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", s
   }
 
   return (
-    <div className="flex flex-col h-full w-full relative">
+    <div 
+      className="flex flex-col h-full w-full relative transition-opacity duration-200"
+      style={{ opacity: mounted ? 1 : 0 }}
+    >
       {/* スクロールエリア */}
       <div className="flex-1 overflow-auto relative">
         <div
