@@ -29,10 +29,6 @@ export default async function Home({ searchParams }: PageProps) {
     layoutMode = "area";
   }
   
-  // allDayパラメータの取得
-  const showAllDay = params.allDay === "true";
-  const showSavedOnly = params.savedOnly === "true";
-  
   // シーズン一覧を取得
   const seasons = await getSeasons();
   
@@ -103,8 +99,6 @@ export default async function Home({ searchParams }: PageProps) {
               currentSeasonId={currentSeasonId}
               currentChannelId={currentChannelId}
               validDay={validDay}
-              showAllDay={showAllDay}
-              showSavedOnly={showSavedOnly}
             />
           </Suspense>
         </LoadingOverlay>
@@ -117,16 +111,12 @@ async function ScheduleDataWrapper({
   layoutMode, 
   currentSeasonId, 
   currentChannelId, 
-  validDay, 
-  showAllDay, 
-  showSavedOnly 
+  validDay 
 }: {
   layoutMode: LayoutMode;
   currentSeasonId: number;
   currentChannelId: number;
   validDay: number;
-  showAllDay: boolean;
-  showSavedOnly: boolean;
 }) {
   let programs: ProgramData[] = [];
   if (layoutMode === "week") {
@@ -147,8 +137,6 @@ async function ScheduleDataWrapper({
     <TimeTable 
       programs={programs} 
       mode={layoutMode} 
-      showAllDay={showAllDay} 
-      showSavedOnly={showSavedOnly} 
       ogPreviews={ogPreviews}
     />
   );

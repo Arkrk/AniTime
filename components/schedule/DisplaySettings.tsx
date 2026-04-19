@@ -6,42 +6,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { ViewSelector } from "./ViewSelector";
 import { VisibilitySettings } from "@/components/schedule/VisibilitySettings";
+import { useDisplaySettings } from "@/hooks/use-display-settings";
 
 export function DisplaySettings() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { showNewOnly, updateShowNewOnly, loaded } = useDisplaySettings();
 
-  const showAllDay = searchParams.get("allDay") === "true";
-  const isSavedOnly = searchParams.get("savedOnly") === "true";
-
-  const toggleAllDay = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (showAllDay) {
-      params.delete("allDay");
-    } else {
-      params.set("allDay", "true");
-    }
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("schedule-change-start", { detail: params.toString() }));
-    }
-    router.push(pathname + "?" + params.toString());
-  };
-
-  const toggleSavedOnly = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (isSavedOnly) {
-      params.delete("savedOnly");
-    } else {
-      params.set("savedOnly", "true");
-    }
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("schedule-change-start", { detail: params.toString() }));
-    }
-    router.push(pathname + "?" + params.toString());
+  const toggleNewOnly = () => {
+    updateShowNewOnly(!showNewOnly);
   };
 
   return (
@@ -61,22 +34,12 @@ export function DisplaySettings() {
           <div className="flex flex-col">
             <div 
               className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent cursor-pointer"
-              onClick={toggleAllDay}
+              onClick={toggleNewOnly}
             >
               <Label className="w-full cursor-pointer pointer-events-none">
-                全日帯の番組を表示
+                新作アニメのみを表示
               </Label>
-              <Switch checked={showAllDay} className="pointer-events-none" />
-            </div>
-            <div className="h-px bg-border" />
-            <div 
-              className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent cursor-pointer"
-              onClick={toggleSavedOnly}
-            >
-              <Label className="w-full cursor-pointer pointer-events-none">
-                保存した番組のみを表示
-              </Label>
-              <Switch checked={isSavedOnly} className="pointer-events-none" />
+              <Switch checked={showNewOnly} className="pointer-events-none" />
             </div>
             <div className="h-px bg-border" />
             <Sheet>
