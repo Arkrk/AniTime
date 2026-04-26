@@ -49,7 +49,7 @@ export const Sidebar = () => {
   ];
 
   return (
-    <aside className="hidden md:flex w-18 h-screen border-r flex-col items-center py-6 shrink-0 z-50">
+    <aside className="hidden md:flex w-18 h-screen border-r flex-col items-center py-5 shrink-0 z-50">
       {/* ロゴ */}
       <div className="mb-auto">
         <Link href="/" className="flex items-center justify-center hover:opacity-80 transition-opacity">

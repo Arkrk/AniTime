@@ -76,7 +76,7 @@ export default async function Home({ searchParams }: PageProps) {
           <div className="hidden sm:flex items-center gap-4">
             <h1 className="text-lg font-bold">番組表</h1>
           </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
             <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
             <div className="flex items-center gap-2">
               {layoutMode === "week" ? (
