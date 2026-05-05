@@ -13,7 +13,6 @@ import { cn } from "@/lib/utils";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
 import { Toggle } from "@/components/ui/toggle";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -186,8 +185,8 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       {program.website_url && showOgPreview && ogPreview}
 
       {/* 各種リンク・保存ボタン */}
-      <div className="flex items-center justify-between pt-2 border-t mt-1 gap-2">
-        <ButtonGroup>
+      <div className="flex items-center justify-between pt-2 mt-1 border-t">
+        <div className="flex gap-1">
           {program.website_url && (
             <Button asChild variant="outline">
               <a
@@ -222,8 +221,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
               </a>
             </Button>
           )}
-        </ButtonGroup>
-
+        </div>
         <Toggle
           pressed={saved}
           onPressedChange={() => toggleSaved(String(program.id))}

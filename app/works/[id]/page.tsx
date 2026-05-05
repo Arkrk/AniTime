@@ -52,7 +52,7 @@ export default async function WorkPage({ params }: PageProps) {
         <div className="mb-6">
           <h1 className="text-2xl md:text-3xl font-bold my-4">{work.name}</h1>
           
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1">
             {work.website_url && (
               <Button size="sm" asChild>
                 <a href={work.website_url} target="_blank" rel="noopener noreferrer">

@@ -4,7 +4,7 @@ import { useLogin } from "@/hooks/login";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DataTable } from "@/components/admin/works/data-table";
 import { columns } from "@/components/admin/works/columns";
 import { Database } from "@/types/supabase";
@@ -50,10 +50,12 @@ export function AdminPageContent({ works, pageCount }: AdminPageContentProps) {
                 <SelectValue placeholder="選択してください" />
               </SelectTrigger>
               <SelectContent position="popper">
-                <SelectItem value="works">作品</SelectItem>
-                <SelectItem value="areas_channels">チャンネル</SelectItem>
-                <SelectItem value="seasons">クール</SelectItem>
-                <SelectItem value="tags">タグ</SelectItem>
+                <SelectGroup>
+                  <SelectItem value="works">作品</SelectItem>
+                  <SelectItem value="areas_channels">チャンネル</SelectItem>
+                  <SelectItem value="seasons">クール</SelectItem>
+                  <SelectItem value="tags">タグ</SelectItem>
+                </SelectGroup>
               </SelectContent>
             </Select>
           </div>
