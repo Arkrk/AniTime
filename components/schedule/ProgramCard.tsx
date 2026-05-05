@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { Toggle } from "@/components/ui/toggle";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -57,7 +58,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
         "absolute p-1 rounded cursor-pointer group flex flex-col transition-all duration-200",
         "overflow-hidden",
         // ホバー時の拡張設定
-        "hover:h-auto! hover:z-50 hover:shadow-2xl hover:scale-[1.02]",
+        "hover:h-auto! hover:z-1 hover:shadow-2xl hover:scale-[1.02]",
         getProgramColorClass(program.color),
         saved ? "border-red-500 dark:border-white border-2" : "border",
         className
@@ -126,7 +127,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
 
         {/* 作品タイトル・コピーボタン */}
         <div className="flex items-start gap-2">
-          <h4 className="text-sm font-bold leading-snug flex-1">
+          <h2 className="text-base font-bold leading-snug flex-1">
             {program.work_id ? (
               <Link href={`/works/${program.work_id}`} className="hover:underline">
                 {program.name}
@@ -134,7 +135,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
             ) : (
               program.name
             )}
-          </h4>
+          </h2>
           <div className="flex gap-1 shrink-0">
             <Button
               variant="ghost"
@@ -185,51 +186,51 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       {program.website_url && showOgPreview && ogPreview}
 
       {/* 各種リンク・保存ボタン */}
-      <div className="flex items-center justify-between pt-2 border-t mt-1">
-        <div className="flex gap-2">
+      <div className="flex items-center justify-between pt-2 border-t mt-1 gap-2">
+        <ButtonGroup>
           {program.website_url && (
-            <a
-              href={program.website_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs px-3 h-8 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-neutral-700 dark:hover:bg-neutral-800 dark:text-gray-100 transition-colors"
-            >
-              <Globe className="h-4 w-4" />
-              公式サイト
-            </a>
+            <Button asChild variant="outline">
+              <a
+                href={program.website_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Globe />
+                公式サイト
+              </a>
+            </Button>
           )}
           {program.x_username && (
-            <a
-              href={`https://x.com/${program.x_username}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center h-8 w-8 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 dark:bg-neutral-700 dark:hover:bg-neutral-800 dark:text-gray-100 transition-colors"
-              title="X"
-            >
-              <FaXTwitter className="h-4 w-4" />
-            </a>
+            <Button asChild variant="outline" size="icon" title="X">
+              <a
+                href={`https://x.com/${program.x_username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaXTwitter />
+              </a>
+            </Button>
           )}
           {program.wikipedia_url && (
-            <a
-              href={program.wikipedia_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center h-8 w-8 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 dark:bg-neutral-700 dark:hover:bg-neutral-800 dark:text-gray-100 transition-colors"
-              title="Wikipedia"
-            >
-              <FaWikipediaW className="h-4 w-4" />
-            </a>
+            <Button asChild variant="outline" size="icon" title="Wikipedia">
+              <a
+                href={program.wikipedia_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaWikipediaW />
+              </a>
+            </Button>
           )}
-        </div>
+        </ButtonGroup>
 
         <Toggle
           pressed={saved}
           onPressedChange={() => toggleSaved(String(program.id))}
-          size="sm"
-          className="h-8 w-8 p-0 bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-neutral-700 dark:hover:bg-neutral-800 dark:text-gray-100 rounded data-[state=on]:bg-red-500! data-[state=on]:text-white! data-[state=on]:hover:bg-red-600!"
-          title={saved ? "削除" : "保存"}
+          variant="outline"
         >
           <Bookmark className={cn("h-4 w-4", saved && "fill-current")} />
+          {saved ? "削除" : "保存"}
         </Toggle>
       </div>
     </div>
@@ -241,7 +242,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
         <HoverCardTrigger asChild>
           {triggerElement}
         </HoverCardTrigger>
-        <HoverCardContent className="w-80 p-4 shadow-xl z-100" side={popupSide} align={popupAlign}>
+        <HoverCardContent className="w-80 p-4 shadow-xl z-50" side={popupSide} align={popupAlign}>
           {programDetails}
         </HoverCardContent>
       </HoverCard>
@@ -253,7 +254,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       <PopoverTrigger asChild>
         {triggerElement}
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4 shadow-xl z-100" side={popupSide} align={popupAlign}>
+      <PopoverContent className="w-80 p-4 shadow-xl z-50" side={popupSide} align={popupAlign}>
         {programDetails}
       </PopoverContent>
     </Popover>

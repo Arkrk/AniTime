@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function AboutApp() {
   return (
-    <div className="bg-primary-foreground rounded-md border overflow-hidden">
+    <div className="bg-primary-foreground rounded-2xl border overflow-hidden">
       <Link href="/about" className="block border-b p-4 hover:bg-accent">
         <div className="flex items-center justify-between gap-4">
           <div>

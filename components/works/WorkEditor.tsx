@@ -121,13 +121,13 @@ export function WorkEditor({ work }: WorkEditorProps) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         {work ? (
-          <Button variant="outline" size="sm">
-            <Pencil className="h-4 w-4" />
+          <Button variant="secondary" size="sm">
+            <Pencil />
             編集
           </Button>
         ) : (
           <Button variant="default" size="sm">
-            <Plus className="h-4 w-4" />
+            <Plus />
             新規
           </Button>
         )}
@@ -209,7 +209,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
               {isDeleting ? (
                 <Spinner />
               ) : (
-                <Trash2 className="h-4 w-4" />
+                <Trash2 />
               )}
               削除
             </Button>

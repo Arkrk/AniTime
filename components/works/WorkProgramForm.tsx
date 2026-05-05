@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Database } from "@/types/supabase";
 import { DAYS } from "@/lib/get-schedule";
@@ -118,11 +118,13 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
                 <SelectValue placeholder="曜日を選択" />
               </SelectTrigger>
               <SelectContent position="popper">
-                {DAYS.map(day => (
-                  <SelectItem key={day.id} value={day.id.toString()}>
-                    {day.label}曜
-                  </SelectItem>
-                ))}
+                <SelectGroup>
+                  {DAYS.map(day => (
+                    <SelectItem key={day.id} value={day.id.toString()}>
+                      {day.label}曜
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
               </SelectContent>
             </Select>
           </Field>
@@ -200,7 +202,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
 
       <Field>
         <FieldLabel>放送クール</FieldLabel>
-        <ScrollArea className="h-40 border rounded-md">
+        <ScrollArea className="h-40 border rounded-2xl overflow-hidden">
           <div className="p-3 flex flex-wrap gap-2">
             {seasons.map(season => (
               <Toggle
@@ -219,7 +221,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
 
       <Field>
         <FieldLabel>タグ</FieldLabel>
-        <ScrollArea className="h-40 border rounded-md">
+        <ScrollArea className="h-40 border rounded-2xl overflow-hidden">
           <div className="p-3 flex flex-wrap gap-2">
             {tags.map(tag => (
               <Toggle

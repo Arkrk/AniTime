@@ -66,28 +66,28 @@ function ProgramItem({
       onClick={() => !isHoverable && setIsTapped(!isTapped)}
     >
       {isEditable && (
-        <div className={`absolute right-2 top-2 flex gap-1 transition-opacity bg-white/80 dark:bg-neutral-900/80 rounded p-1 z-10 ${isHoverable ? 'opacity-0 group-hover:opacity-100' : (isTapped ? 'opacity-100' : 'opacity-0')}`}>
+        <div className={`absolute right-2 top-2 flex gap-1 transition-opacity bg-white/80 dark:bg-neutral-900/80 rounded-2xl p-1 z-10 ${isHoverable ? 'opacity-0 group-hover:opacity-100' : (isTapped ? 'opacity-100' : 'opacity-0')}`}>
           <button
             {...dragHandleProps}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded cursor-grab active:cursor-grabbing"
+            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-2xl cursor-grab active:cursor-grabbing"
           >
             <GripVertical className="h-4 w-4 text-gray-500 dark:text-neutral-400" />
           </button>
           <button
             onClick={() => onDuplicate && onDuplicate(program)}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded"
+            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-2xl"
           >
             <Copy className="h-4 w-4 text-green-500" />
           </button>
           <button
             onClick={() => onEdit && onEdit(program)}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded"
+            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-2xl"
           >
             <Pencil className="h-4 w-4 text-blue-500" />
           </button>
           <button
             onClick={() => onDelete && onDelete(program.id)}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded"
+            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-2xl"
           >
             <Trash2 className="h-4 w-4 text-red-500" />
           </button>
@@ -152,7 +152,7 @@ function ProgramItem({
       )}
 
       {program.programs_tags && program.programs_tags.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1">
           {program.programs_tags?.map((pt: any) => (
             pt.tags && (
               <span
@@ -343,7 +343,7 @@ export function WorkProgramManager({ workId }: { workId: number }) {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-md border overflow-hidden">
+      <div className="rounded-2xl border overflow-hidden">
         {renderContent()}
         {isEditable && (
           <button

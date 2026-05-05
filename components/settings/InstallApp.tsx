@@ -38,13 +38,13 @@ export function InstallApp() {
   if (!mounted || !deferredPrompt) return null
 
   return (
-    <div className="bg-primary-foreground rounded-md border overflow-hidden">
+    <div className="bg-primary-foreground rounded-2xl border overflow-hidden">
       <div className="p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h3 className="font-medium text-base">アプリとしてインストール</h3>
         </div>
         <div>
-          <Button onClick={handleInstallClick} variant="outline">
+          <Button onClick={handleInstallClick}>
             <Download />
             インストール
           </Button>

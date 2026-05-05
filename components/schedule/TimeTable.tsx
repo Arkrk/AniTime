@@ -213,12 +213,12 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
         >
           {/* --- ヘッダー行（チャンネル/エリア名） --- */}
           <div 
-            className="flex sticky top-0 z-98 bg-background border-b shadow-sm shrink-0"
+            className="flex sticky top-0 z-48 bg-background border-b shadow-sm shrink-0"
             style={{ height: currentHeaderHeight }}
           >
             {/* 左上の空白部分 (時間軸の上) も固定 */}
             <div
-              className="sticky left-0 z-98 bg-primary-foreground border-r border-b shrink-0"
+              className="sticky left-0 z-48 bg-primary-foreground border-r border-b shrink-0"
               style={{ width: currentTimeColWidth, height: currentHeaderHeight }}
             />
 
@@ -239,7 +239,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
             
             {/* 時間軸 */}
             <div
-              className="sticky left-0 z-97 bg-primary-foreground border-r text-[10px] md:text-xs text-muted-foreground shrink-0"
+              className="sticky left-0 z-47 bg-primary-foreground border-r text-[10px] md:text-xs text-muted-foreground shrink-0"
               style={{ width: currentTimeColWidth }}
             >
               {/* 時間ラベル */}

@@ -2,7 +2,7 @@ import { ExternalLink } from "lucide-react";
 
 export function ExternalLinks() {
   return (
-    <div className="bg-primary-foreground rounded-md border overflow-hidden">
+    <div className="bg-primary-foreground rounded-2xl border overflow-hidden">
       <a
         href="https://arkxv.notion.site/programs"
         target="_blank"

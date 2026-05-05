@@ -6,6 +6,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -64,11 +65,13 @@ export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
             <SelectValue placeholder="曜日を選択" />
           </SelectTrigger>
           <SelectContent position="popper">
-            {DAYS.map((d) => (
-              <SelectItem key={d.id} value={d.id.toString()}>
-                {d.label}曜
-              </SelectItem>
-            ))}
+            <SelectGroup>
+              {DAYS.map((d) => (
+                <SelectItem key={d.id} value={d.id.toString()}>
+                  {d.label}曜
+                </SelectItem>
+              ))}
+            </SelectGroup>
           </SelectContent>
         </Select>
       </div>

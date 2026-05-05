@@ -108,7 +108,7 @@ export function PersonalDataSettings() {
   }
 
   return (
-    <div className="bg-primary-foreground rounded-md border overflow-hidden">
+    <div className="bg-primary-foreground rounded-2xl border overflow-hidden">
       <div className="border-b p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h3 className="font-medium text-base">データをエクスポート</h3>

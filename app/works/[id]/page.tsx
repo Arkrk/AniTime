@@ -54,28 +54,28 @@ export default async function WorkPage({ params }: PageProps) {
           
           <div className="flex flex-wrap gap-2">
             {work.website_url && (
-              <Button variant="outline" size="sm" asChild>
+              <Button size="sm" asChild>
                 <a href={work.website_url} target="_blank" rel="noopener noreferrer">
                   <Globe className="h-4 w-4" />公式サイト
                 </a>
               </Button>
             )}
             {work.x_username && (
-              <Button variant="outline" size="sm" asChild>
+              <Button variant="secondary" size="sm" asChild>
                 <a href={`https://x.com/${work.x_username}`} target="_blank" rel="noopener noreferrer">
                   <FaXTwitter className="h-4 w-4" />@{work.x_username}
                 </a>
               </Button>
             )}
             {work.wikipedia_url && (
-              <Button variant="outline" size="sm" asChild>
+              <Button variant="secondary" size="sm" asChild>
                 <a href={work.wikipedia_url} target="_blank" rel="noopener noreferrer">
                   <FaWikipediaW className="h-4 w-4" />Wikipedia
                 </a>
               </Button>
             )}
             {work.annict_url && (
-              <Button variant="outline" size="sm" asChild>
+              <Button variant="secondary" size="sm" asChild>
                 <a href={work.annict_url} target="_blank" rel="noopener noreferrer">
                   Annict
                 </a>

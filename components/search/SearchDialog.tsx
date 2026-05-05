@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { 
+  Command,
   CommandDialog, 
   CommandInput, 
   CommandList, 
@@ -48,50 +49,52 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput 
-        placeholder="作品タイトルで検索…"
-        value={query}
-        onValueChange={setQuery}
-      />
-      <CommandList className="h-75">
-        <CommandGroup heading="ナビゲーション">
-          <CommandItem onSelect={() => { onOpenChange(false); router.push("/"); }}>
-            <Table2 />
-            <span>番組表</span>
-          </CommandItem>
-          <CommandItem onSelect={() => { onOpenChange(false); router.push("/saved"); }}>
-            <Bookmark />
-            <span>保存済み</span>
-          </CommandItem>
-          <CommandItem onSelect={() => { onOpenChange(false); router.push("/updates"); }}>
-            <History />
-            <span>更新履歴</span>
-          </CommandItem>
-          <CommandItem onSelect={() => { onOpenChange(false); router.push("/settings"); }}>
-            <Bolt />
-            <span>設定</span>
-          </CommandItem>
-        </CommandGroup>
-        {query.length > 0 && data.length === 0 && !isPending && (
-           <CommandEmpty>作品が見つかりませんでした</CommandEmpty>
-        )}
-        {data.length > 0 && (
-          <>
-            <CommandSeparator />
-            <CommandGroup heading="作品">
-              {data.map((work) => (
-                <CommandItem
-                  key={work.id}
-                  value={work.name}
-                  onSelect={() => handleSelect(work.id)}
-                >
-                  {work.name}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </>
-        )}
-      </CommandList>
+      <Command>
+        <CommandInput 
+          placeholder="作品タイトルで検索…"
+          value={query}
+          onValueChange={setQuery}
+        />
+        <CommandList className="h-75">
+          <CommandGroup heading="ナビゲーション">
+            <CommandItem onSelect={() => { onOpenChange(false); router.push("/"); }}>
+              <Table2 />
+              <span>番組表</span>
+            </CommandItem>
+            <CommandItem onSelect={() => { onOpenChange(false); router.push("/saved"); }}>
+              <Bookmark />
+              <span>保存済み</span>
+            </CommandItem>
+            <CommandItem onSelect={() => { onOpenChange(false); router.push("/updates"); }}>
+              <History />
+              <span>更新履歴</span>
+            </CommandItem>
+            <CommandItem onSelect={() => { onOpenChange(false); router.push("/settings"); }}>
+              <Bolt />
+              <span>設定</span>
+            </CommandItem>
+          </CommandGroup>
+          {query.length > 0 && data.length === 0 && !isPending && (
+            <CommandEmpty>作品が見つかりませんでした</CommandEmpty>
+          )}
+          {data.length > 0 && (
+            <>
+              <CommandSeparator />
+              <CommandGroup heading="作品">
+                {data.map((work) => (
+                  <CommandItem
+                    key={work.id}
+                    value={work.name}
+                    onSelect={() => handleSelect(work.id)}
+                  >
+                    {work.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </>
+          )}
+        </CommandList>
+      </Command>
     </CommandDialog>
   );
 }

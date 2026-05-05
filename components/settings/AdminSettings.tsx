@@ -22,7 +22,7 @@ export function AdminSettings() {
   }, [message]);
 
   return (
-    <div className="bg-primary-foreground rounded-md border overflow-hidden">
+    <div className="bg-primary-foreground rounded-2xl border overflow-hidden">
       <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
           <div>

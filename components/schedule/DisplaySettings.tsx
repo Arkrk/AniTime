@@ -20,8 +20,8 @@ export function DisplaySettings() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Settings className="h-4 w-4" />
+        <Button variant="secondary" size="icon">
+          <Settings />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0 overflow-hidden" align="end">
@@ -55,7 +55,7 @@ export function DisplaySettings() {
                   </div>
                 </div>
               </SheetTrigger>
-              <SheetContent className="w-screen sm:w-100">
+              <SheetContent className="w-screen sm:w-90">
                 <SheetHeader>
                   <SheetTitle>チャンネル表示設定</SheetTitle>
                   <SheetDescription className="sr-only">チャンネルの表示・非表示を設定します</SheetDescription>

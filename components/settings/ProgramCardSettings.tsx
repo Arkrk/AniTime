@@ -7,7 +7,7 @@ export function ProgramCardSettings() {
   const { hoverDetails, updateHoverDetails, showOgPreview, updateShowOgPreview, loaded } = useProgramCardSettings()
 
   return (
-    <div className="bg-primary-foreground rounded-md border overflow-hidden flex flex-col divide-y divide-border">
+    <div className="bg-primary-foreground rounded-2xl border overflow-hidden flex flex-col divide-y divide-border">
       <div className="p-4 flex flex-row gap-4 items-center justify-between">
         <div>
           <h3 className="font-medium text-base">ホバー時に詳細情報を自動表示</h3>

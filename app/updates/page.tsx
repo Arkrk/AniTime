@@ -44,10 +44,10 @@ function UpdatesSkeleton() {
           </div>
           
           <div className="block">
-            <div className="p-2 border border-b rounded-md bg-primary-foreground">
+            <div className="p-2 border border-b rounded-2xl bg-primary-foreground">
               <div className="flex items-center">
                 <div className="w-24 md:w-36 shrink-0 aspect-[1.91/1]">
-                  <Skeleton className="w-full h-full border" />
+                  <Skeleton className="w-full h-full border rounded-lg" />
                 </div>
                 <div className="flex flex-col justify-center mx-3 md:mx-4 flex-1">
                   <Skeleton className="h-4 md:h-5 w-3/4" />
@@ -91,10 +91,10 @@ async function UpdatesList() {
             </div>
             
             <Link href={`/works/${event.work.id}`} className="block group">
-              <div className="p-2 border border-b rounded-md bg-primary-foreground hover:bg-accent transition-colors">
+              <div className="p-2 border border-b rounded-2xl bg-primary-foreground hover:bg-accent transition-colors">
                 <div className="flex items-center">
                   <div className="w-24 md:w-36 shrink-0">
-                    <OGPreviewServer imageUrl={event.work.og_image_url} />
+                    <OGPreviewServer imageUrl={event.work.og_image_url} className="rounded-lg" />
                   </div>
                   <div className="flex flex-col justify-center mx-3 md:mx-4">
                     <span className="font-medium text-card-foreground text-sm md:text-base line-clamp-2 group-hover:text-primary transition-colors">{event.work.name}</span>

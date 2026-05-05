@@ -8,13 +8,13 @@ export const BackButton = () => {
   const router = useRouter();
 
   return (
-    <div className="absolute top-4 left-4 z-50 bg-background/80 rounded-md backdrop-blur-md">
+    <div className="absolute top-4 left-4 z-50 bg-background/80 rounded-4xl backdrop-blur-md">
       <Button
         size="icon"
         variant="outline"
         onClick={() => router.back()}
       >
-        <ArrowLeft className="h-5 w-5" />
+        <ArrowLeft />
       </Button>
     </div>
   );

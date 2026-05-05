@@ -33,7 +33,7 @@ export function VisibilitySettings() {
     return (
       <ScrollArea className="flex-1 min-h-0">
         <div className="flex flex-col gap-6 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-          <div className="border rounded-md overflow-hidden">
+          <div className="border rounded-2xl overflow-hidden">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="flex items-center bg-gray-50/50 dark:bg-neutral-900/50 border-b last:border-b-0 h-[44.5px]">
                 <div className="flex items-center pl-4 py-3 pr-3">
@@ -53,7 +53,7 @@ export function VisibilitySettings() {
   return (
     <ScrollArea className="flex-1 min-h-0">
       <div className="flex flex-col gap-6 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-        <div className="border rounded-md overflow-hidden">
+        <div className="rounded-md overflow-hidden">
           <Accordion type="multiple">
             {areas.map((area) => {
               const areaChannels = channels.filter((c) => c.area_id === area.id);
