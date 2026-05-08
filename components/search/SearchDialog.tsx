@@ -25,17 +25,21 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   const [query, setQuery] = React.useState("");
   const [data, setData] = React.useState<{ id: number; name: string }[]>([]);
   const [isPending, startTransition] = React.useTransition();
+  const [isTyping, setIsTyping] = React.useState(false);
 
   React.useEffect(() => {
     if (!query) {
       setData([]);
+      setIsTyping(false);
       return;
     }
 
+    setIsTyping(true);
     const timer = setTimeout(() => {
       startTransition(async () => {
         const results = await searchWorks(query);
         setData(results);
+        setIsTyping(false);
       });
     }, 500);
 
@@ -74,7 +78,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
               <span>設定</span>
             </CommandItem>
           </CommandGroup>
-          {query.length > 0 && data.length === 0 && !isPending && (
+          {query.length > 0 && data.length === 0 && !isPending && !isTyping && (
             <CommandEmpty>作品が見つかりませんでした</CommandEmpty>
           )}
           {data.length > 0 && (
