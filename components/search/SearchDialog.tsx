@@ -23,7 +23,7 @@ interface SearchDialogProps {
 export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   const router = useRouter();
   const [query, setQuery] = React.useState("");
-  const [data, setData] = React.useState<{ id: number; name: string }[]>([]);
+  const [data, setData] = React.useState<{ id: number; name: string; name_yomi: string | null }[]>([]);
   const [isPending, startTransition] = React.useTransition();
   const [isTyping, setIsTyping] = React.useState(false);
 
@@ -88,7 +88,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                 {data.map((work) => (
                   <CommandItem
                     key={work.id}
-                    value={work.name}
+                    value={`${work.name} ${work.name_yomi || ""}`}
                     onSelect={() => handleSelect(work.id)}
                   >
                     {work.name}

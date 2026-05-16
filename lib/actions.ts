@@ -26,8 +26,8 @@ export async function searchWorks(query: string) {
 
   const { data, error } = await supabase
     .from("works")
-    .select("id, name")
-    .ilike("name", `%${safeQuery}%`)
+    .select("id, name, name_yomi")
+    .or(`name.ilike.%${safeQuery}%,name_yomi.ilike.%${safeQuery}%`)
     .limit(20);
   
   if (error) {
@@ -60,6 +60,7 @@ export async function getAreasAndChannels() {
 
 export async function updateWork(id: number, data: {
   name: string;
+  name_yomi?: string | null;
   website_url?: string | null;
   x_username?: string | null;
   wikipedia_url?: string | null;
@@ -95,6 +96,7 @@ export async function updateWork(id: number, data: {
 
 export async function createWork(data: {
   name: string;
+  name_yomi?: string | null;
   website_url?: string | null;
   x_username?: string | null;
   wikipedia_url?: string | null;

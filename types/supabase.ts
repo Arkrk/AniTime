@@ -223,6 +223,7 @@ export type Database = {
           created_at: string | null
           id: number
           name: string
+          name_yomi: string | null
           og_image_url: string | null
           updated_at: string | null
           website_url: string | null
@@ -234,6 +235,7 @@ export type Database = {
           created_at?: string | null
           id?: number
           name: string
+          name_yomi?: string | null
           og_image_url?: string | null
           updated_at?: string | null
           website_url?: string | null
@@ -245,6 +247,7 @@ export type Database = {
           created_at?: string | null
           id?: number
           name?: string
+          name_yomi?: string | null
           og_image_url?: string | null
           updated_at?: string | null
           website_url?: string | null
