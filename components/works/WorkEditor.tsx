@@ -15,6 +15,7 @@ import { updateWork, deleteWork, createWork } from "@/lib/actions";
 interface Work {
   id: number;
   name: string;
+  name_yomi: string | null;
   website_url: string | null;
   x_username: string | null;
   wikipedia_url: string | null;
@@ -39,6 +40,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
   const [skipInsertTimestamp, setSkipInsertTimestamp] = useState(false);
   const [formData, setFormData] = useState({
     name: work?.name || "",
+    name_yomi: work?.name_yomi || "",
     website_url: work?.website_url || "",
     x_username: work?.x_username || "",
     wikipedia_url: work?.wikipedia_url || "",
@@ -49,6 +51,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
     if (work) {
       setFormData({
         name: work.name,
+        name_yomi: work.name_yomi || "",
         website_url: work.website_url || "",
         x_username: work.x_username || "",
         wikipedia_url: work.wikipedia_url || "",
@@ -57,6 +60,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
     } else {
       setFormData({
         name: "",
+        name_yomi: "",
         website_url: "",
         x_username: "",
         wikipedia_url: "",
@@ -77,6 +81,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
       if (work) {
         await updateWork(work.id, {
           name: formData.name,
+          name_yomi: formData.name_yomi || null,
           website_url: formData.website_url || null,
           x_username: formData.x_username || null,
           wikipedia_url: formData.wikipedia_url || null,
@@ -85,6 +90,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
       } else {
         await createWork({
           name: formData.name,
+          name_yomi: formData.name_yomi || null,
           website_url: formData.website_url || null,
           x_username: formData.x_username || null,
           wikipedia_url: formData.wikipedia_url || null,
@@ -144,6 +150,15 @@ export function WorkEditor({ work }: WorkEditorProps) {
                 id="name"
                 name="name"
                 value={formData.name}
+                onChange={handleChange}
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="name_yomi">タイトル（読み）</FieldLabel>
+              <Input
+                id="name_yomi"
+                name="name_yomi"
+                value={formData.name_yomi}
                 onChange={handleChange}
               />
             </Field>
