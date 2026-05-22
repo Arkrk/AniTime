@@ -29,7 +29,6 @@ type ProgramCardProps = {
 };
 
 export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, className, style, ogPreview, colWidth = 160, forceDesktopSize = false }) => {
-  const [copied, setCopied] = useState(false);
   const { isSaved, toggleSaved } = useSavedPrograms();
   const isHoverable = useMediaQuery("(hover: hover)");
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -39,17 +38,6 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
 
   const popupSide = isDesktop ? "right" : "bottom";
   const popupAlign = isDesktop ? "start" : "center";
-
-  // クリップボードコピー機能
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(program.name);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
-    }
-  };
 
   const triggerElement = (
     <div
@@ -124,29 +112,16 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
         {/* チャンネル名 */}
         <span className="text-xs text-muted-foreground mb-0.5">{program.channel_name}</span>
 
-        {/* 作品タイトル・コピーボタン */}
-        <div className="flex items-start gap-2">
-          <h2 className="text-base font-bold leading-snug flex-1">
-            {program.work_id ? (
-              <Link href={`/works/${program.work_id}`} className="hover:underline">
-                {program.name}
-              </Link>
-            ) : (
-              program.name
-            )}
-          </h2>
-          <div className="flex gap-1 shrink-0">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={handleCopy}
-              title="作品タイトルをコピー"
-            >
-              {copied ? <Check className="h-3 w-3 text-green-600 dark:text-green-300" /> : <Copy className="h-3 w-3" />}
-            </Button>
-          </div>
-        </div>
+        {/* 作品タイトル */}
+        <h2 className="text-base font-bold leading-snug flex-1">
+          {program.work_id ? (
+            <Link href={`/works/${program.work_id}`} className="hover:underline">
+              {program.name}
+            </Link>
+          ) : (
+            program.name
+          )}
+        </h2> 
       </div>
 
       {/* バージョン・メモ */}
@@ -185,7 +160,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       {program.website_url && showOgPreview && ogPreview}
 
       {/* 各種リンク・保存ボタン */}
-      <div className="flex items-center justify-between pt-2 mt-1 border-t">
+      <div className="flex items-center justify-between pt-3 border-t">
         <div className="flex gap-1">
           {program.website_url && (
             <Button asChild variant="outline">
