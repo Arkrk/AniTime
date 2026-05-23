@@ -3,10 +3,12 @@ import { useState, useEffect, useCallback } from 'react';
 const STORAGE_KEY_CHANNELS = 'hidden_channel_ids';
 const EVENT_KEY = 'visibility_settings_changed';
 
+// チャンネルの表示設定を管理するカスタムフック
 export function useVisibilitySettings() {
   const [hiddenChannelIds, setHiddenChannelIds] = useState<number[]>([]);
   const [loaded, setLoaded] = useState(false);
 
+  // 設定をlocalStorageから読み込む
   const loadSettings = useCallback(() => {
     const storedChannels = localStorage.getItem(STORAGE_KEY_CHANNELS);
 
@@ -23,6 +25,7 @@ export function useVisibilitySettings() {
     loadSettings();
     setLoaded(true);
 
+    // 他のタブで設定が変更されたときに反映するためのイベントリスナー
     const handleStorageChange = (e: StorageEvent | Event) => {
       if (e.type === 'storage' && (e as StorageEvent).key !== STORAGE_KEY_CHANNELS) {
         return;
@@ -39,6 +42,7 @@ export function useVisibilitySettings() {
     };
   }, [loadSettings]);
 
+  // チャンネルの表示/非表示を切り替える
   const toggleChannel = (id: number) => {
     setHiddenChannelIds(prev => {
       const next = prev.includes(id)
@@ -54,6 +58,7 @@ export function useVisibilitySettings() {
     });
   };
 
+  // 複数のチャンネルの表示/非表示を一括で設定する
   const setChannelVisibility = (ids: number[], visible: boolean) => {
     setHiddenChannelIds(prev => {
       let next = [...prev];

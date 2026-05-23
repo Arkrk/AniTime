@@ -15,6 +15,7 @@ type Channel = Database["public"]["Tables"]["channels"]["Row"] & {
 type Tag = Database["public"]["Tables"]["tags"]["Row"];
 type Season = Database["public"]["Tables"]["seasons"]["Row"];
 
+// 番組データを管理するカスタムフック
 export function useWorkPrograms(workId: number) {
   const { user } = useLogin();
   const supabase = createClient();
@@ -25,8 +26,9 @@ export function useWorkPrograms(workId: number) {
   const [seasons, setSeasons] = useState<Season[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 番組データを取得
   const fetchPrograms = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("programs")
       .select(`
         *,
@@ -46,13 +48,14 @@ export function useWorkPrograms(workId: number) {
     const fetchData = async () => {
       setLoading(true);
       
-      // Fetch master data
+      // チャンネル、タグ、シーズンのマスターデータを取得
       const [channelsRes, tagsRes, seasonsRes] = await Promise.all([
         supabase.from("channels").select("*, areas(*)").order("order"),
         supabase.from("tags").select("*").order("order"),
         supabase.from("seasons").select("*").order("id", { ascending: false }),
       ]);
 
+      // データが取得できたら状態を更新
       if (channelsRes.data) setChannels(channelsRes.data);
       if (tagsRes.data) setTags(tagsRes.data);
       if (seasonsRes.data) setSeasons(seasonsRes.data);
@@ -65,6 +68,7 @@ export function useWorkPrograms(workId: number) {
     fetchData();
   }, [workId]);
 
+  // 番組データを追加
   const addProgram = async (programData: any) => {
     if (!user) return;
     
@@ -78,7 +82,7 @@ export function useWorkPrograms(workId: number) {
       ...program 
     } = programData;
 
-    // Get max order
+    // 新しい番組のorderは、現在の最大値 +1 にする
     const maxOrder = programs.length > 0 ? Math.max(...programs.map(p => p.order)) : 0;
     
     const { data, error } = await supabase
@@ -90,7 +94,7 @@ export function useWorkPrograms(workId: number) {
     if (error) throw error;
 
     if (data) {
-      // Add relations
+      // シーズンとタグの関連を保存
       if (season_ids?.length) {
         await supabase.from("programs_seasons").insert(
           season_ids.map((sid: number) => ({ program_id: data.id, season_id: sid }))
@@ -102,7 +106,7 @@ export function useWorkPrograms(workId: number) {
         );
       }
       
-      // Update work updated_at
+      // 更新日時を更新
       if (!skipUpdateTimestamp) {
         await supabase.from("works").update({ updated_at: new Date().toISOString() }).eq("id", workId);
       }
@@ -111,6 +115,7 @@ export function useWorkPrograms(workId: number) {
     }
   };
 
+  // 番組データを更新
   const updateProgram = async (id: number, programData: any) => {
     if (!user) return;
 
@@ -131,7 +136,7 @@ export function useWorkPrograms(workId: number) {
 
     if (error) throw error;
 
-    // Update relations (delete all and re-insert)
+    // シーズンとタグの関連を更新
     if (season_ids !== undefined) {
       await supabase.from("programs_seasons").delete().eq("program_id", id);
       if (season_ids.length > 0) {
@@ -150,7 +155,7 @@ export function useWorkPrograms(workId: number) {
       }
     }
 
-    // Update work updated_at
+    // 更新日時を更新
     if (!skipUpdateTimestamp) {
       await supabase.from("works").update({ updated_at: new Date().toISOString() }).eq("id", workId);
     }
@@ -158,10 +163,11 @@ export function useWorkPrograms(workId: number) {
     await fetchPrograms();
   };
 
+  // 番組データを削除
   const deleteProgram = async (id: number) => {
     if (!user) return;
 
-    // Delete relations first
+    // 関連するシーズンとタグのデータを先に削除
     const { error: seasonsError } = await supabase.from("programs_seasons").delete().eq("program_id", id);
     if (seasonsError) throw seasonsError;
 
@@ -178,19 +184,19 @@ export function useWorkPrograms(workId: number) {
     setPrograms(programs.filter(p => p.id !== id));
   };
 
+  // 番組の並び順を入れ替える
   const reorderPrograms = async (activeId: number, overId: number) => {
     if (!user) return;
 
     const oldIndex = programs.findIndex(p => p.id === activeId);
     const newIndex = programs.findIndex(p => p.id === overId);
 
+    // 並び替え後の番組リストを作成
     if (oldIndex !== -1 && newIndex !== -1) {
       const newPrograms = arrayMove(programs, oldIndex, newIndex);
       
-      // Optimistic update
       setPrograms(newPrograms);
-
-      // Update order in DB
+      
       const updates = newPrograms.map((p, index) => ({
         id: p.id,
         order: index + 1

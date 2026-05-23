@@ -4,11 +4,13 @@ const STORAGE_KEY_HOVER = 'program_card_hover_details';
 const STORAGE_KEY_OG = 'program_card_show_og_preview';
 const EVENT_KEY = 'program_card_settings_changed';
 
+// 番組カードの設定を管理するカスタムフック
 export function useProgramCardSettings() {
   const [hoverDetails, setHoverDetails] = useState<boolean>(true);
   const [showOgPreview, setShowOgPreview] = useState<boolean>(true);
   const [loaded, setLoaded] = useState(false);
 
+  // 設定をlocalStorageから読み込む
   const loadSettings = useCallback(() => {
     if (typeof window !== 'undefined') {
       const storedHover = localStorage.getItem(STORAGE_KEY_HOVER);
@@ -26,6 +28,7 @@ export function useProgramCardSettings() {
     loadSettings();
     setLoaded(true);
 
+    // 他のタブで設定が変更されたときに反映するためのイベントリスナー
     const handleStorageChange = (e: StorageEvent | Event) => {
       if (e.type === 'storage') {
         const key = (e as StorageEvent).key;
@@ -45,6 +48,7 @@ export function useProgramCardSettings() {
     };
   }, [loadSettings]);
 
+  // 詳細情報の自動表示設定を更新してlocalStorageに保存
   const updateHoverDetails = (hover: boolean) => {
     setHoverDetails(hover);
     setTimeout(() => {
@@ -53,6 +57,7 @@ export function useProgramCardSettings() {
     }, 0);
   };
 
+  // OGプレビューの表示設定を更新してlocalStorageに保存
   const updateShowOgPreview = (show: boolean) => {
     setShowOgPreview(show);
     setTimeout(() => {

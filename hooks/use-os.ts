@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 export type OS = "mac" | "windows" | "linux" | "other";
 
+// ユーザーのOSを判定するカスタムフック
 export function useOs() {
   const [os, setOs] = useState<OS>("other");
 

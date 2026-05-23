@@ -1,5 +1,6 @@
 import * as React from "react"
 
+// メディアクエリの状態を管理するカスタムフック
 export function useMediaQuery(query: string) {
   const [value, setValue] = React.useState(false)
 

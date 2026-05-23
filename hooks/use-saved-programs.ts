@@ -4,13 +4,14 @@ import { useState, useEffect, useCallback } from "react";
 
 const STORAGE_KEY = "saved_program_ids";
 
-// Simple event emitter for local updates to sync across components
 const eventTarget = new EventTarget();
 
+// 保存済み番組のIDをlocalStorageで管理するカスタムフック
 export function useSavedPrograms() {
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // localStorageから保存済みIDを読み込む
   const readFromStorage = useCallback(() => {
     if (typeof window === "undefined") return [];
     try {
@@ -30,9 +31,9 @@ export function useSavedPrograms() {
       setSavedIds(readFromStorage());
     };
 
-    // Listen for changes from other components/hooks
+    // 同一タブ内での変更を検知
     eventTarget.addEventListener("saved-programs-change", handleStorageChange);
-    // Listen for changes from other tabs
+    // 他タブでの変更を検知
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
@@ -41,6 +42,7 @@ export function useSavedPrograms() {
     };
   }, [readFromStorage]);
 
+  // IDの保存/削除を切り替える
   const toggleSaved = useCallback((id: string) => {
     const current = readFromStorage();
     const newIds = current.includes(id)

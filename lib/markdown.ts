@@ -6,6 +6,7 @@ import html from "remark-html";
 
 const contentDirectory = path.join(process.cwd(), "content");
 
+// Markdown ファイルを読み込み、HTML に変換して返す関数
 export async function getMarkDownContent(fileName: string): Promise<{ contentHtml: string; [key: string]: any } | null> {
   const fullPath = path.join(contentDirectory, fileName);
   if (!fs.existsSync(fullPath)) {

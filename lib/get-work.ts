@@ -10,6 +10,7 @@ type WorkDetail = Database["public"]["Tables"]["works"]["Row"] & {
   })[];
 };
 
+// IDを指定して作品データを取得
 export const getWorkById = cache(async (id: number) => {
   const supabase = await createClient();
 
@@ -46,6 +47,7 @@ export const getWorkById = cache(async (id: number) => {
   return work;
 });
 
+// 作品データをページ単位で取得
 export const getWorks = cache(async (
   page: number = 1,
   limit: number = 50,

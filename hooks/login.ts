@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/client";
 import { User } from "@supabase/supabase-js";
 
+// ログイン状態を管理するカスタムフック
 export function useLogin() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +29,7 @@ export function useLogin() {
       }
     };
 
+    // ユーザーのセッションを確認して状態を更新
     const checkUser = async () => {
       checkErrorFromUrl();
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -84,6 +86,7 @@ export function useLogin() {
     };
   }, [supabase, ADMIN_EMAIL]);
 
+  // ログイン処理
   const handleLogin = async () => {
     setLoading(true);
     try {
@@ -101,6 +104,7 @@ export function useLogin() {
     }
   };
 
+  // ログアウト処理
   const handleLogout = async () => {
     setLoading(true);
     try {

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/server";
 import { getOGImage } from "@/lib/get-opengraph";
 
+// 認証が必要な処理を行う前に呼び出す関数
 async function requireAuth() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -16,6 +17,7 @@ async function requireAuth() {
   return supabase;
 }
 
+// 作品データを検索
 export async function searchWorks(query: string) {
   if (!query || query.length < 1 || query.length > 100) return [];
 
@@ -58,6 +60,7 @@ export async function getAreasAndChannels() {
   return { areas, channels };
 }
 
+// 作品データを更新
 export async function updateWork(id: number, data: {
   name: string;
   name_yomi?: string | null;
@@ -94,6 +97,7 @@ export async function updateWork(id: number, data: {
   return { success: true };
 }
 
+// 作品データを追加
 export async function createWork(data: {
   name: string;
   name_yomi?: string | null;
@@ -104,11 +108,13 @@ export async function createWork(data: {
 }, skipInsertTimestamp?: boolean) {
   const supabase = await requireAuth();
 
+  // 作成日時を追加
   const insertData: any = { ...data };
   if (!skipInsertTimestamp) {
     insertData.created_at = new Date().toISOString();
   }
 
+  // 公式サイトURLがある場合はOGP画像を取得
   if (insertData.website_url) {
     const ogImage = await getOGImage(insertData.website_url);
     insertData.og_image_url = ogImage;
@@ -128,6 +134,7 @@ export async function createWork(data: {
   return { success: true, id: newWork.id };
 }
 
+// 作品データを削除
 export async function deleteWork(id: number) {
   const supabase = await requireAuth();
 

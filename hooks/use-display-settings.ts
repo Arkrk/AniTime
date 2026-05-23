@@ -3,10 +3,12 @@ import { useState, useEffect, useCallback } from 'react';
 const STORAGE_KEY_NEW_ONLY = 'display_settings_new_only';
 const EVENT_KEY = 'display_settings_changed';
 
+// 番組表の表示設定を管理するカスタムフック
 export function useDisplaySettings() {
   const [showNewOnly, setShowNewOnly] = useState<boolean>(false);
   const [loaded, setLoaded] = useState(false);
 
+  // 設定をlocalStorageから読み込む
   const loadSettings = useCallback(() => {
     if (typeof window !== 'undefined') {
       const storedNewOnly = localStorage.getItem(STORAGE_KEY_NEW_ONLY);
@@ -20,6 +22,7 @@ export function useDisplaySettings() {
     loadSettings();
     setLoaded(true);
 
+    // 他のタブで設定が変更されたときに反映するためのイベントリスナー
     const handleStorageChange = (e: StorageEvent | Event) => {
       if (e.type === 'storage') {
         const key = (e as StorageEvent).key;
@@ -39,6 +42,7 @@ export function useDisplaySettings() {
     };
   }, [loadSettings]);
 
+  // 設定を更新してlocalStorageに保存
   const updateShowNewOnly = (show: boolean) => {
     setShowNewOnly(show);
     setTimeout(() => {

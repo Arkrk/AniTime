@@ -12,6 +12,7 @@ export const DAYS = [
   { id: 7, label: "日", en: "Sun" },
 ];
 
+// 指定したシーズンと曜日の番組表を取得
 export async function getScheduleByDay(day: number, seasonId: number): Promise<ProgramData[]> {
   const supabase = await createClient();
 
@@ -85,6 +86,7 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
   return formattedData;
 }
 
+// 指定したシーズンとチャンネルの週間番組表を取得
 export async function getWeekScheduleByChannel(seasonId: number, channelId: number): Promise<ProgramData[]> {
   const supabase = await createClient();
 
