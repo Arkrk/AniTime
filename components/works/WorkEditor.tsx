@@ -154,7 +154,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor="name_yomi">タイトル（読み）</FieldLabel>
+              <FieldLabel htmlFor="name_yomi">タイトルの読み</FieldLabel>
               <Input
                 id="name_yomi"
                 name="name_yomi"
@@ -207,13 +207,13 @@ export function WorkEditor({ work }: WorkEditorProps) {
         <SheetFooter className={`flex flex-row items-center justify-between w-full`}>
           {!work ? (
             <div className="flex items-center space-x-2">
-              <Globe className={cn("h-4 w-4 transition-colors", !skipInsertTimestamp ? "text-white" : "text-muted-foreground")} />
+              <Globe className={cn("h-4 w-4 transition-colors", !skipInsertTimestamp ? "text-foreground" : "text-muted-foreground")} />
               <Switch
                 id="skip-insert-timestamp"
                 checked={skipInsertTimestamp}
                 onCheckedChange={setSkipInsertTimestamp}
               />
-              <Lock className={cn("h-4 w-4 transition-colors", skipInsertTimestamp ? "text-white" : "text-muted-foreground")} />
+              <Lock className={cn("h-4 w-4 transition-colors", skipInsertTimestamp ? "text-foreground" : "text-muted-foreground")} />
             </div>
           ) : (
             <Button
