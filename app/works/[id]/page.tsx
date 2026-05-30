@@ -7,9 +7,9 @@ import { formatRelativeTime } from "@/lib/date-utils";
 import { BackButton } from "@/components/layout/BackButton";
 import { Button } from "@/components/ui/button";
 import { WorkProgramManager } from "@/components/works/WorkProgramManager";
-import { WorkEditor } from "@/components/works/WorkEditor";
 import { defaultOpenGraph } from "@/lib/metadata";
 import { OGPreviewServer } from "@/components/works/OGPreviewServer";
+import { WorkActionsMenu } from "@/components/works/WorkActionsMenu";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -46,6 +46,7 @@ export default async function WorkPage({ params }: PageProps) {
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <BackButton />
+      <WorkActionsMenu work={work} floating />
 
       <div className="flex-1 p-4 md:px-8 py-16 max-w-4xl mx-auto w-full">
         {/* 作品情報 */}
@@ -81,7 +82,6 @@ export default async function WorkPage({ params }: PageProps) {
                 </a>
               </Button>
             )}
-            <WorkEditor work={work} />
           </div>
         </div>
 

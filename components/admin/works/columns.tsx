@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Database } from "@/types/supabase";
-import { WorkEditor } from "@/components/works/WorkEditor";
+import { WorkActionsMenu } from "@/components/works/WorkActionsMenu";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import Link from "next/link";
@@ -130,7 +130,7 @@ export const columns: ColumnDef<Work>[] = [
     id: "actions",
     cell: ({ row }) => {
       const work = row.original;
-      return <WorkEditor work={work} />;
+      return <WorkActionsMenu work={work} deleteRedirectTo="/admin" />;
     },
   },
 ];

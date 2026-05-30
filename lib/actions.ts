@@ -135,7 +135,7 @@ export async function createWork(data: {
 }
 
 // 作品データを削除
-export async function deleteWork(id: number) {
+export async function deleteWork(id: number, redirectTo = "/") {
   const supabase = await requireAuth();
 
   const { error } = await supabase
@@ -147,5 +147,5 @@ export async function deleteWork(id: number) {
     throw new Error(error.message);
   }
 
-  redirect("/");
+  redirect(redirectTo);
 }

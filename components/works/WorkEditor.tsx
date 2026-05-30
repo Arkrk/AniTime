@@ -3,14 +3,14 @@
 import { useState, useEffect } from "react";
 import { useLogin } from "@/hooks/login";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "@/components/ui/switch";
-import { Pencil, Trash2, Plus, AtSign, Globe, Lock } from "lucide-react";
+import { AtSign, Globe, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { updateWork, deleteWork, createWork } from "@/lib/actions";
+import { updateWork, createWork } from "@/lib/actions";
 
 interface Work {
   id: number;
@@ -24,19 +24,26 @@ interface Work {
 
 interface WorkEditorProps {
   work?: Work;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function WorkEditor({ work }: WorkEditorProps) {
+export function WorkEditor({
+  work,
+  open,
+  onOpenChange,
+}: WorkEditorProps) {
   const { user } = useLogin();
   const [mounted, setMounted] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const [open, setOpen] = useState(false);
+  const sheetOpen = open ?? internalOpen;
+  const setSheetOpen = onOpenChange ?? setInternalOpen;
   const [isSaving, setIsSaving] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [skipInsertTimestamp, setSkipInsertTimestamp] = useState(false);
   const [formData, setFormData] = useState({
     name: work?.name || "",
@@ -67,7 +74,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
         annict_url: "",
       });
     }
-  }, [work, open]);
+  }, [work, sheetOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -97,7 +104,7 @@ export function WorkEditor({ work }: WorkEditorProps) {
           annict_url: formData.annict_url || null,
         }, skipInsertTimestamp);
       }
-      setOpen(false);
+      setSheetOpen(false);
     } catch (error) {
       console.error(error);
       alert(work ? "更新に失敗しました" : "作成に失敗しました");
@@ -106,38 +113,12 @@ export function WorkEditor({ work }: WorkEditorProps) {
     }
   };
 
-  const handleDelete = async () => {
-    if (!work) return;
-    if (!confirm("本当に削除しますか？ この操作は取り消せません。")) return;
-    setIsDeleting(true);
-    try {
-      await deleteWork(work.id);
-    } catch (error) {
-      console.error(error);
-      alert("削除に失敗しました");
-      setIsDeleting(false);
-    }
-  };
-
   if (!mounted || !user) {
     return null;
   }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        {work ? (
-          <Button variant="secondary" size="sm">
-            <Pencil />
-            編集
-          </Button>
-        ) : (
-          <Button variant="default" size="sm">
-            <Plus />
-            新規
-          </Button>
-        )}
-      </SheetTrigger>
+    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetContent className="flex flex-col w-screen sm:w-150" aria-describedby={undefined}>
         <SheetHeader>
           <SheetTitle>{work ? "作品を編集" : "作品を追加"}</SheetTitle>
@@ -215,25 +196,12 @@ export function WorkEditor({ work }: WorkEditorProps) {
               />
               <Lock className={cn("h-4 w-4 transition-colors", skipInsertTimestamp ? "text-foreground" : "text-muted-foreground")} />
             </div>
-          ) : (
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={isDeleting || isSaving}
-            >
-              {isDeleting ? (
-                <Spinner />
-              ) : (
-                <Trash2 />
-              )}
-              削除
-            </Button>
-          )}
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setOpen(false)}>
+          ) : null}
+          <div className="ml-auto flex gap-2">
+            <Button variant="outline" onClick={() => setSheetOpen(false)}>
               キャンセル
             </Button>
-            <Button onClick={handleSave} disabled={isDeleting || isSaving}>
+            <Button onClick={handleSave} disabled={isSaving}>
               {isSaving && <Spinner className="mr-2" />}
               {work ? "保存" : "追加"}
             </Button>

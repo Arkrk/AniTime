@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { WorkEditor } from "@/components/works/WorkEditor";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Plus, ArrowLeft, ArrowRight } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,6 +34,7 @@ export function DataTable<TData, TValue>({
   const router = useRouter();
   const searchParams = useSearchParams();
   const [sorting, setSorting] = useState<SortingState>([{ id: "id", desc: true }]);
+  const [createOpen, setCreateOpen] = useState(false);
 
   // URLパラメータから初期状態を設定
   useEffect(() => {
@@ -131,7 +132,11 @@ export function DataTable<TData, TValue>({
         </table>
       </div>
       <div className="flex items-center justify-between py-4 shrink-0 border-t px-4">
-        <WorkEditor />
+        <Button variant="default" size="sm" onClick={() => setCreateOpen(true)}>
+          <Plus />
+          新規
+        </Button>
+        <WorkEditor open={createOpen} onOpenChange={setCreateOpen} />
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
