@@ -33,12 +33,12 @@ export const Toolbar: React.FC = () => {
                 <Palette className="h-5 w-5" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-4 mb-2" side="top" align="end">
+            <PopoverContent side="top" align="end">
               <div className="space-y-3">
                 <h4 className="font-medium text-sm">背景色の凡例</h4>
-                <div className="border rounded-md overflow-hidden bg-background">
+                <div className="border rounded-lg overflow-hidden">
                   <table className="w-full text-xs text-center border-separate border-spacing-0">
-                    <thead className="bg-muted/50 text-muted-foreground">
+                    <thead className="text-muted-foreground">
                       <tr>
                         <th className="border-b border-r p-1.5 font-medium w-10"></th>
                         <th className="border-b border-r p-1.5 font-medium w-25">AT-X</th>
@@ -50,28 +50,28 @@ export const Toolbar: React.FC = () => {
                         <td className="border-b border-r p-2">
                           <div className="w-5 h-5 mx-auto bg-purple-100 dark:bg-purple-900 border border-purple-200 dark:border-purple-700 rounded-full"></div>
                         </td>
-                        <td className="border-b border-r p-1 text-[11px]">独占放送</td>
-                        <td className="border-b p-1 bg-muted/10"></td>
+                        <td className="border-b border-r p-1 text-[11px]">最速放送<br /><span className="text-[10px] inline-block text-muted-foreground whitespace-nowrap">1週間先行</span></td>
+                        <td className="border-b p-1"></td>
                       </tr>
                       <tr>
                         <td className="border-b border-r p-2">
                           <div className="w-5 h-5 mx-auto bg-red-100 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-full"></div>
                         </td>
                         <td className="border-b border-r p-1 text-[11px]">最速放送</td>
-                        <td className="border-b p-1 bg-muted/10"></td>
+                        <td className="border-b p-1"></td>
                       </tr>
                       <tr>
                         <td className="border-b border-r p-2">
                           <div className="w-5 h-5 mx-auto bg-orange-100 dark:bg-orange-900 border border-orange-200 dark:border-orange-700 rounded-full"></div>
                         </td>
-                        <td className="border-b border-r p-1 text-[11px]">最速放送<br/><span className="scale-90 inline-block text-muted-foreground whitespace-nowrap">地上波同時</span></td>
-                        <td className="border-b p-1 text-[11px]">最速放送<br/><span className="scale-90 inline-block text-muted-foreground whitespace-nowrap">AT-Xは考慮せず</span></td>
+                        <td className="border-b border-r p-1 text-[11px]">最速放送<br /><span className="text-[10px] inline-block text-muted-foreground whitespace-nowrap">地上波同時</span></td>
+                        <td className="border-b p-1 text-[11px]">最速放送<br /><span className="text-[10px] inline-block text-muted-foreground whitespace-nowrap">AT-Xは考慮せず</span></td>
                       </tr>
                       <tr>
                         <td className="border-b border-r p-2">
                           <div className="w-5 h-5 mx-auto bg-yellow-100 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-full"></div>
                         </td>
-                        <td colSpan={2} className="border-b p-1 text-[11px]">同日時差放送</td>
+                        <td colSpan={2} className="border-b p-1 text-[11px]">同日時差遅れ放送</td>
                       </tr>
                       <tr>
                         <td className="border-b border-r p-2">
