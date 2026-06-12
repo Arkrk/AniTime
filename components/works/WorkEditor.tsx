@@ -202,7 +202,7 @@ export function WorkEditor({
               キャンセル
             </Button>
             <Button onClick={handleSave} disabled={isSaving}>
-              {isSaving && <Spinner className="mr-2" />}
+              {isSaving && <Spinner />}
               {work ? "保存" : "追加"}
             </Button>
           </div>

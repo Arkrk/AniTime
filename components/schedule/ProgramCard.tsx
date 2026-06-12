@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { ja } from "date-fns/locale";
-import { Copy, Check, Clock, Calendar, Bookmark, Globe } from "lucide-react";
+import { Clock, Calendar, Bookmark, Globe } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
 import { LayoutProgram, LayoutMode } from "@/types/schedule";
 import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
@@ -77,7 +77,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
           {formatTime30(program.start_time)}～{formatTime30(program.end_time)}
         </span>
         {/* 番組名 */}
-        <span className={cn(forceDesktopSize ? "text-[13px] leading-tight" : "text-[11px] md:text-[13px] leading-[1.15] md:leading-tight", "font-bold group-hover:line-clamp-none mb-0.5")}>
+        <span className={cn(forceDesktopSize ? "text-[13px] leading-tight" : "text-[11px] md:text-[13px] leading-[1.15] md:leading-tight", "font-bold group-hover:line-clamp-none")}>
           {program.name}
         </span>
       </div>
@@ -121,13 +121,13 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
           ) : (
             program.name
           )}
-        </h2> 
+        </h2>
       </div>
 
       {/* バージョン・メモ */}
       {(program.version || program.note) && (
         <div className="flex flex-col gap-1">
-          
+
           {program.version && (
             <span className="text-sm text-blue-600 dark:text-blue-300 font-medium w-fit">
               {program.version}
@@ -155,7 +155,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
           ))}
         </div>
       )}
-      
+
       {/* OGプレビュー */}
       {program.website_url && showOgPreview && ogPreview}
 

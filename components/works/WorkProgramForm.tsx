@@ -110,8 +110,8 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
         <div className="grid grid-cols-2 gap-4">
           <Field>
             <FieldLabel htmlFor="day_of_the_week">曜日</FieldLabel>
-            <Select 
-              value={formData.day_of_the_week?.toString()} 
+            <Select
+              value={formData.day_of_the_week?.toString()}
               onValueChange={(val) => handleChange("day_of_the_week", Number(val))}
             >
               <SelectTrigger className="w-full">
@@ -163,10 +163,10 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
         <div className="grid grid-cols-2 gap-4">
           <Field>
             <FieldLabel htmlFor="start_time">開始時間</FieldLabel>
-            <Input 
-              id="start_time" 
-              type="time" 
-              value={formData.start_time || ""} 
+            <Input
+              id="start_time"
+              type="time"
+              value={formData.start_time || ""}
               onChange={(e) => handleChange("start_time", e.target.value)}
               required
               className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
@@ -175,10 +175,10 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
 
           <Field>
             <FieldLabel htmlFor="end_time">終了時間</FieldLabel>
-            <Input 
-              id="end_time" 
-              type="time" 
-              value={formData.end_time || ""} 
+            <Input
+              id="end_time"
+              type="time"
+              value={formData.end_time || ""}
               onChange={(e) => handleChange("end_time", e.target.value)}
               required
               className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
@@ -186,75 +186,75 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
           </Field>
         </div>
 
-      <Field>
-        <FieldLabel htmlFor="color">背景色</FieldLabel>
-        <div className="flex flex-wrap gap-2">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map(color => (
-            <button
-              key={color}
-              type="button"
-              onClick={() => handleChange("color", color)}
-              className={`w-8 h-8 rounded-full border-2 ${getProgramColorClass(color)} ${formData.color === color ? "ring-2 ring-offset-2 ring-black" : ""}`}
-            />
-          ))}
-        </div>
-      </Field>
-
-      <Field>
-        <FieldLabel>放送クール</FieldLabel>
-        <ScrollArea className="h-40 border rounded-2xl overflow-hidden">
-          <div className="p-3 flex flex-wrap gap-2">
-            {seasons.map(season => (
-              <Toggle
-                key={season.id}
-                variant="outline"
-                size="default"
-                pressed={formData.season_ids.includes(season.id)}
-                onPressedChange={() => handleSeasonToggle(season.id)}
-              >
-                {season.year}年{season.month}月
-              </Toggle>
+        <Field>
+          <FieldLabel htmlFor="color">背景色</FieldLabel>
+          <div className="flex flex-wrap gap-2">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map(color => (
+              <button
+                key={color}
+                type="button"
+                onClick={() => handleChange("color", color)}
+                className={`w-8 h-8 rounded-full border-2 ${getProgramColorClass(color)} ${formData.color === color ? "ring-2 ring-offset-2 ring-black" : ""}`}
+              />
             ))}
           </div>
-        </ScrollArea>
-      </Field>
+        </Field>
 
-      <Field>
-        <FieldLabel>タグ</FieldLabel>
-        <ScrollArea className="h-40 border rounded-2xl overflow-hidden">
-          <div className="p-3 flex flex-wrap gap-2">
-            {tags.map(tag => (
-              <Toggle
-                key={tag.id}
-                variant="outline"
-                size="default"
-                pressed={formData.tag_ids.includes(tag.id)}
-                onPressedChange={() => handleTagToggle(tag.id)}
-              >
-                {tag.name}
-              </Toggle>
-            ))}
-          </div>
-        </ScrollArea>
-      </Field>
+        <Field>
+          <FieldLabel>放送クール</FieldLabel>
+          <ScrollArea className="h-40 border rounded-2xl overflow-hidden">
+            <div className="p-3 flex flex-wrap gap-2">
+              {seasons.map(season => (
+                <Toggle
+                  key={season.id}
+                  variant="outline"
+                  size="default"
+                  pressed={formData.season_ids.includes(season.id)}
+                  onPressedChange={() => handleSeasonToggle(season.id)}
+                >
+                  {season.year}年{season.month}月
+                </Toggle>
+              ))}
+            </div>
+          </ScrollArea>
+        </Field>
 
-      <Field>
-        <FieldLabel htmlFor="version">バージョン</FieldLabel>
-        <Input 
-          id="version" 
-          value={formData.version || ""} 
-          onChange={(e) => handleChange("version", e.target.value)}
-        />
-      </Field>
+        <Field>
+          <FieldLabel>タグ</FieldLabel>
+          <ScrollArea className="h-40 border rounded-2xl overflow-hidden">
+            <div className="p-3 flex flex-wrap gap-2">
+              {tags.map(tag => (
+                <Toggle
+                  key={tag.id}
+                  variant="outline"
+                  size="default"
+                  pressed={formData.tag_ids.includes(tag.id)}
+                  onPressedChange={() => handleTagToggle(tag.id)}
+                >
+                  {tag.name}
+                </Toggle>
+              ))}
+            </div>
+          </ScrollArea>
+        </Field>
 
-      <Field>
-        <FieldLabel htmlFor="note">備考</FieldLabel>
-        <Textarea 
-          id="note" 
-          value={formData.note || ""} 
-          onChange={(e) => handleChange("note", e.target.value)}
-        />
-      </Field>
+        <Field>
+          <FieldLabel htmlFor="version">バージョン</FieldLabel>
+          <Input
+            id="version"
+            value={formData.version || ""}
+            onChange={(e) => handleChange("version", e.target.value)}
+          />
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="note">備考</FieldLabel>
+          <Textarea
+            id="note"
+            value={formData.note || ""}
+            onChange={(e) => handleChange("note", e.target.value)}
+          />
+        </Field>
       </div>
 
       <SheetFooter>
@@ -273,7 +273,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
               キャンセル
             </Button>
             <Button type="submit" disabled={isSaving}>
-              {isSaving && <Spinner className="mr-2" />}
+              {isSaving && <Spinner />}
               {initialData?.id ? "保存" : "追加"}
             </Button>
           </div>
