@@ -11,7 +11,7 @@ export const TIME_COL_WIDTH = 35; // 時間軸列の幅
 export const HEADER_HEIGHT = 35; // ヘッダー行の高さ
 
 // モバイル表示用
-export const MOBILE_HOUR_HEIGHT = 180; 
+export const MOBILE_HOUR_HEIGHT = 180;
 export const MOBILE_COL_WIDTH = 120;
 export const MOBILE_MIN_HEIGHT = 3;
 export const MOBILE_TIME_COL_WIDTH = 28;
@@ -22,7 +22,7 @@ export const MOBILE_HEADER_HEIGHT = 28;
  */
 export const calculatePosition = (timeStr: string) => {
   const [h, m] = timeStr.split(":").map(Number);
-  
+
   // 30時間制対応: 0時〜5時は「翌日」とみなして +24時間する
   let hour = h;
   let isNextDay = false;
@@ -33,7 +33,7 @@ export const calculatePosition = (timeStr: string) => {
 
   // 開始時間(6:00)からの経過分数
   const minutesFromStart = (hour - START_HOUR) * 60 + m;
-  
+
   return { minutesFromStart, isNextDay };
 };
 
@@ -63,10 +63,10 @@ export const calculateLayout = (
       // week
       key = p.day_of_the_week;
     }
-    
+
     if (!groupsMap.has(key)) {
       groupsMap.set(key, []);
-      
+
       // メタデータもモードによって切り替え
       if (mode === "channel") {
         // チャンネル別
@@ -92,7 +92,7 @@ export const calculateLayout = (
     progs.sort((a, b) => {
       const posA = calculatePosition(a.start_time).minutesFromStart;
       const posB = calculatePosition(b.start_time).minutesFromStart;
-      
+
       if (posA !== posB) {
         return posA - posB; // 時間優先
       }
@@ -106,10 +106,10 @@ export const calculateLayout = (
     progs.forEach((prog) => {
       const { minutesFromStart: startMin, isNextDay } = calculatePosition(prog.start_time);
       const { minutesFromStart: endMin } = calculatePosition(prog.end_time);
-      
+
       // 終了時間が開始時間より前になってしまう場合（日またぎ計算ミス等）のガード
       const safeEndMin = endMin < startMin ? endMin + 24 * 60 : endMin;
-      
+
       const top = startMin * minHeight;
       const height = Math.max((safeEndMin - startMin) * minHeight, 20);
 
@@ -142,7 +142,7 @@ export const calculateLayout = (
     });
 
     const meta = metaMap.get(key)!;
-    
+
     result.push({
       id: key,
       name: meta.name,
@@ -163,7 +163,7 @@ export const calculateLayout = (
  */
 export const formatTime30 = (timeStr: string) => {
   if (!timeStr) return "";
-  
+
   const [h, m] = timeStr.split(":").map(Number);
   let hour = h;
 
@@ -174,23 +174,33 @@ export const formatTime30 = (timeStr: string) => {
 
   // ゼロ埋めは分のみ行い、時間はそのまま（25時など）にする
   const minStr = m.toString().padStart(2, "0");
-  
+
   return `${hour}:${minStr}`;
 };
 
 /**
- * 番組の色IDからTailwindのクラス名を取得する
+ * 番組の色IDからTailwind CSSのクラス名を取得する
  */
 export const getProgramColorClass = (colorId?: number | null) => {
   const colors = [
-    "bg-purple-100 border-purple-200 text-purple-900 dark:bg-purple-900 dark:border-purple-700 dark:text-purple-100", // 1: 紫色
-    "bg-red-100 border-red-200 text-red-900 dark:bg-red-900 dark:border-red-700 dark:text-red-100",                   // 2: 赤色
-    "bg-orange-100 border-orange-200 text-orange-900 dark:bg-orange-900 dark:border-orange-700 dark:text-orange-100", // 3: オレンジ色
-    "bg-yellow-100 border-yellow-200 text-yellow-900 dark:bg-yellow-900 dark:border-yellow-700 dark:text-yellow-100", // 4: 黄色
-    "bg-green-100 border-green-200 text-green-900 dark:bg-green-900 dark:border-green-700 dark:text-green-100",       // 5: 緑色
-    "bg-blue-100 border-blue-200 text-blue-900 dark:bg-blue-900 dark:border-blue-700 dark:text-blue-100",             // 6: 青色
-    "bg-gray-200 border-gray-300 text-gray-800 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100",             // 7: 灰色
-    "bg-olive-50 border-olive-300 text-olive-900 dark:bg-olive-900 dark:border-olive-700 dark:text-olive-100",        // 8: オリーブ色
+    // 1: AT-X 最速放送（1週間先行）
+    "bg-purple-200 border-purple-300 text-purple-900 dark:bg-purple-900 dark:border-purple-700 dark:text-purple-100",
+    // 2: AT-X 最速放送
+    "bg-red-200 border-red-300 text-red-900 dark:bg-red-900 dark:border-red-700 dark:text-red-100",
+    // 3: 最速放送
+    "bg-orange-200 border-orange-300 text-orange-900 dark:bg-orange-900 dark:border-orange-700 dark:text-orange-100",
+    // 4: 同日時差遅れ放送
+    "bg-yellow-200 border-yellow-300 text-yellow-900 dark:bg-yellow-900 dark:border-yellow-700 dark:text-yellow-100",
+    // 5: 1～6日遅れ放送
+    "bg-green-200 border-green-300 text-green-900 dark:bg-green-900 dark:border-green-700 dark:text-green-100",
+    // 6: 1週以上遅れ放送
+    "bg-sky-200 border-sky-300 text-sky-900 dark:bg-sky-900 dark:border-sky-700 dark:text-sky-100",
+    // 7: 旧作・再放送
+    "bg-slate-300 border-slate-400 text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100",
+    // 8: 関連番組
+    "bg-muted text-foreground",
+    // 9: 未確定の情報
+    "bg-background border-dashed border-chart-2 text-muted-foreground",
   ];
-  return colors[(colorId || 1) - 1] || colors[6];
+  return colors[(colorId || 1) - 1] || colors[8];
 };
