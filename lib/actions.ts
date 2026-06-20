@@ -68,6 +68,7 @@ export async function updateWork(id: number, data: {
   x_username?: string | null;
   wikipedia_url?: string | null;
   annict_url?: string | null;
+  season_id?: number | null;
 }) {
   const supabase = await requireAuth();
 
@@ -105,6 +106,7 @@ export async function createWork(data: {
   x_username?: string | null;
   wikipedia_url?: string | null;
   annict_url?: string | null;
+  season_id?: number | null;
 }, skipInsertTimestamp?: boolean) {
   const supabase = await requireAuth();
 

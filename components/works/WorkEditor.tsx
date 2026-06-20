@@ -11,6 +11,8 @@ import { Switch } from "@/components/ui/switch";
 import { AtSign, Globe, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { updateWork, createWork } from "@/lib/actions";
+import { getSeasons, Season } from "@/lib/get-seasons";
+import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 
 interface Work {
   id: number;
@@ -20,6 +22,7 @@ interface Work {
   x_username: string | null;
   wikipedia_url: string | null;
   annict_url: string | null;
+  season_id: number | null;
 }
 
 interface WorkEditorProps {
@@ -45,6 +48,7 @@ export function WorkEditor({
   const setSheetOpen = onOpenChange ?? setInternalOpen;
   const [isSaving, setIsSaving] = useState(false);
   const [skipInsertTimestamp, setSkipInsertTimestamp] = useState(false);
+  const [seasons, setSeasons] = useState<Season[]>([]);
   const [formData, setFormData] = useState({
     name: work?.name || "",
     name_yomi: work?.name_yomi || "",
@@ -52,7 +56,16 @@ export function WorkEditor({
     x_username: work?.x_username || "",
     wikipedia_url: work?.wikipedia_url || "",
     annict_url: work?.annict_url || "",
+    season_id: work?.season_id ?? null as number | null,
   });
+
+  useEffect(() => {
+    async function loadSeasons() {
+      const data = await getSeasons();
+      setSeasons(data);
+    }
+    loadSeasons();
+  }, []);
 
   useEffect(() => {
     if (work) {
@@ -63,6 +76,7 @@ export function WorkEditor({
         x_username: work.x_username || "",
         wikipedia_url: work.wikipedia_url || "",
         annict_url: work.annict_url || "",
+        season_id: work.season_id ?? null,
       });
     } else {
       setFormData({
@@ -72,6 +86,7 @@ export function WorkEditor({
         x_username: "",
         wikipedia_url: "",
         annict_url: "",
+        season_id: null,
       });
     }
   }, [work, sheetOpen]);
@@ -93,6 +108,7 @@ export function WorkEditor({
           x_username: formData.x_username || null,
           wikipedia_url: formData.wikipedia_url || null,
           annict_url: formData.annict_url || null,
+          season_id: formData.season_id,
         });
       } else {
         await createWork({
@@ -102,6 +118,7 @@ export function WorkEditor({
           x_username: formData.x_username || null,
           wikipedia_url: formData.wikipedia_url || null,
           annict_url: formData.annict_url || null,
+          season_id: formData.season_id,
         }, skipInsertTimestamp);
       }
       setSheetOpen(false);
@@ -141,6 +158,14 @@ export function WorkEditor({
                 name="name_yomi"
                 value={formData.name_yomi}
                 onChange={handleChange}
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="season_id">放送開始クール</FieldLabel>
+              <SeasonSelector
+                seasons={seasons}
+                currentSeasonId={formData.season_id}
+                onValueChange={(value) => setFormData(prev => ({ ...prev, season_id: value }))}
               />
             </Field>
             <Field>

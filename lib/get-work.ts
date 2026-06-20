@@ -3,6 +3,7 @@ import { cache } from "react";
 import { Database } from "@/types/supabase";
 
 type WorkDetail = Database["public"]["Tables"]["works"]["Row"] & {
+  seasons: Pick<Database["public"]["Tables"]["seasons"]["Row"], "id" | "year" | "month"> | null;
   programs: (Database["public"]["Tables"]["programs"]["Row"] & {
     channels: { name: string } | null;
     programs_seasons: { seasons: Pick<Database["public"]["Tables"]["seasons"]["Row"], "id" | "year" | "month"> | null }[];
@@ -18,6 +19,11 @@ export const getWorkById = cache(async (id: number) => {
     .from("works")
     .select(`
       *,
+      seasons (
+        id,
+        year,
+        month
+      ),
       programs (
         *,
         channels (name),
@@ -37,7 +43,7 @@ export const getWorkById = cache(async (id: number) => {
     return null;
   }
 
-  const work = data as WorkDetail;
+  const work = data as any as WorkDetail;
 
   // programsをorder順にソート
   if (work.programs) {

@@ -225,6 +225,7 @@ export type Database = {
           name: string
           name_yomi: string | null
           og_image_url: string | null
+          season_id: number | null
           updated_at: string | null
           website_url: string | null
           wikipedia_url: string | null
@@ -237,6 +238,7 @@ export type Database = {
           name: string
           name_yomi?: string | null
           og_image_url?: string | null
+          season_id?: number | null
           updated_at?: string | null
           website_url?: string | null
           wikipedia_url?: string | null
@@ -249,12 +251,21 @@ export type Database = {
           name?: string
           name_yomi?: string | null
           og_image_url?: string | null
+          season_id?: number | null
           updated_at?: string | null
           website_url?: string | null
           wikipedia_url?: string | null
           x_username?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "works_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

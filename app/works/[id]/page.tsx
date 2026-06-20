@@ -6,10 +6,13 @@ import { getWorkById } from "@/lib/get-work";
 import { formatRelativeTime } from "@/lib/date-utils";
 import { BackButton } from "@/components/layout/BackButton";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { WorkProgramManager } from "@/components/works/WorkProgramManager";
 import { defaultOpenGraph } from "@/lib/metadata";
 import { OGPreviewServer } from "@/components/works/OGPreviewServer";
 import { WorkActionsMenu } from "@/components/works/WorkActionsMenu";
+import { cn } from "@/lib/utils";
+import { getSeasonBadgeClass } from "@/lib/colors";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -51,8 +54,13 @@ export default async function WorkPage({ params }: PageProps) {
       <div className="flex-1 p-4 md:px-8 py-16 max-w-4xl mx-auto w-full">
         {/* 作品情報 */}
         <div className="mb-6">
+          {work.seasons && (
+            <Badge className={cn("px-2.5 py-3", getSeasonBadgeClass(work.seasons.month))}>
+              {work.seasons.year}年{work.seasons.month}月
+            </Badge>
+          )}
           <h1 className="text-2xl md:text-3xl font-bold my-4">{work.name}</h1>
-          
+
           <div className="flex flex-wrap gap-1">
             {work.website_url && (
               <Button size="sm" asChild>

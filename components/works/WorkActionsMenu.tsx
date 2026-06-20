@@ -32,6 +32,7 @@ interface Work {
   x_username: string | null;
   wikipedia_url: string | null;
   annict_url: string | null;
+  season_id: number | null;
 }
 
 interface WorkActionsMenuProps {
