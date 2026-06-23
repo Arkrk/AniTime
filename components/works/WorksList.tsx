@@ -46,6 +46,7 @@ export const WorksList = ({
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const searchParamsString = searchParams.toString();
   const { user } = useLogin();
   const [mounted, setMounted] = useState(false);
   const listRef = React.useRef<HTMLDivElement>(null);
@@ -61,7 +62,7 @@ export const WorksList = ({
         scrollContainer.scrollTop = 0;
       }
     }
-  }, [currentPage, mounted]);
+  }, [searchParamsString, mounted]);
 
   if (works.length === 0) {
     return (
