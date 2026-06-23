@@ -58,15 +58,22 @@ export const getWorks = cache(async (
   page: number = 1,
   limit: number = 50,
   sortColumn: string = "id",
-  sortDirection: "asc" | "desc" = "asc"
+  sortDirection: "asc" | "desc" = "asc",
+  seasonId?: number | "all" | null
 ) => {
   const supabase = await createClient();
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  const { data, count, error } = await supabase
+  let query = supabase
     .from("works")
-    .select("*", { count: "exact" })
+    .select("*, seasons(id, year, month)", { count: "exact" });
+
+  if (seasonId !== undefined && seasonId !== null && seasonId !== "all") {
+    query = query.eq("season_id", seasonId);
+  }
+
+  const { data, count, error } = await query
     .order(sortColumn, { ascending: sortDirection === "asc" })
     .range(from, to);
 

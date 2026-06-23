@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Table2, Bookmark, History, Database, Bolt } from "lucide-react";
-import { useLogin } from "@/hooks/login";
-import { useEffect, useState, PointerEvent } from "react";
+import { Table2, Bookmark, History, Clapperboard, Bolt } from "lucide-react";
+import { useState, PointerEvent } from "react";
 
 const RippleLink = ({
   href,
@@ -59,18 +58,12 @@ const RippleLink = ({
 
 export const Bottombar = () => {
   const pathname = usePathname();
-  const { user } = useLogin();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const navItems = [
     { label: "番組表", icon: Table2, href: "/" },
     { label: "保存済み", icon: Bookmark, href: "/saved" },
+    { label: "作品", icon: Clapperboard, href: "/works" },
     { label: "更新履歴", icon: History, href: "/updates" },
-    ...(mounted && user ? [{ label: "データ管理", icon: Database, href: "/admin" }] : []),
     { label: "設定", icon: Bolt, href: "/settings" },
   ];
 

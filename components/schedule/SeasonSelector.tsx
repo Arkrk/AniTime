@@ -15,18 +15,19 @@ import { Season } from "@/lib/get-seasons";
 
 type SeasonSelectorProps = {
   seasons: Season[];
-  currentSeasonId?: number | null;
+  currentSeasonId?: number | "all" | null;
   onValueChange?: (value: number | null) => void;
+  showAll?: boolean;
 };
 
-export const SeasonSelector = ({ seasons, currentSeasonId, onValueChange }: SeasonSelectorProps) => {
+export const SeasonSelector = ({ seasons, currentSeasonId, onValueChange, showAll }: SeasonSelectorProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const handleValueChange = (value: string) => {
     if (onValueChange) {
-      if (value === "none") {
+      if (value === "none" || value === "all") {
         onValueChange(null);
       } else {
         onValueChange(Number(value));
@@ -38,6 +39,8 @@ export const SeasonSelector = ({ seasons, currentSeasonId, onValueChange }: Seas
     const params = new URLSearchParams(searchParams.toString());
     // seasonのみを更新
     params.set("season", value);
+    // シーズン変更時はページ番号をリセットする
+    params.delete("page");
 
     // オーバーレイ用のイベントを発火
     if (typeof window !== "undefined") {
@@ -56,7 +59,7 @@ export const SeasonSelector = ({ seasons, currentSeasonId, onValueChange }: Seas
 
   const selectValue = currentSeasonId !== undefined && currentSeasonId !== null
     ? currentSeasonId.toString()
-    : "none";
+    : showAll ? "all" : "none";
 
   return (
     <Select
@@ -67,6 +70,14 @@ export const SeasonSelector = ({ seasons, currentSeasonId, onValueChange }: Seas
         <SelectValue placeholder="放送クールを選択" />
       </SelectTrigger>
       <SelectContent position="popper">
+        {showAll && (
+          <>
+            <SelectGroup>
+              <SelectItem value="all">すべて</SelectItem>
+            </SelectGroup>
+            {(activeSeasons.length > 0 || inactiveSeasons.length > 0) && <SelectSeparator />}
+          </>
+        )}
         {onValueChange && (
           <>
             <SelectGroup>

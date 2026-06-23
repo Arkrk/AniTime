@@ -52,7 +52,7 @@ export function WorkActionsMenu({
   const [mounted, setMounted] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const buttonVariant = floating ? "outline" : "ghost";
+  const buttonSize = floating ? "icon" : "icon-sm";
 
   useEffect(() => {
     setMounted(true);
@@ -77,8 +77,8 @@ export function WorkActionsMenu({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant={buttonVariant}
-            size="icon"
+            variant="outline"
+            size={buttonSize}
             className={className}
             aria-label="作品の操作メニュー"
           >
