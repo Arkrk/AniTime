@@ -87,6 +87,14 @@ export const WorksList = ({
     return `${pathname}?${params.toString()}`;
   };
 
+  const handlePageChangeStart = (pageNumber: number) => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", pageNumber.toString());
+      window.dispatchEvent(new CustomEvent("season-change-start", { detail: params.toString() }));
+    }
+  };
+
   return (
     <div ref={listRef} className="p-4 pb-20">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -186,6 +194,7 @@ export const WorksList = ({
         pageCount={pageCount}
         totalCount={totalCount}
         createPageUrl={createPageUrl}
+        onPageChangeStart={handlePageChangeStart}
       />
     </div>
   );

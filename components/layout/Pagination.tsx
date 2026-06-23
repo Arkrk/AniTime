@@ -14,6 +14,7 @@ interface PaginationProps {
   totalCount: number;
   createPageUrl: (pageNumber: number) => string;
   unit?: string;
+  onPageChangeStart?: (pageNumber: number) => void;
 }
 
 export function Pagination({
@@ -21,7 +22,8 @@ export function Pagination({
   pageCount,
   totalCount,
   createPageUrl,
-  unit = "作品"
+  unit = "作品",
+  onPageChangeStart
 }: PaginationProps) {
   const [open, setOpen] = useState(false);
 
@@ -38,7 +40,11 @@ export function Pagination({
           disabled={currentPage <= 1}
           className={cn(currentPage <= 1 && "pointer-events-none opacity-50")}
         >
-          <Link href={createPageUrl(currentPage - 1)} aria-label="前のページへ">
+          <Link
+            href={createPageUrl(currentPage - 1)}
+            aria-label="前のページへ"
+            onClick={() => onPageChangeStart?.(currentPage - 1)}
+          >
             <ChevronLeft />
           </Link>
         </Button>
@@ -76,7 +82,13 @@ export function Pagination({
                         : "text-muted-foreground hover:text-foreground"
                     )}
                   >
-                    <Link href={createPageUrl(pageNum)} onClick={() => setOpen(false)}>
+                    <Link
+                      href={createPageUrl(pageNum)}
+                      onClick={() => {
+                        setOpen(false);
+                        onPageChangeStart?.(pageNum);
+                      }}
+                    >
                       {pageNum}
                     </Link>
                   </Button>
@@ -97,7 +109,10 @@ export function Pagination({
             currentPage >= pageCount && "pointer-events-none opacity-50"
           )}
         >
-          <Link href={createPageUrl(currentPage + 1)}>
+          <Link
+            href={createPageUrl(currentPage + 1)}
+            onClick={() => onPageChangeStart?.(currentPage + 1)}
+          >
             <span>次のページへ</span>
             <ChevronRight />
           </Link>
