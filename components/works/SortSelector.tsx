@@ -56,7 +56,7 @@ export function SortSelector({ currentSort, currentOrder }: SortSelectorProps) {
     params.delete("page"); // ソート条件変更時はページ数をリセット
 
     if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("season-change-start", { detail: params.toString() }));
+      window.dispatchEvent(new CustomEvent("loading-start", { detail: params.toString() }));
     }
 
     router.push(`${pathname}?${params.toString()}`);

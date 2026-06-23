@@ -92,7 +92,7 @@ export default async function Home({ searchParams }: PageProps) {
 
       {/* 番組表エリア  */}
       <div className="flex-1 overflow-hidden relative">
-        <LoadingOverlay currentParamsKey={currentParamsKey} eventName="schedule-change-start">
+        <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start">
           <Suspense fallback={<LoaderScreen />}>
             <ScheduleDataWrapper
               layoutMode={layoutMode}

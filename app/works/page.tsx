@@ -78,7 +78,7 @@ export default async function WorksPage({ searchParams }: PageProps) {
 
       {/* 作品リストエリア */}
       <div className="flex-1 min-h-0 relative">
-        <LoadingOverlay currentParamsKey={currentParamsKey} eventName="season-change-start">
+        <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start">
           <div className="h-full w-full overflow-auto">
             <Suspense fallback={<LoaderScreen />}>
               <WorksListWrapper currentSeasonId={currentSeasonId} currentPage={currentPage} currentSort={currentSort} currentOrder={currentOrder} />

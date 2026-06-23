@@ -91,7 +91,7 @@ export const WorksList = ({
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(searchParams.toString());
       params.set("page", pageNumber.toString());
-      window.dispatchEvent(new CustomEvent("season-change-start", { detail: params.toString() }));
+      window.dispatchEvent(new CustomEvent("loading-start", { detail: params.toString() }));
     }
   };
 

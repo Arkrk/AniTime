@@ -16,7 +16,7 @@ export const ViewSelector = () => {
     params.set("view", value);
     // オーバーレイ用のイベントを発火
     if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("schedule-change-start", { detail: params.toString() }));
+      window.dispatchEvent(new CustomEvent("loading-start", { detail: params.toString() }));
     }
     router.push(`/?${params.toString()}`);
   };
