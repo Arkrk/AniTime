@@ -57,11 +57,12 @@ export function Pagination({
               <ChevronDown />
             </Button>
           </PopoverTrigger>
-          <PopoverContent side="top" align="start" className="w-fit min-w-50">
-            <div className="text-center pb-3 border-b text-xs text-muted-foreground font-medium">
-              全{pageCount}ページ - {totalCount}{unit}
+          <PopoverContent side="top" align="start" className="w-fit min-w-50 p-0 gap-0">
+            <div className="text-center px-3 py-2.5 border-b text-xs text-muted-foreground font-medium">
+              全{pageCount}ページ・{totalCount}{unit}
             </div>
             <div className={cn(
+              "p-3",
               pageCount < 7
                 ? "flex justify-center gap-2"
                 : "grid grid-cols-7 gap-2 justify-items-center"
@@ -88,6 +89,7 @@ export function Pagination({
                         setOpen(false);
                         onPageChangeStart?.(pageNum);
                       }}
+                      className="tabular-nums"
                     >
                       {pageNum}
                     </Link>

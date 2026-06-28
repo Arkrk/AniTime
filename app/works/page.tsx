@@ -63,7 +63,7 @@ export default async function WorksPage({ searchParams }: PageProps) {
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold flex items-center gap-2">
               <span>作品</span>
-              <Suspense fallback={<span className="text-sm font-normal text-muted-foreground opacity-50">...</span>}>
+              <Suspense fallback={<span className="text-sm font-normal text-muted-foreground opacity-50"></span>}>
                 <WorksCountWrapper currentSeasonId={currentSeasonId} currentPage={currentPage} currentSort={currentSort} currentOrder={currentOrder} />
               </Suspense>
             </h1>
