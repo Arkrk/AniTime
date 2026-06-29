@@ -9,6 +9,30 @@ import { useMemo, useEffect } from "react";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Bookmark } from "lucide-react";
 import React from "react";
+import { Bar, BarChart, XAxis, LabelList } from "recharts";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+
+const formatDuration = (minutes: number, format?: "text" | "colon") => {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (format === "colon") {
+    return `${h}:${String(m).padStart(2, "0")}`;
+  }
+  if (h > 0) return `${h}時間${m}分`;
+  return `${m}分`;
+};
+
+const chartConfig = {
+  minutes: {
+    label: "視聴時間",
+    color: "var(--primary)",
+  },
+} satisfies ChartConfig;
 
 export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramData[], ogPreviews?: Record<string, React.ReactNode> }) => {
   const { isSaved, isLoaded } = useSavedPrograms();
@@ -21,7 +45,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
   const programsByDay = useMemo(() => {
     const grouped = new Map<number, ProgramData[]>();
     DAYS.forEach(day => grouped.set(day.id, []));
-    
+
     savedPrograms.forEach(p => {
       const list = grouped.get(p.day_of_the_week);
       if (list) list.push(p);
@@ -35,7 +59,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
         return posA - posB;
       });
     });
-    
+
     return grouped;
   }, [savedPrograms]);
 
@@ -44,6 +68,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
     const count = savedPrograms.length;
     let totalMinutes = 0;
     const dayMinutes = new Map<number, number>();
+    DAYS.forEach(day => dayMinutes.set(day.id, 0));
 
     savedPrograms.forEach(prog => {
       const { minutesFromStart: startMin } = calculatePosition(prog.start_time);
@@ -51,9 +76,9 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
       // 日またぎ対応: 終了時刻が開始時刻より前の場合は翌日とみなす
       const safeEndMin = endMin < startMin ? endMin + 24 * 60 : endMin;
       const duration = safeEndMin - startMin;
-      
+
       totalMinutes += duration;
-      
+
       // 曜日ごとの集計
       const current = dayMinutes.get(prog.day_of_the_week) || 0;
       dayMinutes.set(prog.day_of_the_week, current + duration);
@@ -65,17 +90,17 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
       if (minutes > maxMinutes) maxMinutes = minutes;
     }
 
-    const formatDuration = (minutes: number) => {
-      const h = Math.floor(minutes / 60);
-      const m = minutes % 60;
-      if (h > 0) return `${h}時間${m}分`;
-      return `${m}分`;
-    };
+    // グラフ用データ
+    const chartData = DAYS.map(day => ({
+      day: day.label,
+      minutes: dayMinutes.get(day.id) || 0,
+    }));
 
     return {
       count,
       totalTime: formatDuration(totalMinutes),
-      maxTime: formatDuration(maxMinutes)
+      maxTime: formatDuration(maxMinutes),
+      chartData,
     };
   }, [savedPrograms]);
 
@@ -111,15 +136,67 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
 
   return (
     <div className="p-4 space-y-8 pb-20">
-      {/* 統計情報 */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-muted p-4 rounded-2xl border text-center">
-          <div className="text-xs text-muted-foreground mb-1 font-bold">1週間の合計視聴時間</div>
-          <div className="text-2xl font-bold">{stats.totalTime}</div>
-        </div>
-        <div className="bg-muted p-4 rounded-2xl border text-center">
-          <div className="text-xs text-muted-foreground mb-1 font-bold">1日の最大視聴時間</div>
-          <div className="text-2xl font-bold">{stats.maxTime}</div>
+      {/* サマリーエリア */}
+      <div className="bg-muted rounded-2xl border">
+        <div className="flex flex-col md:flex-row md:divide-x divide-y md:divide-y-0 divide-border">
+          {/* 合計視聴時間・最大視聴時間 */}
+          <div className="flex flex-row md:flex-col justify-center divide-x md:divide-x-0 md:divide-y divide-border md:w-1/3">
+            <div className="flex-1 p-3 flex items-center justify-center flex-col">
+              <div className="text-xs text-muted-foreground mb-1">1週間の合計視聴時間</div>
+              <div className="text-xl md:text-2xl font-bold">{stats.totalTime}</div>
+            </div>
+            <div className="flex-1 p-3 flex items-center justify-center flex-col">
+              <div className="text-xs text-muted-foreground mb-1">1日の最大視聴時間</div>
+              <div className="text-xl md:text-2xl font-bold">{stats.maxTime}</div>
+            </div>
+          </div>
+
+          {/* グラフ */}
+          <div className="px-3 py-2 flex-1 flex flex-col justify-center">
+            <div className="h-40 md:h-50 w-full">
+              <ChartContainer config={chartConfig} className="aspect-auto h-full w-full">
+                <BarChart data={stats.chartData} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
+                  <XAxis
+                    dataKey="day"
+                    tickLine={false}
+                    tickMargin={10}
+                    axisLine={false}
+                    tick={{ fill: "var(--muted-foreground)" }}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={
+                      <ChartTooltipContent
+                        labelFormatter={(label) => `${label}曜日`}
+                        formatter={(value) => (
+                          <div className="flex items-center gap-1.5 justify-between w-full">
+                            <span className="text-muted-foreground">視聴時間</span>
+                            <span className="font-mono font-medium text-foreground tabular-nums">
+                              {formatDuration(Number(value))}
+                            </span>
+                          </div>
+                        )}
+                        className="p-2.5"
+                      />
+                    }
+                  />
+                  <Bar
+                    dataKey="minutes"
+                    fill="var(--chart-2)"
+                    radius={4}
+                  >
+                    <LabelList
+                      dataKey="minutes"
+                      position="top"
+                      offset={8}
+                      className="fill-foreground font-semibold md:text-sm"
+                      formatter={(value: any) => formatDuration(Number(value), "colon")}
+                    />
+                  </Bar>
+                </BarChart>
+              </ChartContainer>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -136,7 +213,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {dayPrograms.map(program => (
                 <div key={program.id} className="relative h-28">
-                  <ProgramCard 
+                  <ProgramCard
                     program={{
                       ...program,
                       top: 0,
