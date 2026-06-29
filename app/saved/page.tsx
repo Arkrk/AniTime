@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getScheduleByDay } from "@/lib/get-schedule";
+import { SavedCount } from "@/components/saved/SavedCount";
 import { getSeasons } from "@/lib/get-seasons";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 import { SavedProgramList } from "@/components/saved/SavedProgramList";
@@ -45,12 +46,19 @@ export default async function SavedPage({ searchParams }: PageProps) {
     <div className="flex flex-col h-full w-full">
       
       {/* コントロールバー */}
-      <div className="shrink-0 p-4 border-b z-10 sticky top-0">
+      <div className="shrink-0 p-4 border-b z-10 sticky top-0 bg-background/85 backdrop-blur-md">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <h1 className="text-lg font-bold">保存済み</h1>
+            <h1 className="text-lg font-bold flex items-center gap-2">
+              <span>保存済み</span>
+              <Suspense fallback={<span className="text-sm font-normal text-muted-foreground opacity-50"></span>}>
+                <SavedCount />
+              </Suspense>
+            </h1>
           </div>
-          <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
+          <div className="flex items-center gap-2">
+            <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
+          </div>
         </div>
       </div>
 

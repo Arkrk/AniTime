@@ -63,7 +63,7 @@ export default async function WorksPage({ searchParams }: PageProps) {
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold flex items-center gap-2">
               <span>作品</span>
-              <Suspense fallback={<span className="text-sm font-normal text-muted-foreground opacity-50"></span>}>
+              <Suspense fallback={<span className="text-base font-normal text-muted-foreground"></span>}>
                 <WorksCountWrapper currentSeasonId={currentSeasonId} currentPage={currentPage} currentSort={currentSort} currentOrder={currentOrder} />
               </Suspense>
             </h1>
@@ -148,7 +148,7 @@ async function WorksCountWrapper({
   const limit = 50;
   const { count } = await getWorks(currentPage, limit, currentSort, currentOrder, currentSeasonId);
 
-  if (count === null || count === undefined) return null;
+  if (count === null || count === undefined || count === 0) return null;
 
   return (
     <span className="text-base font-normal text-muted-foreground">

@@ -5,7 +5,7 @@ import { ProgramData, LayoutProgram } from "@/types/schedule";
 import { ProgramCard } from "@/components/schedule/ProgramCard";
 import { DAYS } from "@/lib/get-schedule";
 import { calculatePosition } from "@/lib/schedule-utils";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Bookmark } from "lucide-react";
 import React from "react";
@@ -79,6 +79,14 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
     };
   }, [savedPrograms]);
 
+  // コントロールバーの SavedCount コンポーネントへ件数を通知
+  useEffect(() => {
+    if (isLoaded) {
+      const event = new CustomEvent("saved-count-change", { detail: stats.count });
+      window.dispatchEvent(event);
+    }
+  }, [stats.count, isLoaded]);
+
   if (!isLoaded) {
     return null;
   }
@@ -104,11 +112,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
   return (
     <div className="p-4 space-y-8 pb-20">
       {/* 統計情報 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <div className="bg-muted p-4 rounded-2xl border text-center">
-          <div className="text-xs text-muted-foreground mb-1 font-bold">保存済み数</div>
-          <div className="text-2xl font-bold">{stats.count}</div>
-        </div>
+      <div className="grid grid-cols-2 gap-4">
         <div className="bg-muted p-4 rounded-2xl border text-center">
           <div className="text-xs text-muted-foreground mb-1 font-bold">1週間の合計視聴時間</div>
           <div className="text-2xl font-bold">{stats.totalTime}</div>
