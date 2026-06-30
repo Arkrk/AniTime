@@ -137,7 +137,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
   return (
     <div className="p-4 space-y-8 pb-20">
       {/* サマリーエリア */}
-      <div className="bg-muted rounded-2xl border">
+      <div className="bg-primary-foreground rounded-2xl border">
         <div className="flex flex-col md:flex-row md:divide-x divide-y md:divide-y-0 divide-border">
           {/* 合計視聴時間・最大視聴時間 */}
           <div className="flex flex-row md:flex-col justify-center divide-x md:divide-x-0 md:divide-y divide-border md:w-1/3">

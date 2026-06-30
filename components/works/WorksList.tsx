@@ -137,7 +137,7 @@ export const WorksList = ({
 
                 {/* リンクボタン・管理者操作メニュー */}
                 {(hasLinks || (mounted && user)) && (
-                  <div className="flex items-center justify-between pt-2 border-t mt-auto gap-1.5 relative z-10 pointer-events-auto">
+                  <div className="flex items-center justify-between sm:pt-2 sm:border-t mt-auto gap-1.5 relative z-10 pointer-events-auto">
                     <div className="flex flex-wrap gap-1">
                       {work.website_url && (
                         <Button size="icon-sm" variant="outline" asChild>
