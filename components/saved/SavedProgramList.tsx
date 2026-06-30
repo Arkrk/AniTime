@@ -4,7 +4,7 @@ import { useSavedPrograms } from "@/hooks/use-saved-programs";
 import { ProgramData, LayoutProgram } from "@/types/schedule";
 import { ProgramCard } from "@/components/schedule/ProgramCard";
 import { DAYS } from "@/lib/get-schedule";
-import { calculatePosition } from "@/lib/schedule-utils";
+import { calculatePosition, formatTime30 } from "@/lib/schedule-utils";
 import { useMemo, useEffect } from "react";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Bookmark } from "lucide-react";
@@ -91,10 +91,15 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
     }
 
     // グラフ用データ
-    const chartData = DAYS.map(day => ({
-      day: day.label,
-      minutes: dayMinutes.get(day.id) || 0,
-    }));
+    const chartData = DAYS.map(day => {
+      const dayProgs = programsByDay.get(day.id) || [];
+      const lastProg = dayProgs[dayProgs.length - 1];
+      return {
+        day: day.label,
+        minutes: dayMinutes.get(day.id) || 0,
+        endTime: lastProg ? formatTime30(lastProg.end_time) : null,
+      };
+    });
 
     return {
       count,
@@ -102,7 +107,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
       maxTime: formatDuration(maxMinutes),
       chartData,
     };
-  }, [savedPrograms]);
+  }, [savedPrograms, programsByDay]);
 
   // コントロールバーの SavedCount コンポーネントへ件数を通知
   useEffect(() => {
@@ -168,12 +173,22 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
                     content={
                       <ChartTooltipContent
                         labelFormatter={(label) => `${label}曜日`}
-                        formatter={(value) => (
-                          <div className="flex items-center gap-1.5 justify-between w-full">
-                            <span className="text-muted-foreground">視聴時間</span>
-                            <span className="font-mono font-medium text-foreground tabular-nums">
-                              {formatDuration(Number(value))}
-                            </span>
+                        formatter={(value, _, item) => (
+                          <div className="flex flex-col gap-1 w-full text-xs">
+                            <div className="flex items-center gap-1.5 justify-between w-full">
+                              <span className="text-muted-foreground">視聴時間</span>
+                              <span className="font-medium text-foreground tabular-nums">
+                                {formatDuration(Number(value))}
+                              </span>
+                            </div>
+                            {item.payload?.endTime && (
+                              <div className="flex items-center gap-1.5 justify-between w-full">
+                                <span className="text-muted-foreground">終了時間</span>
+                                <span className="font-medium text-foreground tabular-nums">
+                                  {item.payload.endTime}
+                                </span>
+                              </div>
+                            )}
                           </div>
                         )}
                         className="p-2.5"
