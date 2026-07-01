@@ -63,11 +63,13 @@ export default async function SavedPage({ searchParams }: PageProps) {
       </div>
 
       {/* 番組リストエリア */}
-      <div className="flex-1 overflow-auto relative">
+      <div className="flex-1 min-h-0 relative">
         <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start">
-          <Suspense fallback={<LoaderScreen />}>
-            <SavedProgramListWrapper currentSeasonId={currentSeasonId} />
-          </Suspense>
+          <div className="h-full w-full overflow-auto">
+            <Suspense fallback={<LoaderScreen />}>
+              <SavedProgramListWrapper currentSeasonId={currentSeasonId} />
+            </Suspense>
+          </div>
         </LoadingOverlay>
       </div>
       

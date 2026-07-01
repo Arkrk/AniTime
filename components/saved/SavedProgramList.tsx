@@ -1,11 +1,12 @@
 "use client";
 
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
+import { useSearchParams } from "next/navigation";
 import { ProgramData, LayoutProgram } from "@/types/schedule";
 import { ProgramCard } from "@/components/schedule/ProgramCard";
 import { DAYS } from "@/lib/get-schedule";
 import { calculatePosition, formatTime30 } from "@/lib/schedule-utils";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Bookmark } from "lucide-react";
 import React from "react";
@@ -36,6 +37,9 @@ const chartConfig = {
 
 export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramData[], ogPreviews?: Record<string, React.ReactNode> }) => {
   const { isSaved, isLoaded } = useSavedPrograms();
+  const searchParams = useSearchParams();
+  const searchParamsString = searchParams.toString();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const savedPrograms = useMemo(() => {
     return programs.filter(p => isSaved(String(p.id)));
@@ -117,6 +121,16 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
     }
   }, [stats.count, isLoaded]);
 
+  // シーズン切り替え（URLパラメータの変更）時にスクロール位置をリセット
+  useEffect(() => {
+    if (containerRef.current) {
+      const scrollContainer = containerRef.current.closest(".overflow-auto");
+      if (scrollContainer) {
+        scrollContainer.scrollTop = 0;
+      }
+    }
+  }, [searchParamsString]);
+
   if (!isLoaded) {
     return null;
   }
@@ -140,24 +154,24 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
   }
 
   return (
-    <div className="p-4 space-y-8 pb-20">
+    <div ref={containerRef} className="p-4 space-y-8 pb-20">
       {/* サマリーエリア */}
       <div className="bg-primary-foreground rounded-2xl border">
         <div className="flex flex-col md:flex-row md:divide-x divide-y md:divide-y-0 divide-border">
           {/* 合計視聴時間・最大視聴時間 */}
           <div className="flex flex-row md:flex-col justify-center divide-x md:divide-x-0 md:divide-y divide-border md:w-1/3">
             <div className="flex-1 p-3 flex items-center justify-center flex-col">
-              <div className="text-xs text-muted-foreground mb-1">1週間の合計視聴時間</div>
+              <div className="text-xs md:text-sm text-muted-foreground mb-1">1週間の合計視聴時間</div>
               <div className="text-xl md:text-2xl font-bold">{stats.totalTime}</div>
             </div>
             <div className="flex-1 p-3 flex items-center justify-center flex-col">
-              <div className="text-xs text-muted-foreground mb-1">1日の最大視聴時間</div>
+              <div className="text-xs md:text-sm text-muted-foreground mb-1">1日の最大視聴時間</div>
               <div className="text-xl md:text-2xl font-bold">{stats.maxTime}</div>
             </div>
           </div>
 
           {/* グラフ */}
-          <div className="px-3 py-2 flex-1 flex flex-col justify-center">
+          <div className="p-3 flex-1 flex flex-col justify-center">
             <div className="h-40 md:h-50 w-full">
               <ChartContainer config={chartConfig} className="aspect-auto h-full w-full">
                 <BarChart data={stats.chartData} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
@@ -223,7 +237,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
           <div key={day.id}>
             <h2 className="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2">
               <span className="text-2xl">{day.label}</span>
-              <span className="text-sm text-gray-500 font-normal">曜日</span>
+              <span className="text-sm text-muted-foreground font-normal">曜日</span>
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {dayPrograms.map(program => (
