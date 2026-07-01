@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useScrollReset } from "@/hooks/use-scroll-reset";
 import Link from "next/link";
 import { Globe, Clapperboard, ImageOff } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
@@ -46,23 +47,13 @@ export const WorksList = ({
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const searchParamsString = searchParams.toString();
   const { user } = useLogin();
   const [mounted, setMounted] = useState(false);
-  const listRef = React.useRef<HTMLDivElement>(null);
+  const listRef = useScrollReset<HTMLDivElement>();
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (mounted && listRef.current) {
-      const scrollContainer = listRef.current.closest(".overflow-auto");
-      if (scrollContainer) {
-        scrollContainer.scrollTop = 0;
-      }
-    }
-  }, [searchParamsString, mounted]);
 
   if (works.length === 0) {
     return (

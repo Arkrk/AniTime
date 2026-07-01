@@ -1,22 +1,17 @@
 "use client";
 
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
-import { useSearchParams } from "next/navigation";
+import { useScrollReset } from "@/hooks/use-scroll-reset";
 import { ProgramData, LayoutProgram } from "@/types/schedule";
 import { ProgramCard } from "@/components/schedule/ProgramCard";
 import { DAYS } from "@/lib/get-schedule";
 import { calculatePosition, formatTime30 } from "@/lib/schedule-utils";
-import { useMemo, useEffect, useRef } from "react";
+import { useMemo, useEffect } from "react";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Bookmark } from "lucide-react";
 import React from "react";
 import { Bar, BarChart, XAxis, LabelList } from "recharts";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 const formatDuration = (minutes: number, format?: "text" | "colon") => {
   const h = Math.floor(minutes / 60);
@@ -37,9 +32,7 @@ const chartConfig = {
 
 export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramData[], ogPreviews?: Record<string, React.ReactNode> }) => {
   const { isSaved, isLoaded } = useSavedPrograms();
-  const searchParams = useSearchParams();
-  const searchParamsString = searchParams.toString();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useScrollReset<HTMLDivElement>();
 
   const savedPrograms = useMemo(() => {
     return programs.filter(p => isSaved(String(p.id)));
@@ -120,16 +113,6 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
       window.dispatchEvent(event);
     }
   }, [stats.count, isLoaded]);
-
-  // シーズン切り替え（URLパラメータの変更）時にスクロール位置をリセット
-  useEffect(() => {
-    if (containerRef.current) {
-      const scrollContainer = containerRef.current.closest(".overflow-auto");
-      if (scrollContainer) {
-        scrollContainer.scrollTop = 0;
-      }
-    }
-  }, [searchParamsString]);
 
   if (!isLoaded) {
     return null;
