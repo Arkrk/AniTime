@@ -234,7 +234,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
                       isNextDay: false
                     } as LayoutProgram}
                     mode="area"
-                    ogPreview={program.website_url ? ogPreviews?.[program.website_url] : undefined}
+                    ogPreview={program.og_image_url ? ogPreviews?.[program.id] : undefined}
                     className="relative! top-0! left-0! w-full! h-full!"
                     style={{ width: "100%", height: "100%" }}
                     forceDesktopSize={true}

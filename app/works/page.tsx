@@ -109,7 +109,7 @@ async function WorksListWrapper({
 
   // OGPプレビューをサーバー側で生成
   const ogPreviews = works.reduce((acc, w) => {
-    if (w.website_url && !acc[w.id]) {
+    if (w.og_image_url && !acc[w.id]) {
       acc[w.id] = <OGPreviewServer imageUrl={w.og_image_url} className="rounded-none border-none w-full h-full" />;
     }
     return acc;

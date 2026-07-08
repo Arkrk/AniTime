@@ -25,7 +25,7 @@ export default async function SavedPage({ searchParams }: PageProps) {
 
   // シーズン一覧を取得
   const seasons = await getSeasons();
-  
+
   // シーズンIDの決定
   const latestSeasonId = seasons.length > 0 ? seasons[0].id : 0;
   const seasonParam = params.season;
@@ -44,7 +44,7 @@ export default async function SavedPage({ searchParams }: PageProps) {
 
   return (
     <div className="flex flex-col h-full w-full">
-      
+
       {/* コントロールバー */}
       <div className="shrink-0 p-4 border-b z-10 sticky top-0 bg-background/85 backdrop-blur-md">
         <div className="flex items-center justify-between gap-4">
@@ -72,7 +72,7 @@ export default async function SavedPage({ searchParams }: PageProps) {
           </div>
         </LoadingOverlay>
       </div>
-      
+
     </div>
   );
 }
@@ -83,8 +83,8 @@ async function SavedProgramListWrapper({ currentSeasonId }: { currentSeasonId: n
 
   // OGP情報を一括取得
   const ogPreviews = programs.reduce((acc, p) => {
-    if (p.website_url && !acc[p.website_url]) {
-      acc[p.website_url] = <OGPreviewServer imageUrl={p.og_image_url} />;
+    if (p.og_image_url && !acc[p.id]) {
+      acc[p.id] = <OGPreviewServer imageUrl={p.og_image_url} className="rounded-lg" />;
     }
     return acc;
   }, {} as Record<string, React.ReactNode>);

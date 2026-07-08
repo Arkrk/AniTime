@@ -157,7 +157,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       )}
 
       {/* OGプレビュー */}
-      {program.website_url && showOgPreview && ogPreview}
+      {program.og_image_url && showOgPreview && ogPreview}
 
       {/* 各種リンク・保存ボタン */}
       <div className="flex items-center justify-between pt-3 border-t">

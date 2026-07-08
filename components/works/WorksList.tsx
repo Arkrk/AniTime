@@ -106,7 +106,7 @@ export const WorksList = ({
               />
               {/* プレビュー画像のコンテナ */}
               <div className="aspect-[1.91/1] w-full relative overflow-hidden bg-muted border-b pointer-events-none">
-                {work.website_url ? (
+                {work.og_image_url ? (
                   <div className="w-full h-full">
                     {ogPreviews[work.id]}
                   </div>

@@ -22,7 +22,7 @@ export async function searchWorks(query: string) {
   if (!query || query.length < 1 || query.length > 100) return [];
 
   const supabase = await createClient();
-  
+
   // ワイルドカード文字のエスケープ処理
   const safeQuery = query.replace(/[%_\\]/g, '\\$&');
 
@@ -31,7 +31,7 @@ export async function searchWorks(query: string) {
     .select("id, name, name_yomi")
     .or(`name.ilike.%${safeQuery}%,name_yomi.ilike.%${safeQuery}%`)
     .limit(20);
-  
+
   if (error) {
     console.error("Error searching works:", error);
     return [];
@@ -41,7 +41,7 @@ export async function searchWorks(query: string) {
 
 export async function getAreasAndChannels() {
   const supabase = await createClient();
-  
+
   const { data: areas, error: areasError } = await supabase
     .from("areas")
     .select("id, name, order")
@@ -69,21 +69,11 @@ export async function updateWork(id: number, data: {
   wikipedia_url?: string | null;
   annict_url?: string | null;
   season_id?: number | null;
+  og_image_url?: string | null;
 }) {
   const supabase = await requireAuth();
 
   const updateData: any = { ...data };
-
-  if (data.website_url) {
-    // 公式サイトURLがある場合はOGP画像を取得
-    const ogImage = await getOGImage(data.website_url);
-    if (ogImage !== undefined) {
-       updateData.og_image_url = ogImage;
-    }
-  } else if (data.website_url === null) {
-    // 公式サイトURLが消されたらOGP画像も消す
-    updateData.og_image_url = null;
-  }
 
   const { error } = await supabase
     .from("works")
@@ -107,6 +97,7 @@ export async function createWork(data: {
   wikipedia_url?: string | null;
   annict_url?: string | null;
   season_id?: number | null;
+  og_image_url?: string | null;
 }, skipInsertTimestamp?: boolean) {
   const supabase = await requireAuth();
 
@@ -114,12 +105,6 @@ export async function createWork(data: {
   const insertData: any = { ...data };
   if (!skipInsertTimestamp) {
     insertData.created_at = new Date().toISOString();
-  }
-
-  // 公式サイトURLがある場合はOGP画像を取得
-  if (insertData.website_url) {
-    const ogImage = await getOGImage(insertData.website_url);
-    insertData.og_image_url = ogImage;
   }
 
   const { data: newWork, error } = await supabase
@@ -134,6 +119,44 @@ export async function createWork(data: {
 
   revalidatePath("/admin");
   return { success: true, id: newWork.id };
+}
+
+// OGP画像URLを取得
+export async function fetchOGImageURL(url: string) {
+  return await getOGImage(url);
+}
+
+// 画像をSupabaseにアップロード
+export async function uploadWorkImage(formData: FormData) {
+  const file = formData.get("file") as File | null;
+  if (!file) {
+    throw new Error("ファイルが見つかりません。");
+  }
+
+  const supabase = await requireAuth();
+
+  // 拡張子を取得
+  const fileExt = file.name.split('.').pop();
+  // ユニークなファイル名を生成 (時刻 + ランダム文字列)
+  const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+
+  const { error } = await supabase.storage
+    .from("work_images")
+    .upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (error) {
+    throw new Error(`画像のアップロードに失敗しました: ${error.message}`);
+  }
+
+  // 公開URLを取得
+  const { data: { publicUrl } } = supabase.storage
+    .from("work_images")
+    .getPublicUrl(fileName);
+
+  return publicUrl;
 }
 
 // 作品データを削除

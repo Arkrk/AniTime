@@ -127,8 +127,8 @@ async function ScheduleDataWrapper({
   
   // OGP情報を一括取得
   const ogPreviews = programs.reduce((acc, p) => {
-    if (p.website_url && !acc[p.website_url]) {
-      acc[p.website_url] = <OGPreviewServer imageUrl={p.og_image_url} className="rounded-lg" />;
+    if (p.og_image_url && !acc[p.id]) {
+      acc[p.id] = <OGPreviewServer imageUrl={p.og_image_url} className="rounded-lg" />;
     }
     return acc;
   }, {} as Record<string, React.ReactNode>);

@@ -306,7 +306,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
                         program={prog}
                         mode={mode}
                         colWidth={currentColWidth}
-                        ogPreview={prog.website_url ? ogPreviews?.[prog.website_url] : undefined}
+                        ogPreview={prog.og_image_url ? ogPreviews?.[prog.id] : undefined}
                         style={{
                           top: newTop,
                           height: displayHeight - 2,

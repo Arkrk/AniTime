@@ -95,7 +95,7 @@ export default async function WorkPage({ params }: PageProps) {
 
         {/* 番組一覧 */}
         <div>
-          {work.website_url && (
+          {work.og_image_url && (
             <div className="mb-8 w-full">
               <OGPreviewServer imageUrl={work.og_image_url} />
             </div>

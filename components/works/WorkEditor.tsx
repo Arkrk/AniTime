@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLogin } from "@/hooks/login";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
@@ -8,9 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "@/components/ui/switch";
-import { AtSign, Globe, Lock } from "lucide-react";
+import { AtSign, Globe, Lock, CloudUpload } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { updateWork, createWork } from "@/lib/actions";
+import { updateWork, createWork, fetchOGImageURL, uploadWorkImage } from "@/lib/actions";
 import { getSeasons, Season } from "@/lib/get-seasons";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 
@@ -23,6 +23,7 @@ interface Work {
   wikipedia_url: string | null;
   annict_url: string | null;
   season_id: number | null;
+  og_image_url?: string | null;
 }
 
 interface WorkEditorProps {
@@ -57,7 +58,46 @@ export function WorkEditor({
     wikipedia_url: work?.wikipedia_url || "",
     annict_url: work?.annict_url || "",
     season_id: work?.season_id ?? null as number | null,
+    og_image_url: work?.og_image_url || "",
   });
+
+  const [isFetchingImage, setIsFetchingImage] = useState(false);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFetchImage = async () => {
+    if (!formData.website_url) {
+      alert("公式サイトのURLを入力してください");
+      return;
+    }
+    setIsFetchingImage(true);
+    try {
+      const url = await fetchOGImageURL(formData.website_url);
+      if (url) {
+        setFormData(prev => ({ ...prev, og_image_url: url }));
+        setSelectedImageFile(null);
+        setPreviewUrl(null);
+      } else {
+        alert("画像の取得に失敗しました。");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("画像の取得に失敗しました。");
+    } finally {
+      setIsFetchingImage(false);
+    }
+  };
+
+  const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setSelectedImageFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setFormData(prev => ({ ...prev, og_image_url: "" })); // clear manual URL
+    e.target.value = '';
+  };
 
   useEffect(() => {
     async function loadSeasons() {
@@ -68,6 +108,12 @@ export function WorkEditor({
   }, []);
 
   useEffect(() => {
+    setSelectedImageFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+
     if (work) {
       setFormData({
         name: work.name,
@@ -77,6 +123,7 @@ export function WorkEditor({
         wikipedia_url: work.wikipedia_url || "",
         annict_url: work.annict_url || "",
         season_id: work.season_id ?? null,
+        og_image_url: work.og_image_url || "",
       });
     } else {
       setFormData({
@@ -87,12 +134,20 @@ export function WorkEditor({
         wikipedia_url: "",
         annict_url: "",
         season_id: null,
+        og_image_url: "",
       });
     }
   }, [work, sheetOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    if (name === "og_image_url") {
+      setSelectedImageFile(null);
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(null);
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -100,6 +155,17 @@ export function WorkEditor({
     if (!formData.name) return;
     setIsSaving(true);
     try {
+      let finalOgImageUrl = formData.og_image_url || null;
+
+      if (selectedImageFile) {
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", selectedImageFile);
+        const uploadedUrl = await uploadWorkImage(uploadFormData);
+        if (uploadedUrl) {
+          finalOgImageUrl = uploadedUrl;
+        }
+      }
+
       if (work) {
         await updateWork(work.id, {
           name: formData.name,
@@ -109,6 +175,7 @@ export function WorkEditor({
           wikipedia_url: formData.wikipedia_url || null,
           annict_url: formData.annict_url || null,
           season_id: formData.season_id,
+          og_image_url: finalOgImageUrl,
         });
       } else {
         await createWork({
@@ -119,6 +186,7 @@ export function WorkEditor({
           wikipedia_url: formData.wikipedia_url || null,
           annict_url: formData.annict_url || null,
           season_id: formData.season_id,
+          og_image_url: finalOgImageUrl,
         }, skipInsertTimestamp);
       }
       setSheetOpen(false);
@@ -207,6 +275,52 @@ export function WorkEditor({
                 value={formData.annict_url}
                 onChange={handleChange}
               />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="og_image_url">画像のURL</FieldLabel>
+              <div className="flex gap-2 mb-2">
+                <Input
+                  id="og_image_url"
+                  name="og_image_url"
+                  value={formData.og_image_url}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleFetchImage}
+                  disabled={isFetchingImage || !formData.website_url}
+                >
+                  {isFetchingImage ? <Spinner /> : <Globe />}
+                  公式サイトから取得
+                </Button>
+                <div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleUploadImage}
+                    className="hidden"
+                    disabled={isSaving}
+                    ref={fileInputRef}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isSaving}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <CloudUpload />
+                    {selectedImageFile ? selectedImageFile.name : "アップロード"}
+                  </Button>
+                </div>
+              </div>
+              {(previewUrl || formData.og_image_url) && (
+                <div className="mt-2 relative aspect-[1.91/1] w-full overflow-hidden rounded-2xl border">
+                  <img src={previewUrl || formData.og_image_url} alt="プレビュー" className="object-cover w-full h-full" />
+                </div>
+              )}
             </Field>
           </div>
         </div>
