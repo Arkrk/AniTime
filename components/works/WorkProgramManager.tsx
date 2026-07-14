@@ -3,15 +3,11 @@
 import { useState, useEffect } from "react";
 import { useWorkPrograms } from "@/hooks/use-work-programs";
 import { WorkProgramForm } from "./WorkProgramForm";
-import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Spinner } from "../ui/spinner";
-import { Plus, Pencil, Trash2, GripVertical, Calendar, Clock, Copy, TvMinimal } from "lucide-react";
-import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
-import { DAYS } from "@/lib/get-schedule";
-import { format, parseISO } from "date-fns";
-import { ja } from "date-fns/locale";
+import { ArrowUpDown, Check, Plus, TvMinimal } from "lucide-react";
+import { useSavedPrograms } from "@/hooks/use-saved-programs";
 import {
   DndContext,
   closestCenter,
@@ -25,184 +21,10 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-  useSortable,
+  arrayMove,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { useMediaQuery } from "@/hooks/use-media-query";
-
-interface ProgramItemProps {
-  program: any;
-  isEditable?: boolean;
-  isLast?: boolean;
-  dragHandleProps?: any;
-  dragRef?: (node: HTMLElement | null) => void;
-  style?: React.CSSProperties;
-  onEdit?: (program: any) => void;
-  onDuplicate?: (program: any) => void;
-  onDelete?: (id: number) => void;
-}
-
-function ProgramItem({
-  program,
-  isEditable = false,
-  isLast = false,
-  dragHandleProps,
-  dragRef,
-  style,
-  onEdit,
-  onDuplicate,
-  onDelete,
-}: ProgramItemProps) {
-  const dayLabel = DAYS.find(d => d.id === program.day_of_the_week)?.label || "?";
-  const colorClass = getProgramColorClass(program.color);
-  const isHoverable = useMediaQuery("(hover: hover)");
-  const [isTapped, setIsTapped] = useState(false);
-
-  return (
-    <div
-      ref={dragRef}
-      style={style}
-      className={`p-4 flex flex-col gap-3 ${colorClass} ${(!isEditable && isLast) ? "" : "border-b"} relative group`}
-      onClick={() => !isHoverable && setIsTapped(!isTapped)}
-    >
-      {isEditable && (
-        <div className={`absolute right-2 top-2 flex gap-1 transition-opacity bg-white/80 dark:bg-neutral-900/80 rounded-2xl p-1 z-10 ${isHoverable ? 'opacity-0 group-hover:opacity-100' : (isTapped ? 'opacity-100' : 'opacity-0')}`}>
-          <button
-            {...dragHandleProps}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-2xl cursor-grab active:cursor-grabbing"
-          >
-            <GripVertical className="h-4 w-4 text-gray-500 dark:text-neutral-400" />
-          </button>
-          <button
-            onClick={() => onDuplicate && onDuplicate(program)}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-2xl"
-          >
-            <Copy className="h-4 w-4 text-green-500" />
-          </button>
-          <button
-            onClick={() => onEdit && onEdit(program)}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-2xl"
-          >
-            <Pencil className="h-4 w-4 text-blue-500" />
-          </button>
-          <button
-            onClick={() => onDelete && onDelete(program.id)}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-2xl"
-          >
-            <Trash2 className="h-4 w-4 text-red-500" />
-          </button>
-        </div>
-      )}
-
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-base">
-            {program.channels?.name || "未定"}
-          </span>
-          {(() => {
-            const validSeasons = program.programs_seasons?.filter((ps: any) => ps.seasons) || [];
-            if (validSeasons.length === 0) return null;
-
-            const firstSeason = validSeasons[0];
-            const remainingCount = validSeasons.length - 1;
-
-            return (
-              <>
-                <Badge variant="outline" className="border-black/20 dark:border-white/50 text-xs font-normal">
-                  {firstSeason.seasons.year}年{firstSeason.seasons.month}月
-                </Badge>
-                {remainingCount > 0 && (
-                  <span className="text-xs">+{remainingCount}</span>
-                )}
-              </>
-            );
-          })()}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3 text-sm font-mono shrink-0">
-          {program.start_date && (
-            <>
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4 shrink-0" />
-                <span>{format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}</span>
-              </div>
-              <div className="h-3 w-px bg-black/20 dark:bg-white/20" />
-            </>
-          )}
-          <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4 shrink-0" />
-            <span>
-              <span>{dayLabel}曜</span>
-              <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time)}</span>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {program.version && (
-        <div className="text-sm text-blue-600 dark:text-blue-300 font-medium">
-          {program.version}
-        </div>
-      )}
-
-      {program.note && (
-        <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
-          {program.note}
-        </p>
-      )}
-
-      {program.programs_tags && program.programs_tags.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1">
-          {program.programs_tags?.map((pt: any) => (
-            pt.tags && (
-              <span
-                key={pt.tags.id}
-                className="px-1.5 py-0.5 bg-white/60 dark:bg-white/30 text-foreground text-xs rounded-sm border"
-              >
-                {pt.tags.name}
-              </span>
-            )
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-interface SortableItemProps {
-  program: any;
-  onEdit: (program: any) => void;
-  onDuplicate: (program: any) => void;
-  onDelete: (id: number) => void;
-}
-
-function SortableItem({ program, onEdit, onDuplicate, onDelete }: SortableItemProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id: program.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <ProgramItem
-      program={program}
-      isEditable={true}
-      dragRef={setNodeRef}
-      style={style}
-      dragHandleProps={{ ...attributes, ...listeners }}
-      onEdit={onEdit}
-      onDuplicate={onDuplicate}
-      onDelete={onDelete}
-    />
-  );
-}
+import { ProgramItem } from "./ProgramItem";
+import { SortableItem } from "./SortableItem";
 
 export function WorkProgramManager({ workId }: { workId: number }) {
   const {
@@ -215,12 +37,15 @@ export function WorkProgramManager({ workId }: { workId: number }) {
     addProgram,
     updateProgram,
     deleteProgram,
-    reorderPrograms
+    saveProgramsOrder
   } = useWorkPrograms(workId);
+  const { isSaved, toggleSaved } = useSavedPrograms();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProgram, setEditingProgram] = useState<any | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [isReordering, setIsReordering] = useState(false);
+  const [localPrograms, setLocalPrograms] = useState<any[]>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -236,7 +61,11 @@ export function WorkProgramManager({ workId }: { workId: number }) {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      reorderPrograms(Number(active.id), Number(over.id));
+      const oldIndex = localPrograms.findIndex((p) => p.id === active.id);
+      const newIndex = localPrograms.findIndex((p) => p.id === over.id);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        setLocalPrograms(arrayMove(localPrograms, oldIndex, newIndex));
+      }
     }
   };
 
@@ -276,7 +105,7 @@ export function WorkProgramManager({ workId }: { workId: number }) {
     }
   };
 
-  const displayPrograms = programs;
+  const displayPrograms = isReordering ? localPrograms : programs;
   const isEditable = mounted && !!user;
 
   if (!mounted || loading) {
@@ -290,7 +119,7 @@ export function WorkProgramManager({ workId }: { workId: number }) {
   const renderContent = () => {
     if (displayPrograms.length === 0) {
       return (
-        <Empty className="border-0">
+        <Empty>
           <EmptyMedia variant="icon">
             <TvMinimal className="h-5 w-5" />
           </EmptyMedia>
@@ -320,6 +149,9 @@ export function WorkProgramManager({ workId }: { workId: number }) {
                 onEdit={handleEdit}
                 onDuplicate={handleDuplicate}
                 onDelete={handleDelete}
+                isSaved={isSaved(program.id.toString())}
+                onToggleSaved={toggleSaved}
+                isReordering={isReordering}
               />
             ))}
           </SortableContext>
@@ -335,6 +167,9 @@ export function WorkProgramManager({ workId }: { workId: number }) {
             program={program}
             isEditable={false}
             isLast={index === displayPrograms.length - 1}
+            isSaved={isSaved(program.id.toString())}
+            onToggleSaved={toggleSaved}
+            isReordering={false}
           />
         ))}
       </>
@@ -343,16 +178,49 @@ export function WorkProgramManager({ workId }: { workId: number }) {
 
   return (
     <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold">放送情報</h2>
+      </div>
+
       <div className="rounded-2xl border overflow-hidden">
         {renderContent()}
         {isEditable && (
-          <button
-            onClick={handleAdd}
-            className="w-full p-4 flex items-center justify-center gap-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors border-t font-medium text-sm"
-          >
-            <Plus className="h-4 w-4" />
-            番組を追加
-          </button>
+          <div className="flex items-stretch">
+            {!isReordering && (
+              <button
+                onClick={handleAdd}
+                className={`flex-1 p-4 flex items-center justify-center gap-2 text-muted-foreground bg-primary-foreground hover:bg-accent hover:text-foreground cursor-pointer transition-colors font-medium text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset
+                  ${displayPrograms.length > 1 ? "rounded-bl-2xl" : "rounded-b-2xl"}`}
+              >
+                <Plus className="h-4 w-4" />
+                番組を追加
+              </button>
+            )}
+            {displayPrograms.length > 1 && (
+              <button
+                onClick={() => {
+                  if (isReordering) {
+                    const isChanged = localPrograms.length === programs.length && localPrograms.some((p, i) => p.id !== programs[i].id);
+                    if (isChanged) {
+                      saveProgramsOrder(localPrograms);
+                    }
+                    setIsReordering(false);
+                  } else {
+                    setLocalPrograms(programs);
+                    setIsReordering(true);
+                  }
+                }}
+                className={`flex items-center justify-center gap-2 cursor-pointer transition-colors font-medium text-sm bg-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset
+                  ${isReordering
+                    ? "flex-1 p-4 text-foreground hover:bg-accent rounded-b-2xl"
+                    : "px-6 border-l text-muted-foreground hover:bg-accent hover:text-foreground rounded-br-2xl"
+                  }`}
+              >
+                {isReordering ? <Check className="h-4 w-4" /> : <ArrowUpDown className="h-4 w-4" />}
+                {isReordering ? "並べ替えを完了" : "並べ替え"}
+              </button>
+            )}
+          </div>
         )}
       </div>
 

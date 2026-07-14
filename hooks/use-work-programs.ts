@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/utils/client";
 import { Database } from "@/types/supabase";
 import { useLogin } from "@/hooks/login";
-import { arrayMove } from "@dnd-kit/sortable";
 
 type Program = Database["public"]["Tables"]["programs"]["Row"] & {
   channels: { name: string } | null;
@@ -19,7 +18,7 @@ type Season = Database["public"]["Tables"]["seasons"]["Row"];
 export function useWorkPrograms(workId: number) {
   const { user } = useLogin();
   const supabase = createClient();
-  
+
   const [programs, setPrograms] = useState<Program[]>([]);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
@@ -47,7 +46,7 @@ export function useWorkPrograms(workId: number) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      
+
       // チャンネル、タグ、シーズンのマスターデータを取得
       const [channelsRes, tagsRes, seasonsRes] = await Promise.all([
         supabase.from("channels").select("*, areas(*)").order("order"),
@@ -59,9 +58,9 @@ export function useWorkPrograms(workId: number) {
       if (channelsRes.data) setChannels(channelsRes.data);
       if (tagsRes.data) setTags(tagsRes.data);
       if (seasonsRes.data) setSeasons(seasonsRes.data);
-      
+
       await fetchPrograms();
-      
+
       setLoading(false);
     };
 
@@ -71,20 +70,20 @@ export function useWorkPrograms(workId: number) {
   // 番組データを追加
   const addProgram = async (programData: any) => {
     if (!user) return;
-    
-    const { 
-      season_ids, 
-      tag_ids, 
-      channels, 
-      programs_seasons, 
-      programs_tags, 
+
+    const {
+      season_ids,
+      tag_ids,
+      channels,
+      programs_seasons,
+      programs_tags,
       skipUpdateTimestamp,
-      ...program 
+      ...program
     } = programData;
 
     // 新しい番組のorderは、現在の最大値 +1 にする
     const maxOrder = programs.length > 0 ? Math.max(...programs.map(p => p.order)) : 0;
-    
+
     const { data, error } = await supabase
       .from("programs")
       .insert({ ...program, work_id: workId, order: maxOrder + 1 })
@@ -105,7 +104,7 @@ export function useWorkPrograms(workId: number) {
           tag_ids.map((tid: number) => ({ program_id: data.id, tag_id: tid }))
         );
       }
-      
+
       // 更新日時を更新
       if (!skipUpdateTimestamp) {
         await supabase.from("works").update({ updated_at: new Date().toISOString() }).eq("id", workId);
@@ -119,14 +118,14 @@ export function useWorkPrograms(workId: number) {
   const updateProgram = async (id: number, programData: any) => {
     if (!user) return;
 
-    const { 
-      season_ids, 
-      tag_ids, 
-      channels, 
-      programs_seasons, 
-      programs_tags, 
+    const {
+      season_ids,
+      tag_ids,
+      channels,
+      programs_seasons,
+      programs_tags,
       skipUpdateTimestamp,
-      ...program 
+      ...program
     } = programData;
 
     const { error } = await supabase
@@ -184,27 +183,19 @@ export function useWorkPrograms(workId: number) {
     setPrograms(programs.filter(p => p.id !== id));
   };
 
-  // 番組の並び順を入れ替える
-  const reorderPrograms = async (activeId: number, overId: number) => {
+  // 番組の並び順を一括保存する
+  const saveProgramsOrder = async (newPrograms: any[]) => {
     if (!user) return;
 
-    const oldIndex = programs.findIndex(p => p.id === activeId);
-    const newIndex = programs.findIndex(p => p.id === overId);
+    setPrograms(newPrograms);
 
-    // 並び替え後の番組リストを作成
-    if (oldIndex !== -1 && newIndex !== -1) {
-      const newPrograms = arrayMove(programs, oldIndex, newIndex);
-      
-      setPrograms(newPrograms);
-      
-      const updates = newPrograms.map((p, index) => ({
-        id: p.id,
-        order: index + 1
-      }));
+    const updates = newPrograms.map((p, index) => ({
+      id: p.id,
+      order: index + 1
+    }));
 
-      for (const update of updates) {
-        await supabase.from("programs").update({ order: update.order }).eq("id", update.id);
-      }
+    for (const update of updates) {
+      await supabase.from("programs").update({ order: update.order }).eq("id", update.id);
     }
   };
 
@@ -218,6 +209,6 @@ export function useWorkPrograms(workId: number) {
     addProgram,
     updateProgram,
     deleteProgram,
-    reorderPrograms
+    saveProgramsOrder
   };
 }

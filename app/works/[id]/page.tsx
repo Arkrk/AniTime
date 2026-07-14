@@ -100,7 +100,6 @@ export default async function WorkPage({ params }: PageProps) {
               <OGPreviewServer imageUrl={work.og_image_url} />
             </div>
           )}
-          <h2 className="text-lg font-bold mb-4">放送情報</h2>
           <WorkProgramManager workId={workId} />
         </div>
 
