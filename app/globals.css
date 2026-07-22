@@ -53,6 +53,7 @@
   --radius-4xl: calc(var(--radius) + 16px);
   --font-heading: var(--font-sans);
   --breakpoint-md8: 800px;
+  --animate-shimmer: shimmer 1.5s infinite linear;
 }
 
 :root {
@@ -122,6 +123,16 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
 }
 
 @layer base {
