@@ -5,7 +5,7 @@ import { useWorkPrograms } from "@/hooks/use-work-programs";
 import { WorkProgramForm } from "./WorkProgramForm";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
-import { Spinner } from "../ui/spinner";
+import { ProgramItemSkeleton } from "./ProgramItemSkeleton";
 import { ArrowUpDown, Check, Plus, TvMinimal } from "lucide-react";
 import { useSavedPrograms } from "@/hooks/use-saved-programs";
 import {
@@ -106,17 +106,19 @@ export function WorkProgramManager({ workId }: { workId: number }) {
   };
 
   const displayPrograms = isReordering ? localPrograms : programs;
-  const isEditable = mounted && !!user;
-
-  if (!mounted || loading) {
-    return (
-      <div className="flex justify-center py-8">
-        <Spinner className="size-8 text-muted-foreground" />
-      </div>
-    );
-  }
+  const isEditable = mounted && !!user && !loading;
 
   const renderContent = () => {
+    if (!mounted || loading) {
+      return (
+        <>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <ProgramItemSkeleton key={i} isLast={i === 2} />
+          ))}
+        </>
+      );
+    }
+
     if (displayPrograms.length === 0) {
       return (
         <Empty>

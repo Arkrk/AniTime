@@ -171,7 +171,7 @@ export function ProgramItem({
 
                   return (
                     <>
-                      <Badge variant="outline" className="px-[7px] py-2.5 border-black/20 dark:border-white/50 text-xs font-normal">
+                      <Badge variant="outline" className="px-1.75 py-2.5 border-black/20 dark:border-white/50 text-xs font-normal">
                         {firstSeason.seasons.year}年{firstSeason.seasons.month}月
                       </Badge>
                       {remainingCount > 0 && (
