@@ -37,7 +37,7 @@ export const ViewSelector = () => {
           className={cn(
             "flex flex-col items-center justify-center p-2 h-16 flex-1 rounded-md border text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
             currentView === option.value
-              ? "border-primary text-primary bg-primary/5"
+              ? "border-primary text-primary bg-accent"
               : "border-border text-muted-foreground"
           )}
         >

@@ -62,7 +62,7 @@ export const Sidebar = () => {
                     "group flex flex-col items-center gap-1 transition-colors",
                     pathname === item.href
                       ? "text-foreground"
-                      : "text-gray-400 hover:text-slate-900 dark:text-gray-500 dark:hover:text-white"
+                      : "text-ring hover:text-foreground"
                   )}
                 >
                   <item.icon className="w-7 h-7 group-hover:scale-110 transition-transform stroke-[1.5]" />
@@ -84,7 +84,7 @@ export const Sidebar = () => {
             <TooltipTrigger asChild>
               <button
                 onClick={() => setSearchOpen(true)}
-                className="group text-gray-400 hover:text-slate-900 dark:text-gray-500 dark:hover:text-white transition-colors"
+                className="group text-ring hover:text-foreground transition-colors"
               >
                 <Search className="w-7 h-7 group-hover:scale-110 transition-transform stroke-[1.5]" />
               </button>

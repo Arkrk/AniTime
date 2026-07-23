@@ -59,7 +59,7 @@ export function ProgramItem({
         <div className="flex items-center">
           <button
             {...dragHandleProps}
-            className="p-1 hover:bg-foreground/15 rounded-xl cursor-grab active:cursor-grabbing touch-none outline-none"
+            className="p-1 hover:bg-foreground/10 rounded-xl cursor-grab active:cursor-grabbing touch-none outline-none"
           >
             <GripVertical className="h-5 w-5" />
           </button>
@@ -71,7 +71,7 @@ export function ProgramItem({
       <div className="flex items-center">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="p-1 hover:bg-foreground/15 rounded-xl outline-none">
+            <button className="p-1 hover:bg-foreground/10 rounded-xl outline-none">
               <MoreHorizontal className="h-5 w-5" />
             </button>
           </DropdownMenuTrigger>

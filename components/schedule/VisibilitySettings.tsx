@@ -34,8 +34,8 @@ export function VisibilitySettings() {
       <ScrollArea className="flex-1 min-h-0">
         <div className="flex flex-col gap-6 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
           <div className="border rounded-2xl overflow-hidden">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="flex items-center bg-gray-50/50 dark:bg-neutral-900/50 border-b last:border-b-0 h-[44.5px]">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="flex items-center bg-primary-foreground border-b last:border-b-0 h-[44.5px]">
                 <div className="flex items-center pl-4 py-3 pr-3">
                   <Skeleton className="size-4 rounded-sm" />
                 </div>
@@ -77,7 +77,7 @@ export function VisibilitySettings() {
 
               return (
                 <AccordionItem key={area.id} value={`area-${area.id}`} className="border-b last:border-b-0 group overflow-hidden">
-                  <div className="flex items-center bg-gray-50/50 dark:bg-neutral-900/50 border-b -mb-px group-data-[state=open]:mb-0 relative z-10">
+                  <div className="flex items-center bg-primary-foreground hover:bg-accent border-b -mb-px group-data-[state=open]:mb-0 relative z-10">
                     <div className="flex items-center pl-4 py-3 pr-3">
                       <Checkbox
                         id={`area-group-${area.id}`}
@@ -88,7 +88,7 @@ export function VisibilitySettings() {
                     <AccordionPrimitive.Header className="flex flex-1">
                       <AccordionPrimitive.Trigger
                         className={cn(
-                          "flex flex-1 items-center justify-between py-3 pr-4 font-bold transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+                          "flex flex-1 items-center justify-between py-3 pr-4 font-bold transition-all [&[data-state=open]>svg]:rotate-180",
                           "text-left text-sm"
                         )}
                       >

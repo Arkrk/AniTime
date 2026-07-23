@@ -78,7 +78,7 @@ export const Bottombar = () => {
               "flex flex-col items-center justify-center w-full h-full transition-colors",
               pathname === item.href
                 ? "text-foreground"
-                : "text-gray-400 hover:text-slate-900 dark:text-gray-500 dark:hover:text-white"
+                : "text-ring hover:text-foreground"
             )}
             title={item.label}
           >
