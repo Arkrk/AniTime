@@ -62,22 +62,22 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       <div className="flex flex-col h-full">
         {/* チャンネル名（エリア別表示時のみ） */}
         {mode === "area" && (
-          <span className={cn(forceDesktopSize ? "text-xs" : "text-[10px] md:text-xs", "font-semibold truncate leading-none shrink-0")}>
+          <span className={cn(forceDesktopSize ? "text-xs" : "text-[10px] md:text-xs", "font-semibold truncate leading-[1.15] shrink-0")}>
             {program.channel_name}
           </span>
         )}
         {/* 放送開始日 */}
         {program.start_date && (
-          <span className={cn(forceDesktopSize ? "text-xs" : "text-[10px] md:text-xs", "w-fit rounded shrink-0")}>
+          <span className={cn(forceDesktopSize ? "text-xs" : "text-[10px] md:text-xs", "leading-[1.15] w-fit rounded shrink-0")}>
             {format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}
           </span>
         )}
         {/* 放送時間 */}
-        <span className={cn(forceDesktopSize ? "text-xs opacity-70" : "text-[10px] md:text-xs opacity-75 md:opacity-70", "leading-none my-0.5 tracking-tight shrink-0")}>
+        <span className={cn(forceDesktopSize ? "text-xs" : "text-[10px] md:text-xs", "tracking-tight shrink-0 opacity-70")}>
           {formatTime30(program.start_time)}～{formatTime30(program.end_time, program.start_time)}
         </span>
         {/* 番組名 */}
-        <span className={cn(forceDesktopSize ? "text-[13px] leading-tight" : "text-[11px] md:text-[13px] leading-[1.15] md:leading-tight", "font-bold group-hover:line-clamp-none")}>
+        <span className={cn(forceDesktopSize ? "text-[13px]" : "text-[11px] md:text-[13px]", "font-bold leading-tight group-hover:line-clamp-none")}>
           {program.name}
         </span>
       </div>
