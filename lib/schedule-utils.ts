@@ -1,7 +1,6 @@
 import { ProgramData, ChannelLayout, LayoutProgram, LayoutMode } from "@/types/schedule";
 
-export const START_HOUR = 6; // 6時開始
-export const END_HOUR = 30;   // 30時(翌6時)終了
+export const START_HOUR = 5; // 1日の開始時間
 
 // デスクトップ表示用
 export const HOUR_HEIGHT = 240; // 1時間あたりの高さ(px) -> 1分 = 4px
@@ -18,12 +17,12 @@ export const MOBILE_TIME_COL_WIDTH = 28;
 export const MOBILE_HEADER_HEIGHT = 28;
 
 /**
- * "HH:MM:SS" 形式の文字列を、開始時刻(6:00)からの経過分等に変換する
+ * "HH:MM:SS" 形式の文字列を、開始時間からの経過分等に変換する
  */
 export const calculatePosition = (timeStr: string) => {
   const [h, m] = timeStr.split(":").map(Number);
 
-  // 30時間制対応: 0時〜5時は「翌日」とみなして +24時間する
+  // 30時間制対応
   let hour = h;
   let isNextDay = false;
   if (hour < START_HOUR) {
@@ -31,7 +30,7 @@ export const calculatePosition = (timeStr: string) => {
     isNextDay = true;
   }
 
-  // 開始時間(6:00)からの経過分数
+  // 開始時間からの経過分数
   const minutesFromStart = (hour - START_HOUR) * 60 + m;
 
   return { minutesFromStart, isNextDay };
@@ -60,7 +59,6 @@ export const calculateLayout = (
     } else if (mode === "area") {
       key = p.area_id;
     } else {
-      // week
       key = p.day_of_the_week;
     }
 
@@ -161,20 +159,22 @@ export const calculateLayout = (
  * 時刻文字列 (HH:MM:SS) を30時間制の表示形式 (HH:MM) に変換する
  * 例: "01:30:00" -> "25:30", "22:00:00" -> "22:00"
  */
-export const formatTime30 = (timeStr: string) => {
+export const formatTime30 = (timeStr: string, startTimeStr?: string) => {
   if (!timeStr) return "";
 
-  const [h, m] = timeStr.split(":").map(Number);
-  let hour = h;
+  let { minutesFromStart: endMin } = calculatePosition(timeStr);
 
-  // 6時より前（00:00〜05:59）は翌日扱いとして +24 する
-  if (hour < 6) {
-    hour += 24;
+  if (startTimeStr) {
+    const { minutesFromStart: startMin } = calculatePosition(startTimeStr);
+    if (endMin < startMin) {
+      endMin += 24 * 60;
+    }
   }
 
-  // ゼロ埋めは分のみ行い、時間はそのまま（25時など）にする
-  const minStr = m.toString().padStart(2, "0");
+  const hour = Math.floor(endMin / 60) + START_HOUR;
+  const m = endMin % 60;
 
+  const minStr = m.toString().padStart(2, "0");
   return `${hour}:${minStr}`;
 };
 

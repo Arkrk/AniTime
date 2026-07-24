@@ -94,7 +94,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
       return {
         day: day.label,
         minutes: dayMinutes.get(day.id) || 0,
-        endTime: lastProg ? formatTime30(lastProg.end_time) : null,
+        endTime: lastProg ? formatTime30(lastProg.end_time, lastProg.start_time) : null,
       };
     });
 

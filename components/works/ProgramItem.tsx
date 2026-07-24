@@ -207,7 +207,7 @@ export function ProgramItem({
                 <Clock className="h-4 w-4 shrink-0" />
                 <span>
                   <span>{dayLabel}曜</span>
-                  <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time)}</span>
+                  <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time, program.start_time)}</span>
                 </span>
               </div>
 

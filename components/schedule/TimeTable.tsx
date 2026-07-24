@@ -6,7 +6,6 @@ import {
   calculateLayout,
   calculatePosition,
   START_HOUR,
-  END_HOUR,
   HOUR_HEIGHT,
   MIN_HEIGHT,
   COL_WIDTH,
@@ -35,7 +34,7 @@ type TimeTableProps = {
 export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", ogPreviews }) => {
   const [mounted, setMounted] = useState(false);
   const scrollRef = React.useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -75,7 +74,11 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
 
     programs.forEach((p) => {
       const { minutesFromStart: startMin } = calculatePosition(p.start_time);
-      const { minutesFromStart: endMin } = calculatePosition(p.end_time);
+      let { minutesFromStart: endMin } = calculatePosition(p.end_time);
+
+      if (endMin < startMin) {
+        endMin += 24 * 60;
+      }
 
       const startH = Math.floor(startMin / 60) + START_HOUR;
       const endH = Math.floor((endMin - 1) / 60) + START_HOUR;
@@ -91,15 +94,15 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
 
     programHours.forEach((h) => {
       if (h >= START_HOUR && h < 20) {
-        hours.add(h); // 全日帯 (6:00 - 19:59) は番組が存在する時間帯のみ
+        hours.add(h); // 全日帯 (5:00〜19:59) は番組が存在する時間帯のみ
       }
-      if (h >= 20 && h < END_HOUR) {
+      if (h >= 20) {
         if (h < minLate) minLate = h;
         if (h > maxLate) maxLate = h;
       }
     });
 
-    // 深夜帯 (20:00 - 29:59) は番組が存在する時間帯とその間を表示
+    // 深夜帯 (20:00～) は番組が存在する時間帯とその間を表示
     if (minLate <= maxLate) {
       for (let h = minLate; h <= maxLate; h++) {
         hours.add(h);
@@ -172,8 +175,8 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
 
   if (!hasPrograms) {
     return (
-      <div 
-        className="flex flex-col h-full w-full relative transition-opacity duration-200" 
+      <div
+        className="flex flex-col h-full w-full relative transition-opacity duration-200"
         style={{ opacity: mounted ? 1 : 0 }}
       >
         <div className="flex-1 flex items-center justify-center p-8">
@@ -195,12 +198,12 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
   }
 
   return (
-    <div 
+    <div
       className="flex flex-col h-full w-full relative transition-opacity duration-200"
       style={{ opacity: mounted ? 1 : 0 }}
     >
       {/* スクロールエリア */}
-      <div 
+      <div
         ref={scrollRef}
         onScroll={handleScroll}
         className="flex-1 overflow-auto relative"
@@ -212,7 +215,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
           }}
         >
           {/* --- ヘッダー行（チャンネル/エリア名） --- */}
-          <div 
+          <div
             className="flex sticky top-0 z-48 bg-background border-b shadow-sm shrink-0"
             style={{ height: currentHeaderHeight }}
           >
@@ -236,7 +239,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
 
           {/* --- メイングリッド（時間軸 + 番組部分） --- */}
           <div className="flex relative flex-1" style={{ minHeight: totalHeight }}>
-            
+
             {/* 時間軸 */}
             <div
               className="sticky left-0 z-47 bg-primary-foreground border-r text-[10px] md:text-xs text-muted-foreground shrink-0"
@@ -249,9 +252,9 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
                   <div
                     key={hour}
                     className="absolute w-full border-b flex items-start justify-center pt-1"
-                    style={{ 
-                      top: top, 
-                      height: currentHourHeight 
+                    style={{
+                      top: top,
+                      height: currentHourHeight
                     }}
                   >
                     {hour}
@@ -287,14 +290,14 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
                     // プログラムの表示位置を再計算
                     // prog.top は START_HOUR(6) からの絶対位置
                     const originalStartMin = prog.top / currentMinHeight;
-                    
+
                     let displayStartMin = originalStartMin;
                     let displayHeight = prog.height;
 
                     // 新しいY座標を計算
                     const startHour = Math.floor(displayStartMin / 60) + START_HOUR;
                     const startMinInHour = displayStartMin % 60;
-                    
+
                     const baseY = hourToY.get(startHour);
                     if (baseY === undefined) return null; // 表示範囲外の時間帯は非表示
 

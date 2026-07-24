@@ -74,7 +74,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
         )}
         {/* 放送時間 */}
         <span className={cn(forceDesktopSize ? "text-xs opacity-70" : "text-[10px] md:text-xs opacity-75 md:opacity-70", "leading-none my-0.5 tracking-tight shrink-0")}>
-          {formatTime30(program.start_time)}～{formatTime30(program.end_time)}
+          {formatTime30(program.start_time)}～{formatTime30(program.end_time, program.start_time)}
         </span>
         {/* 番組名 */}
         <span className={cn(forceDesktopSize ? "text-[13px] leading-tight" : "text-[11px] md:text-[13px] leading-[1.15] md:leading-tight", "font-bold group-hover:line-clamp-none")}>
@@ -103,7 +103,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
           <Clock className="h-3 w-3" />
           <span>
             <span>{dayLabel}曜</span>
-            <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time)}</span>
+            <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time, program.start_time)}</span>
           </span>
         </div>
       </div>
