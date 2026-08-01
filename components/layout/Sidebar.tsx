@@ -42,16 +42,16 @@ export const Sidebar = () => {
   ];
 
   return (
-    <aside className="hidden md:flex w-18 h-screen border-r flex-col items-center py-5 shrink-0 z-50">
+    <aside className="hidden md:flex w-18 h-screen border-r flex-col items-center py-1 shrink-0 z-50">
       {/* ロゴ */}
       <div className="mb-auto">
-        <Link href="/" className="flex items-center justify-center hover:opacity-80 transition-opacity">
+        <Link href="/" className="group flex p-4 items-center justify-center hover:bg-accent rounded-md transition-transform active:scale-90">
           <Image src={icon} alt="AniTime" width={28} height={28} />
         </Link>
       </div>
 
       {/* ナビゲーション */}
-      <nav className="flex flex-col gap-10 items-center justify-center">
+      <nav className="flex flex-col gap-2 items-center justify-center">
         <TooltipProvider delayDuration={0}>
           {navItems.map((item) => (
             <Tooltip key={item.label}>
@@ -59,13 +59,13 @@ export const Sidebar = () => {
                 <Link
                   href={item.href}
                   className={cn(
-                    "group flex flex-col items-center gap-1 transition-colors",
+                    "group flex flex-col p-4 items-center transition-transform rounded-md active:scale-90",
                     pathname === item.href
-                      ? "text-foreground"
-                      : "text-ring hover:text-foreground"
+                      ? "text-foreground bg-accent"
+                      : "text-ring hover:text-foreground hover:bg-accent"
                   )}
                 >
-                  <item.icon className="w-7 h-7 group-hover:scale-110 transition-transform stroke-[1.5]" />
+                  <item.icon className="w-7 h-7" />
                 </Link>
               </TooltipTrigger>
 
@@ -84,12 +84,12 @@ export const Sidebar = () => {
             <TooltipTrigger asChild>
               <button
                 onClick={() => setSearchOpen(true)}
-                className="group text-ring hover:text-foreground transition-colors"
+                className="group p-4 text-ring hover:text-foreground hover:bg-accent transition-transform rounded-md active:scale-90"
               >
-                <Search className="w-7 h-7 group-hover:scale-110 transition-transform stroke-[1.5]" />
+                <Search className="w-7 h-7" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="right" className="font-medium flex items-center gap-2">
+            <TooltipContent side="right" className="font-medium flex items-center">
               <p>検索</p>
               <Kbd>
                 <span className="text-xs">{os === "mac" ? "⌘" : "Ctrl + "}</span>K

@@ -14,7 +14,7 @@ const notoSansJP = Noto_Sans_JP({ subsets: ["latin"], variable: "--font-noto-san
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
-  title: { default: "AniTime", template: `%s - AniTime`},
+  title: { default: "AniTime", template: `%s - AniTime` },
   description: "TVアニメ番組表",
   openGraph: {
     ...defaultOpenGraph,
@@ -50,7 +50,7 @@ export default function RootLayout({
           <ThemeColorManager />
           {/* アプリ全体のコンテナ */}
           <div className="flex h-dvh md:h-screen w-full bg-background overflow-hidden">
-            
+
             {/* 1. サイドバー (PC用) */}
             <Sidebar />
 
@@ -58,13 +58,13 @@ export default function RootLayout({
             {/* flex-1: 残りの幅を占有 */}
             {/* pb-16: モバイルでボトムバーの高さ分を確保 */}
             {/* md:pb-0: PCではボトムバーがないのでpadding不要 */}
-            <main className="flex-1 flex flex-col min-w-0 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0 relative overflow-hidden">
+            <main className="flex-1 flex flex-col min-w-0 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0 relative overflow-hidden">
               {children}
             </main>
 
             {/* 3. ボトムバー (モバイル用) */}
             <Bottombar />
-          
+
           </div>
           <Toaster richColors position="top-center" />
           <Analytics />

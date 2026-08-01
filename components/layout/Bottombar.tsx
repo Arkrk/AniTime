@@ -69,7 +69,7 @@ export const Bottombar = () => {
 
   return (
     <nav className="fixed bottom-0 left-0 z-50 w-full border-t bg-background md:hidden pb-[env(safe-area-inset-bottom)]">
-      <div className="flex h-16 items-center justify-around">
+      <div className="flex h-14 items-center justify-around">
         {navItems.map((item) => (
           <RippleLink
             key={item.label}
