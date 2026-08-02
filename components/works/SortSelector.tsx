@@ -70,7 +70,7 @@ export function SortSelector({ currentSort, currentOrder }: SortSelectorProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>並べ替え基準</DropdownMenuLabel>
+        <DropdownMenuLabel>並べ替えの基準</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={currentSort} onValueChange={handleSortChange}>
           {SORT_OPTIONS.map((opt) => {
             const Icon = opt.icon;
@@ -83,7 +83,7 @@ export function SortSelector({ currentSort, currentOrder }: SortSelectorProps) {
           })}
         </DropdownMenuRadioGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuLabel>順序</DropdownMenuLabel>
+        <DropdownMenuLabel>並べ替えの順序</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={currentOrder} onValueChange={handleOrderChange}>
           {ORDER_OPTIONS.map((opt) => {
             const Icon = opt.icon;

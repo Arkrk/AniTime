@@ -32,7 +32,6 @@ const RippleLink = ({
     <Link
       href={href}
       className={cn("relative overflow-hidden", className)}
-      title={title}
       onPointerDown={handlePointerDown}
     >
       {ripples.map((r) => (

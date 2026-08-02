@@ -128,10 +128,10 @@ export const WorksList = ({
 
                 {/* リンクボタン・管理者操作メニュー */}
                 {(hasLinks || (mounted && user)) && (
-                  <div className="flex items-center justify-between sm:pt-2 sm:border-t mt-auto gap-1.5 relative z-10 pointer-events-auto">
+                  <div className="flex items-center justify-between sm:pt-2 sm:border-t mt-auto gap-1.5 relative z-10 pointer-events-none">
                     <div className="flex flex-wrap gap-1">
                       {work.website_url && (
-                        <Button size="icon-sm" variant="outline" asChild>
+                        <Button size="icon-sm" variant="outline" className="pointer-events-auto" asChild>
                           <a
                             href={work.website_url}
                             target="_blank"
@@ -143,7 +143,7 @@ export const WorksList = ({
                         </Button>
                       )}
                       {work.x_username && (
-                        <Button size="icon-sm" variant="outline" asChild>
+                        <Button size="icon-sm" variant="outline" className="pointer-events-auto" asChild>
                           <a
                             href={`https://x.com/${work.x_username}`}
                             target="_blank"
@@ -155,7 +155,7 @@ export const WorksList = ({
                         </Button>
                       )}
                       {work.wikipedia_url && (
-                        <Button size="icon-sm" variant="outline" asChild>
+                        <Button size="icon-sm" variant="outline" className="pointer-events-auto" asChild>
                           <a
                             href={work.wikipedia_url}
                             target="_blank"
@@ -168,7 +168,7 @@ export const WorksList = ({
                       )}
                     </div>
                     {mounted && user && (
-                      <div onClick={(e) => e.stopPropagation()} className="ml-auto shrink-0">
+                      <div onClick={(e) => e.stopPropagation()} className="ml-auto shrink-0 pointer-events-auto">
                         <WorkActionsMenu work={work as any} deleteRedirectTo="/works" />
                       </div>
                     )}

@@ -45,7 +45,7 @@ export const Sidebar = () => {
     <aside className="hidden md:flex w-18 h-screen border-r flex-col items-center py-1 shrink-0 z-50">
       {/* ロゴ */}
       <div className="mb-auto">
-        <Link href="/" className="group flex p-4 items-center justify-center hover:bg-accent rounded-md transition-transform active:scale-90">
+        <Link href="/" className="group flex p-4 items-center justify-center hover:bg-accent active:bg-accent rounded-md transition-transform active:scale-90">
           <Image src={icon} alt="AniTime" width={28} height={28} />
         </Link>
       </div>
@@ -62,7 +62,7 @@ export const Sidebar = () => {
                     "group flex flex-col p-4 items-center transition-transform rounded-md active:scale-90",
                     pathname === item.href
                       ? "text-foreground bg-accent"
-                      : "text-ring hover:text-foreground hover:bg-accent"
+                      : "text-ring hover:text-foreground hover:bg-accent active:bg-accent"
                   )}
                 >
                   <item.icon className="w-7 h-7" />
@@ -84,7 +84,7 @@ export const Sidebar = () => {
             <TooltipTrigger asChild>
               <button
                 onClick={() => setSearchOpen(true)}
-                className="group p-4 text-ring hover:text-foreground hover:bg-accent transition-transform rounded-md active:scale-90"
+                className="group p-4 text-ring hover:text-foreground hover:bg-accent active:bg-accent transition-transform rounded-md active:scale-90"
               >
                 <Search className="w-7 h-7" />
               </button>
