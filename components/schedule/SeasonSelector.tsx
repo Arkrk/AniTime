@@ -38,7 +38,16 @@ export const SeasonSelector = ({ seasons, currentSeasonId, onValueChange, showAl
     // 現在のクエリパラメータをコピーしてインスタンス化
     const params = new URLSearchParams(searchParams.toString());
     // seasonのみを更新
-    params.set("season", value);
+    if (value === "all" || value === "none") {
+      params.set("season", value);
+    } else {
+      const selectedSeason = seasons.find((s) => s.id.toString() === value);
+      if (selectedSeason) {
+        params.set("season", `${selectedSeason.year}-${selectedSeason.month}`);
+      } else {
+        params.set("season", value);
+      }
+    }
     // シーズン変更時はページ番号をリセットする
     params.delete("page");
 

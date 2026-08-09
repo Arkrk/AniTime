@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DAYS } from "@/lib/get-schedule";
+import { DAYS, getDayString } from "@/lib/get-schedule";
 
 type DayTabsProps = {
   currentDay: number;
@@ -39,14 +39,14 @@ export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
     return (
       <div className="hidden sm:block">
         <Tabs
-          defaultValue={currentDay.toString()}
-          value={currentDay.toString()}
+          defaultValue={getDayString(currentDay)}
+          value={getDayString(currentDay)}
           onValueChange={handleValueChange}
           className="w-fit"
         >
           <TabsList>
             {DAYS.map((d) => (
-              <TabsTrigger key={d.id} value={d.id.toString()}>
+              <TabsTrigger key={d.id} value={d.en.toLowerCase()}>
                 {d.label}
               </TabsTrigger>
             ))}
@@ -60,14 +60,14 @@ export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
     <>
       {/* モバイルサイズではSelect */}
       <div className="block sm:hidden">
-        <Select value={currentDay.toString()} onValueChange={handleValueChange}>
+        <Select value={getDayString(currentDay)} onValueChange={handleValueChange}>
           <SelectTrigger>
             <SelectValue placeholder="曜日を選択" />
           </SelectTrigger>
           <SelectContent position="popper">
             <SelectGroup>
               {DAYS.map((d) => (
-                <SelectItem key={d.id} value={d.id.toString()}>
+                <SelectItem key={d.id} value={d.en.toLowerCase()}>
                   {d.label}曜
                 </SelectItem>
               ))}
@@ -79,14 +79,14 @@ export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
       {/* デスクトップサイズではTabs */}
       <div className="hidden sm:block">
         <Tabs
-          defaultValue={currentDay.toString()}
-          value={currentDay.toString()}
+          defaultValue={getDayString(currentDay)}
+          value={getDayString(currentDay)}
           onValueChange={handleValueChange}
           className="w-fit"
         >
           <TabsList>
             {DAYS.map((d) => (
-              <TabsTrigger key={d.id} value={d.id.toString()}>
+              <TabsTrigger key={d.id} value={d.en.toLowerCase()}>
                 {d.label}
               </TabsTrigger>
             ))}

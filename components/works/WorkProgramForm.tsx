@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Textarea } from "@/components/ui/textarea";
 import { Database } from "@/types/supabase";
 import { DAYS } from "@/lib/get-schedule";
+import { compareSeasons } from "@/lib/get-seasons";
 import { getProgramColorClass } from "@/lib/schedule-utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Toggle } from "@/components/ui/toggle";
@@ -204,7 +205,9 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
           <FieldLabel>放送クール</FieldLabel>
           <ScrollArea className="h-40 border rounded-2xl overflow-hidden">
             <div className="p-3 flex flex-wrap gap-2">
-              {seasons.map(season => (
+              {[...seasons]
+                .sort((a, b) => compareSeasons(a, b, "desc"))
+                .map(season => (
                 <Toggle
                   key={season.id}
                   variant="outline"

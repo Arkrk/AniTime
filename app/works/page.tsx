@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getWorks } from "@/lib/get-work";
-import { getSeasons } from "@/lib/get-seasons";
+import { getSeasons, resolveSeasonId } from "@/lib/get-seasons";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 import { WorksList } from "@/components/works/WorksList";
 import { defaultOpenGraph } from "@/lib/metadata";
@@ -29,12 +29,7 @@ export default async function WorksPage({ searchParams }: PageProps) {
 
   // シーズンIDの決定
   const latestSeasonId = seasons.length > 0 ? seasons[0].id : "all";
-  const seasonParam = params.season;
-  const currentSeasonId: number | "all" = seasonParam === "all"
-    ? "all"
-    : seasonParam !== undefined
-      ? Number(seasonParam)
-      : latestSeasonId;
+  const currentSeasonId = resolveSeasonId(params.season, seasons, latestSeasonId);
 
   // ページ番号の決定
   const currentPage = Number(params.page) || 1;

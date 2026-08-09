@@ -12,9 +12,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
-import { DAYS } from "@/lib/get-schedule";
+import { DAYS, getDayString } from "@/lib/get-schedule";
 import { format, parseISO } from "date-fns";
 import { ja } from "date-fns/locale";
+import { compareSeasons } from "@/lib/get-seasons";
 
 export interface ProgramItemProps {
   program: any;
@@ -94,11 +95,14 @@ export function ProgramItem({
               const validSeasons = program.programs_seasons?.filter((ps: any) => ps.seasons) || [];
               if (validSeasons.length === 0) return null;
 
-              if (validSeasons.length === 1) {
-                const season = validSeasons[0].seasons;
+              // 年・月の昇順でソート
+              const sortedSeasons = [...validSeasons].sort((a, b) => compareSeasons(a.seasons, b.seasons, "asc"));
+
+              if (sortedSeasons.length === 1) {
+                const season = sortedSeasons[0].seasons;
                 return (
                   <DropdownMenuItem asChild>
-                    <Link href={`/?season=${season.id}&day=${program.day_of_the_week}`}>
+                    <Link href={`/?season=${season.year}-${season.month}&day=${getDayString(program.day_of_the_week)}`}>
                       <ExternalLink />
                       番組表に移動
                     </Link>
@@ -113,9 +117,9 @@ export function ProgramItem({
                     番組表に移動
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
-                    {validSeasons.map((ps: any) => (
+                    {sortedSeasons.map((ps: any) => (
                       <DropdownMenuItem key={ps.seasons.id} asChild>
-                        <Link href={`/?season=${ps.seasons.id}&day=${program.day_of_the_week}`}>
+                        <Link href={`/?season=${ps.seasons.year}-${ps.seasons.month}&day=${getDayString(program.day_of_the_week)}`}>
                           {ps.seasons.year}年{ps.seasons.month}月
                         </Link>
                       </DropdownMenuItem>
@@ -166,8 +170,11 @@ export function ProgramItem({
                   const validSeasons = program.programs_seasons?.filter((ps: any) => ps.seasons) || [];
                   if (validSeasons.length === 0) return null;
 
-                  const firstSeason = validSeasons[0];
-                  const remainingCount = validSeasons.length - 1;
+                  // 年・月の昇順でソート
+                  const sortedSeasons = [...validSeasons].sort((a, b) => compareSeasons(a.seasons, b.seasons, "asc"));
+
+                  const firstSeason = sortedSeasons[0];
+                  const remainingCount = sortedSeasons.length - 1;
 
                   return (
                     <>

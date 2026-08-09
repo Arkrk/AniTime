@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { getScheduleByDay, getWeekScheduleByChannel, getChannels } from "@/lib/get-schedule";
-import { getSeasons } from "@/lib/get-seasons";
+import { getScheduleByDay, getWeekScheduleByChannel, getChannels, resolveDayId } from "@/lib/get-schedule";
+import { getSeasons, resolveSeasonId } from "@/lib/get-seasons";
 import { TimeTable } from "@/components/schedule/TimeTable";
 import { DayTabs } from "@/components/schedule/DayTabs";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
@@ -35,8 +35,7 @@ export default async function Home({ searchParams }: PageProps) {
   // シーズンIDの決定
   // URLパラメータがあるか？ なければ最新(配列の0番目)のIDを使う
   const latestSeasonId = seasons.length > 0 ? seasons[0].id : 0;
-  const seasonParam = params.season;
-  const currentSeasonId = seasonParam ? Number(seasonParam) : latestSeasonId;
+  const currentSeasonId = resolveSeasonId(params.season, seasons, latestSeasonId);
 
   // 3. データ取得分岐
   let programs: ProgramData[] = [];
@@ -52,9 +51,8 @@ export default async function Home({ searchParams }: PageProps) {
     currentChannelId = channelParam ? Number(channelParam) : defaultChannelId;
   } else {
     // 通常モード
-    const dayParam = params.day;
-    const currentDay = dayParam ? Number(dayParam) : 1;
-    validDay = (currentDay >= 1 && currentDay <= 7) ? currentDay : 1;
+    const currentDay = resolveDayId(params.day, 1);
+    validDay = currentDay;
   }
 
   // renderKeyを生成

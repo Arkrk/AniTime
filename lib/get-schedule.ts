@@ -12,6 +12,22 @@ export const DAYS = [
   { id: 7, label: "日", en: "Sun" },
 ];
 
+// クエリパラメータから曜日IDを取得
+export function resolveDayId(dayParam: string | string[] | undefined, fallbackDay: number = 1): number {
+  const param = Array.isArray(dayParam) ? dayParam[0] : dayParam;
+  if (!param) return fallbackDay;
+
+  const lowerParam = param.toLowerCase();
+  const day = DAYS.find(d => d.en.toLowerCase() === lowerParam);
+  return day ? day.id : fallbackDay;
+}
+
+// 曜日IDからクエリパラメータ用の曜日文字列を取得
+export function getDayString(dayId: number): string {
+  const day = DAYS.find(d => d.id === dayId);
+  return day ? day.en.toLowerCase() : "mon";
+}
+
 // 指定したシーズンと曜日の番組表を取得
 export async function getScheduleByDay(day: number, seasonId: number): Promise<ProgramData[]> {
   const supabase = await createClient();
@@ -166,6 +182,6 @@ export async function getChannels() {
     `)
     .order("area_id")
     .order("order");
-    
+
   return data || [];
 }
