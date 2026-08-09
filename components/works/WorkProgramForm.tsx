@@ -152,6 +152,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
+                  captionLayout="dropdown"
                   selected={formData.start_date ? new Date(formData.start_date) : undefined}
                   onSelect={(date) => handleChange("start_date", date ? format(date, "yyyy-MM-dd") : "")}
                   locale={ja}
@@ -208,16 +209,16 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
               {[...seasons]
                 .sort((a, b) => compareSeasons(a, b, "desc"))
                 .map(season => (
-                <Toggle
-                  key={season.id}
-                  variant="outline"
-                  size="default"
-                  pressed={formData.season_ids.includes(season.id)}
-                  onPressedChange={() => handleSeasonToggle(season.id)}
-                >
-                  {season.year}年{season.month}月
-                </Toggle>
-              ))}
+                  <Toggle
+                    key={season.id}
+                    variant="outline"
+                    size="default"
+                    pressed={formData.season_ids.includes(season.id)}
+                    onPressedChange={() => handleSeasonToggle(season.id)}
+                  >
+                    {season.year}年{season.month}月
+                  </Toggle>
+                ))}
             </div>
           </ScrollArea>
         </Field>
