@@ -19,7 +19,6 @@ export default function UpdatesPage() {
     <div className="flex flex-col h-full overflow-y-auto">
       <main className="flex-1 px-4 pt-8 pb-16 md:px-8 md:pt-16 md:pb-32 max-w-4xl mx-auto w-full">
         <h1 className="text-3xl md:text-4xl font-bold my-4">更新履歴</h1>
-        
         <div className="space-y-8 pt-4">
           <div className="relative border-l border-dashed border-border ml-3">
             <Suspense fallback={<UpdatesSkeleton />}>
@@ -42,7 +41,7 @@ function UpdatesSkeleton() {
             <Skeleton className="h-5 w-38.5" />
             <Skeleton className="ml-3 h-5 w-15 rounded-full" />
           </div>
-          
+
           <div className="block">
             <div className="p-2 border border-b rounded-2xl bg-primary-foreground">
               <div className="flex items-center">
@@ -89,12 +88,12 @@ async function UpdatesList() {
                 {formatRelativeTime(event.date)}
               </span>
             </div>
-            
+
             <Link href={`/works/${event.work.id}`} className="block group">
               <div className="p-2 border border-b rounded-2xl bg-primary-foreground hover:bg-accent transition-colors">
                 <div className="flex items-center">
                   <div className="w-24 md:w-36 shrink-0">
-                    <OGPreviewServer imageUrl={event.work.og_image_url} className="rounded-lg" />
+                    <OGPreviewServer imageUrl={event.work.og_image_url} className="rounded-lg border" />
                   </div>
                   <div className="flex flex-col justify-center mx-3 md:mx-4">
                     <span className="font-medium text-card-foreground text-sm md:text-base line-clamp-2 group-hover:text-primary transition-colors">{event.work.name}</span>
@@ -105,7 +104,7 @@ async function UpdatesList() {
           </div>
         );
       })}
-            
+
       {displayEvents.length === 0 && (
         <div className="ml-8 text-muted-foreground">更新履歴がありません</div>
       )}

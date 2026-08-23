@@ -50,10 +50,21 @@ export default async function WorkPage({ params }: PageProps) {
     <div className="flex flex-col h-full overflow-y-auto">
       <BackButton />
       <WorkActionsMenu work={work} floating />
+      {work.og_image_url && (
+        <div className="relative w-full shrink-0 border-b overflow-hidden flex items-center justify-center bg-black/5">
+          <div
+            className="absolute inset-0 bg-cover bg-center blur-xl opacity-50 scale-110"
+            style={{ backgroundImage: `url(${work.og_image_url})` }}
+          />
+          <div className="relative w-full max-w-4xl mx-auto">
+            <OGPreviewServer imageUrl={work.og_image_url} />
+          </div>
+        </div>
+      )}
 
-      <div className="flex-1 p-4 md:px-8 py-16 max-w-4xl mx-auto w-full">
+      <div className={cn("flex-1 px-4 pb-16 md:px-8 max-w-4xl mx-auto w-full", work.og_image_url ? "pt-4" : "pt-16")}>
         {/* 作品情報 */}
-        <div className="mb-6">
+        <div className="mb-8">
           {work.seasons && (
             <Badge className={cn("px-2.5 py-3", getSeasonBadgeClass(work.seasons.month))}>
               {work.seasons.year}年{work.seasons.month}月
@@ -94,14 +105,7 @@ export default async function WorkPage({ params }: PageProps) {
         </div>
 
         {/* 番組一覧 */}
-        <div>
-          {work.og_image_url && (
-            <div className="mb-8 w-full">
-              <OGPreviewServer imageUrl={work.og_image_url} />
-            </div>
-          )}
-          <WorkProgramManager workId={workId} />
-        </div>
+        <WorkProgramManager workId={workId} />
 
         {(work.updated_at || work.created_at) && (
           <div className="mt-8 text-right text-sm text-muted-foreground flex items-center justify-end gap-1">

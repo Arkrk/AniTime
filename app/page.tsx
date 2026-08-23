@@ -28,10 +28,10 @@ export default async function Home({ searchParams }: PageProps) {
   } else {
     layoutMode = "area";
   }
-  
+
   // シーズン一覧を取得
   const seasons = await getSeasons();
-  
+
   // シーズンIDの決定
   // URLパラメータがあるか？ なければ最新(配列の0番目)のIDを使う
   const latestSeasonId = seasons.length > 0 ? seasons[0].id : 0;
@@ -105,11 +105,11 @@ export default async function Home({ searchParams }: PageProps) {
   );
 }
 
-async function ScheduleDataWrapper({ 
-  layoutMode, 
-  currentSeasonId, 
-  currentChannelId, 
-  validDay 
+async function ScheduleDataWrapper({
+  layoutMode,
+  currentSeasonId,
+  currentChannelId,
+  validDay
 }: {
   layoutMode: LayoutMode;
   currentSeasonId: number;
@@ -122,19 +122,19 @@ async function ScheduleDataWrapper({
   } else {
     programs = await getScheduleByDay(validDay, currentSeasonId);
   }
-  
+
   // OGP情報を一括取得
   const ogPreviews = programs.reduce((acc, p) => {
     if (p.og_image_url && !acc[p.id]) {
-      acc[p.id] = <OGPreviewServer imageUrl={p.og_image_url} className="rounded-lg" />;
+      acc[p.id] = <OGPreviewServer imageUrl={p.og_image_url} className="rounded-lg border" />;
     }
     return acc;
   }, {} as Record<string, React.ReactNode>);
 
   return (
-    <TimeTable 
-      programs={programs} 
-      mode={layoutMode} 
+    <TimeTable
+      programs={programs}
+      mode={layoutMode}
       ogPreviews={ogPreviews}
     />
   );

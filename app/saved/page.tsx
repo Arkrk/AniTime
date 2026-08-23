@@ -83,7 +83,7 @@ async function SavedProgramListWrapper({ currentSeasonId }: { currentSeasonId: n
   // OGP情報を一括取得
   const ogPreviews = programs.reduce((acc, p) => {
     if (p.og_image_url && !acc[p.id]) {
-      acc[p.id] = <OGPreviewServer imageUrl={p.og_image_url} className="rounded-lg" />;
+      acc[p.id] = <OGPreviewServer imageUrl={p.og_image_url} className="rounded-lg border" />;
     }
     return acc;
   }, {} as Record<string, React.ReactNode>);
