@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Globe, History } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
 import { getWorkById } from "@/lib/get-work";
@@ -66,11 +67,13 @@ export default async function WorkPage({ params }: PageProps) {
         {/* 作品情報 */}
         <div className="mb-8">
           {work.seasons && (
-            <Badge className={cn("px-2.5 py-3", getSeasonBadgeClass(work.seasons.month))}>
-              {work.seasons.year}年{work.seasons.month}月
-            </Badge>
+            <Link href={`/works?season=${work.seasons.year}-${work.seasons.month}`}>
+              <Badge className={cn("px-2 py-2.5 md:px-2.5 md:py-3 text-[11px] md:text-xs hover:opacity-80 transition-opacity", getSeasonBadgeClass(work.seasons.month))}>
+                {work.seasons.year}年{work.seasons.month}月
+              </Badge>
+            </Link>
           )}
-          <h1 className="text-2xl md:text-3xl font-bold my-4">{work.name}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mt-1.5 mb-4">{work.name}</h1>
 
           <div className="flex flex-wrap gap-1">
             {work.website_url && (
