@@ -9,6 +9,7 @@ type WorkDetail = Database["public"]["Tables"]["works"]["Row"] & {
     programs_seasons: { seasons: Pick<Database["public"]["Tables"]["seasons"]["Row"], "id" | "year" | "month"> | null }[];
     programs_tags: { tags: Pick<Database["public"]["Tables"]["tags"]["Row"], "id" | "name"> | null }[];
   })[];
+  videos: (Database["public"]["Tables"]["videos"]["Row"])[];
 };
 
 // IDを指定して作品データを取得
@@ -33,6 +34,12 @@ export const getWorkById = cache(async (id: number) => {
         programs_tags (
           tags (id, name)
         )
+      ),
+      videos (
+        id,
+        title,
+        uploaded_at,
+        vid
       )
     `)
     .eq("id", id)
@@ -48,6 +55,15 @@ export const getWorkById = cache(async (id: number) => {
   // programsをorder順にソート
   if (work.programs) {
     work.programs.sort((a, b) => a.order - b.order);
+  }
+
+  // videosをuploaded_atの降順にソート
+  if (work.videos) {
+    work.videos.sort((a, b) => {
+      const dateA = a.uploaded_at ? new Date(a.uploaded_at).getTime() : 0;
+      const dateB = b.uploaded_at ? new Date(b.uploaded_at).getTime() : 0;
+      return dateB - dateA;
+    });
   }
 
   return work;

@@ -9,6 +9,7 @@ import { BackButton } from "@/components/layout/BackButton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { WorkProgramManager } from "@/components/works/WorkProgramManager";
+import { WorkVideos } from "@/components/works/WorkVideos";
 import { defaultOpenGraph } from "@/lib/metadata";
 import { OGPreviewServer } from "@/components/works/OGPreviewServer";
 import { WorkActionsMenu } from "@/components/works/WorkActionsMenu";
@@ -107,8 +108,13 @@ export default async function WorkPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* 番組一覧 */}
-        <WorkProgramManager workId={workId} />
+        <div className="space-y-5">
+          {/* 動画一覧 */}
+          <WorkVideos videos={work.videos} />
+
+          {/* 番組一覧 */}
+          <WorkProgramManager workId={workId} />
+        </div>
 
         {(work.updated_at || work.created_at) && (
           <div className="mt-8 text-right text-sm text-muted-foreground flex items-center justify-end gap-1">

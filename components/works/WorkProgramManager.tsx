@@ -180,7 +180,8 @@ export function WorkProgramManager({ workId }: { workId: number }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <TvMinimal className="text-muted-foreground" />
         <h2 className="text-lg font-bold">放送情報</h2>
       </div>
 
