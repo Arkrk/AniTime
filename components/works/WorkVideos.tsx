@@ -51,10 +51,10 @@ export function WorkVideos({ videos }: { videos: Video[] }) {
         <Video className="text-muted-foreground" />
         <h2 className="text-lg font-bold">動画</h2>
       </div>
-      <div className="relative group/carousel -mr-4 md:mr-0">
+      <div className="relative group/carousel -mx-4 md:mx-0">
         {/* 左スクロールボタン */}
         {canScrollLeft && (
-          <div className="absolute left-0 top-[calc(50%-8px)] -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block">
+          <div className="absolute left-0 top-25.5 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block">
             <Button
               variant="secondary"
               size="icon"
@@ -71,7 +71,7 @@ export function WorkVideos({ videos }: { videos: Video[] }) {
         <div
           ref={scrollContainerRef}
           onScroll={checkScrollability}
-          className="flex overflow-x-auto gap-4 pb-4 pr-4 md:pr-0 snap-x snap-mandatory md:scroll-fade-x scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
+          className="flex overflow-x-auto gap-4 pb-4 pt-3 -mt-3 pl-4 md:px-3 md:-mx-3 snap-x snap-mandatory scroll-pl-4 md:scroll-pl-3 md:scroll-fade-x scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] after:content-[''] after:w-px after:shrink-0 md:after:hidden"
         >
           {videos.map((video) => (
             <a
@@ -79,9 +79,9 @@ export function WorkVideos({ videos }: { videos: Video[] }) {
               href={`https://www.youtube.com/watch?v=${video.vid}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex-none w-70 md:w-80 snap-start rounded-2xl overflow-hidden border bg-primary-foreground hover:bg-accent transition-colors"
+              className="group flex-none w-70 md:w-80 snap-start rounded-2xl outline-none transition-all ring-12 ring-transparent hover:bg-accent hover:ring-accent"
             >
-              <div className="aspect-video relative overflow-hidden">
+              <div className="overflow-hidden aspect-video rounded-2xl border bg-background">
                 <img
                   src={`https://img.youtube.com/vi/${video.vid}/maxresdefault.jpg`}
                   alt={video.title}
@@ -89,7 +89,7 @@ export function WorkVideos({ videos }: { videos: Video[] }) {
                   loading="lazy"
                 />
               </div>
-              <div className="p-3.5">
+              <div className="mt-2.5">
                 <h3 className="text-sm font-medium truncate">
                   {video.title}
                 </h3>
@@ -105,7 +105,7 @@ export function WorkVideos({ videos }: { videos: Video[] }) {
 
         {/* 右スクロールボタン */}
         {canScrollRight && (
-          <div className="absolute right-0 top-[calc(50%-8px)] translate-x-1/2 -translate-y-1/2 z-10 hidden md:block">
+          <div className="absolute right-0 top-25.5 translate-x-1/2 -translate-y-1/2 z-10 hidden md:block">
             <Button
               variant="secondary"
               size="icon"
