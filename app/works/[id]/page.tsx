@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { WorkProgramManager } from "@/components/works/WorkProgramManager";
 import { WorkVideos } from "@/components/works/WorkVideos";
+import { WorkSynopsis } from "@/components/works/WorkSynopsis";
 import { defaultOpenGraph } from "@/lib/metadata";
 import { OGPreviewServer } from "@/components/works/OGPreviewServer";
 import { WorkActionsMenu } from "@/components/works/WorkActionsMenu";
@@ -108,11 +109,14 @@ export default async function WorkPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="space-y-5">
+        <div className="space-y-8">
           {/* 動画一覧 */}
           <WorkVideos videos={work.videos} />
 
-          {/* 番組一覧 */}
+          {/* あらすじ */}
+          <WorkSynopsis synopsis={work.synopsis} />
+
+          {/* 放送情報 */}
           <WorkProgramManager workId={workId} />
         </div>
 

@@ -5,6 +5,7 @@ import { useLogin } from "@/hooks/login";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "@/components/ui/switch";
@@ -24,6 +25,7 @@ interface Work {
   annict_url: string | null;
   season_id: number | null;
   og_image_url?: string | null;
+  synopsis?: string | null;
 }
 
 interface WorkEditorProps {
@@ -59,6 +61,7 @@ export function WorkEditor({
     annict_url: work?.annict_url || "",
     season_id: work?.season_id ?? null as number | null,
     og_image_url: work?.og_image_url || "",
+    synopsis: work?.synopsis || "",
   });
 
   const [isFetchingImage, setIsFetchingImage] = useState(false);
@@ -124,6 +127,7 @@ export function WorkEditor({
         annict_url: work.annict_url || "",
         season_id: work.season_id ?? null,
         og_image_url: work.og_image_url || "",
+        synopsis: work.synopsis || "",
       });
     } else {
       setFormData({
@@ -135,11 +139,12 @@ export function WorkEditor({
         annict_url: "",
         season_id: null,
         og_image_url: "",
+        synopsis: "",
       });
     }
   }, [work, sheetOpen]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     if (name === "og_image_url") {
       setSelectedImageFile(null);
@@ -176,6 +181,7 @@ export function WorkEditor({
           annict_url: formData.annict_url || null,
           season_id: formData.season_id,
           og_image_url: finalOgImageUrl,
+          synopsis: formData.synopsis || null,
         });
       } else {
         await createWork({
@@ -187,6 +193,7 @@ export function WorkEditor({
           annict_url: formData.annict_url || null,
           season_id: formData.season_id,
           og_image_url: finalOgImageUrl,
+          synopsis: formData.synopsis || null,
         }, skipInsertTimestamp);
       }
       setSheetOpen(false);
@@ -321,6 +328,15 @@ export function WorkEditor({
                   <img src={previewUrl || formData.og_image_url} alt="プレビュー" className="object-cover w-full h-full" />
                 </div>
               )}
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="synopsis">あらすじ</FieldLabel>
+              <Textarea
+                id="synopsis"
+                name="synopsis"
+                value={formData.synopsis}
+                onChange={handleChange}
+              />
             </Field>
           </div>
         </div>

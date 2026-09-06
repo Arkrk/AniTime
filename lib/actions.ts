@@ -70,6 +70,7 @@ export async function updateWork(id: number, data: {
   annict_url?: string | null;
   season_id?: number | null;
   og_image_url?: string | null;
+  synopsis?: string | null;
 }) {
   const supabase = await requireAuth();
 
@@ -98,6 +99,7 @@ export async function createWork(data: {
   annict_url?: string | null;
   season_id?: number | null;
   og_image_url?: string | null;
+  synopsis?: string | null;
 }, skipInsertTimestamp?: boolean) {
   const supabase = await requireAuth();
 
