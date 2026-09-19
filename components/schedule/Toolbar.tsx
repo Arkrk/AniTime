@@ -19,10 +19,10 @@ export const Toolbar: React.FC = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-md h-11 w-11 hover:bg-accent/50"
+              className="rounded-md size-11 hover:bg-accent/50"
               onClick={() => setSearchOpen(true)}
             >
-              <Search className="h-5 w-5" />
+              <Search className="size-5" />
             </Button>
             <div className="w-px h-6 bg-border shrink-0" />
           </div>
@@ -30,8 +30,8 @@ export const Toolbar: React.FC = () => {
           {/* 背景色の凡例 */}
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-md h-11 w-11">
-                <Palette className="h-5 w-5" />
+              <Button variant="ghost" size="icon" className="rounded-md size-11">
+                <Palette className="size-5" />
               </Button>
             </PopoverTrigger>
             <PopoverContent side="top" align="end">

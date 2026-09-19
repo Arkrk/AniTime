@@ -90,7 +90,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
         {/* 放送開始日 */}
         {program.start_date ? (
           <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
+            <Calendar className="size-3" />
             <span>
               {format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}
             </span>
@@ -100,7 +100,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
         )}
         {/* 放送時間 */}
         <div className="flex items-center gap-1">
-          <Clock className="h-3 w-3" />
+          <Clock className="size-3" />
           <span>
             <span>{dayLabel}曜</span>
             <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time, program.start_time)}</span>
@@ -202,7 +202,7 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
           onPressedChange={() => toggleSaved(String(program.id))}
           variant="outline"
         >
-          <Bookmark className={cn("h-4 w-4", saved && "fill-current")} />
+          <Bookmark className={cn("size-4", saved && "fill-current")} />
           {saved ? "削除" : "保存"}
         </Toggle>
       </div>

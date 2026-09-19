@@ -47,7 +47,7 @@ export default async function PrivacyPolicyPage() {
 
         {postData.date && (
           <div className="mt-16 text-right text-sm text-muted-foreground flex items-center justify-end gap-1">
-            <History className="h-4 w-4" />
+            <History className="size-4" />
             {formattedDate}に更新
           </div>
         )}

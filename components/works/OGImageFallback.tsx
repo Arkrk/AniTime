@@ -14,7 +14,7 @@ export const OGImageFallback: React.FC<OGImageFallbackProps> = ({ src, alt }) =>
   if (error) {
     return (
       <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
-        <ImageOff className="w-6 h-6" />
+        <ImageOff className="size-6" />
       </div>
     );
   }

@@ -127,7 +127,7 @@ export function VideoEditor({
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-      <SheetContent className="flex flex-col w-screen sm:w-150" aria-describedby={undefined}>
+      <SheetContent className="flex flex-col w-screen sm:w-150 max-sm:border-none" aria-describedby={undefined}>
         <SheetHeader>
           <SheetTitle>{video ? "動画を編集" : "動画を追加"}</SheetTitle>
         </SheetHeader>

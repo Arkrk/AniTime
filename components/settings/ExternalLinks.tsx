@@ -16,7 +16,7 @@ export function ExternalLinks() {
               2025年以前の番組表をスプレッドシートで確認できます。
             </p>
           </div>
-          <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0" />
+          <ExternalLink className="size-4 text-muted-foreground shrink-0" />
         </div>
       </a>
       <a
@@ -32,7 +32,7 @@ export function ExternalLinks() {
               番組データの提供や修正リクエストを送信できます。
             </p>
           </div>
-          <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0" />
+          <ExternalLink className="size-4 text-muted-foreground shrink-0" />
         </div>
       </a>
       <a
@@ -48,7 +48,7 @@ export function ExternalLinks() {
               不具合報告などのフィードバックを送信できます。
             </p>
           </div>
-          <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0" />
+          <ExternalLink className="size-4 text-muted-foreground shrink-0" />
         </div>
       </a>
     </div>

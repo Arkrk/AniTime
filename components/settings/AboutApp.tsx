@@ -12,7 +12,7 @@ export function AboutApp() {
               使い方や開発経緯、技術スタックなど
             </p>
           </div>
-          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+          <ChevronRight className="size-4 text-muted-foreground shrink-0" />
         </div>
       </Link>
       <Link href="/privacy" className="block border-b p-4 hover:bg-accent">
@@ -23,7 +23,7 @@ export function AboutApp() {
               個人情報の取り扱いに関するポリシー
             </p>
           </div>
-          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+          <ChevronRight className="size-4 text-muted-foreground shrink-0" />
         </div>
       </Link>
       <Link href="/releases" className="block p-4 hover:bg-accent">
@@ -34,7 +34,7 @@ export function AboutApp() {
               新機能や改善内容など
             </p>
           </div>
-          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+          <ChevronRight className="size-4 text-muted-foreground shrink-0" />
         </div>
       </Link>
     </div>

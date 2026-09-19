@@ -60,7 +60,7 @@ export const WorksList = ({
       <div className="flex h-full items-center justify-center p-8">
         <Empty>
           <EmptyMedia variant="icon">
-            <Clapperboard className="size-6" />
+            <Clapperboard />
           </EmptyMedia>
           <EmptyHeader>
             <EmptyTitle>表示する作品がありません</EmptyTitle>

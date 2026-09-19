@@ -13,7 +13,7 @@ async function OGImageFetcher({ imageUrl, className }: { imageUrl?: string | nul
   if (!imageUrl) {
     return (
       <div className={cn("w-full flex items-center justify-center bg-muted text-muted-foreground aspect-[1.91/1]", className)}>
-        <ImageOff className="w-6 h-6" />
+        <ImageOff className="size-6" />
       </div>
     );
   }

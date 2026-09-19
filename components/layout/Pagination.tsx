@@ -77,7 +77,7 @@ export function Pagination({
                     size="icon"
                     asChild
                     className={cn(
-                      "h-9 w-9 rounded-full text-base font-normal p-0",
+                      "size-9 rounded-full text-base font-normal p-0",
                       isCurrent
                         ? "border bg-background hover:bg-background text-foreground font-medium shadow-none pointer-events-none"
                         : "text-muted-foreground hover:text-foreground"

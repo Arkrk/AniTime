@@ -81,7 +81,7 @@ export const Bottombar = () => {
             )}
             title={item.label}
           >
-            <item.icon className="w-6 h-6 mb-1" />
+            <item.icon className="size-6 mb-1" />
             <span className="text-[10px] font-medium">{item.label}</span>
           </RippleLink>
         ))}

@@ -32,7 +32,7 @@ export function DisplaySettings() {
           </div>
           <div className="h-px bg-border" />
           <div className="flex flex-col">
-            <div 
+            <div
               className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent cursor-pointer"
               onClick={toggleNewOnly}
             >
@@ -44,7 +44,7 @@ export function DisplaySettings() {
             <div className="h-px bg-border" />
             <Sheet>
               <SheetTrigger asChild>
-                <div 
+                <div
                   className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent cursor-pointer"
                 >
                   <Label className="w-full cursor-pointer pointer-events-none">
@@ -55,7 +55,7 @@ export function DisplaySettings() {
                   </div>
                 </div>
               </SheetTrigger>
-              <SheetContent className="w-screen sm:w-90">
+              <SheetContent className="w-screen sm:w-90 max-sm:border-none">
                 <SheetHeader>
                   <SheetTitle>チャンネル表示設定</SheetTitle>
                   <SheetDescription className="sr-only">チャンネルの表示・非表示を設定します</SheetDescription>

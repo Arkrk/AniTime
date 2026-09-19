@@ -62,7 +62,7 @@ export function ProgramItem({
             {...dragHandleProps}
             className="p-1 hover:bg-foreground/10 rounded-xl cursor-grab active:cursor-grabbing touch-none outline-none"
           >
-            <GripVertical className="h-5 w-5" />
+            <GripVertical className="size-5" />
           </button>
         </div>
       );
@@ -73,7 +73,7 @@ export function ProgramItem({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="p-1 hover:bg-foreground/10 rounded-xl outline-none">
-              <MoreHorizontal className="h-5 w-5" />
+              <MoreHorizontal className="size-5" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -188,7 +188,7 @@ export function ProgramItem({
                   );
                 })()}
                 {isSaved && (
-                  <Bookmark className="h-4 w-4 shrink-0" fill="currentColor" />
+                  <Bookmark className="size-4 shrink-0" fill="currentColor" />
                 )}
               </div>
 
@@ -204,14 +204,14 @@ export function ProgramItem({
               {program.start_date && (
                 <>
                   <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4 shrink-0" />
+                    <Calendar className="size-4 shrink-0" />
                     <span>{format(parseISO(program.start_date), "y年M月d日～", { locale: ja })}</span>
                   </div>
                   <div className="h-3 w-px bg-black/20 dark:bg-white/20" />
                 </>
               )}
               <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4 shrink-0" />
+                <Clock className="size-4 shrink-0" />
                 <span>
                   <span>{dayLabel}曜</span>
                   <span className="ml-1">{formatTime30(program.start_time)}～{formatTime30(program.end_time, program.start_time)}</span>

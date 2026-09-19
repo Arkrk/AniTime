@@ -81,21 +81,21 @@ export default async function WorkPage({ params }: PageProps) {
             {work.website_url && (
               <Button size="sm" asChild>
                 <a href={work.website_url} target="_blank" rel="noopener noreferrer">
-                  <Globe className="h-4 w-4" />公式サイト
+                  <Globe className="size-4" />公式サイト
                 </a>
               </Button>
             )}
             {work.x_username && (
               <Button variant="secondary" size="sm" asChild>
                 <a href={`https://x.com/${work.x_username}`} target="_blank" rel="noopener noreferrer">
-                  <FaXTwitter className="h-4 w-4" />@{work.x_username}
+                  <FaXTwitter className="size-4" />@{work.x_username}
                 </a>
               </Button>
             )}
             {work.wikipedia_url && (
               <Button variant="secondary" size="sm" asChild>
                 <a href={work.wikipedia_url} target="_blank" rel="noopener noreferrer">
-                  <FaWikipediaW className="h-4 w-4" />Wikipedia
+                  <FaWikipediaW className="size-4" />Wikipedia
                 </a>
               </Button>
             )}
@@ -122,7 +122,7 @@ export default async function WorkPage({ params }: PageProps) {
 
         {(work.updated_at || work.created_at) && (
           <div className="mt-8 text-right text-sm text-muted-foreground flex items-center justify-end gap-1">
-            <History className="h-4 w-4" />
+            <History className="size-4" />
             {work.updated_at
               ? `${formatRelativeTime(work.updated_at)}に更新`
               : work.created_at && `${formatRelativeTime(work.created_at)}に追加`}

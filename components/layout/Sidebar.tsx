@@ -65,7 +65,7 @@ export const Sidebar = () => {
                       : "text-ring hover:text-foreground hover:bg-accent active:bg-accent"
                   )}
                 >
-                  <item.icon className="w-7 h-7" />
+                  <item.icon className="size-7" />
                 </Link>
               </TooltipTrigger>
 
@@ -86,7 +86,7 @@ export const Sidebar = () => {
                 onClick={() => setSearchOpen(true)}
                 className="group p-4 text-ring hover:text-foreground hover:bg-accent active:bg-accent transition-transform rounded-md active:scale-90"
               >
-                <Search className="w-7 h-7" />
+                <Search className="size-7" />
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" className="font-medium flex items-center">

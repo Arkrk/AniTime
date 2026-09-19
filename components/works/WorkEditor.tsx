@@ -211,7 +211,7 @@ export function WorkEditor({
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-      <SheetContent className="flex flex-col w-screen sm:w-150" aria-describedby={undefined}>
+      <SheetContent className="flex flex-col w-screen sm:w-150 max-sm:border-none" aria-describedby={undefined}>
         <SheetHeader>
           <SheetTitle>{work ? "作品を編集" : "作品を追加"}</SheetTitle>
         </SheetHeader>
@@ -343,13 +343,13 @@ export function WorkEditor({
         <SheetFooter className={`flex flex-row items-center justify-between w-full`}>
           {!work ? (
             <div className="flex items-center space-x-2">
-              <Globe className={cn("h-4 w-4 transition-colors", !skipInsertTimestamp ? "text-foreground" : "text-muted-foreground")} />
+              <Globe className={cn("size-4 transition-colors", !skipInsertTimestamp ? "text-foreground" : "text-muted-foreground")} />
               <Switch
                 id="skip-insert-timestamp"
                 checked={skipInsertTimestamp}
                 onCheckedChange={setSkipInsertTimestamp}
               />
-              <Lock className={cn("h-4 w-4 transition-colors", skipInsertTimestamp ? "text-foreground" : "text-muted-foreground")} />
+              <Lock className={cn("size-4 transition-colors", skipInsertTimestamp ? "text-foreground" : "text-muted-foreground")} />
             </div>
           ) : null}
           <div className="ml-auto flex gap-2">

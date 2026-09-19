@@ -96,7 +96,7 @@ export function WorkVideos({ workId, videos }: { workId: number; videos: Video[]
         </div>
         {user && (
           <button className="p-1 hover:bg-foreground/10 rounded-xl outline-none" onClick={handleAddClick} aria-label="動画を追加">
-            <Plus />
+            <Plus className="size-5" />
           </button>
         )}
       </div>
@@ -109,11 +109,11 @@ export function WorkVideos({ workId, videos }: { workId: number; videos: Video[]
               <Button
                 variant="secondary"
                 size="icon"
-                className="h-10 w-10 rounded-full shadow-md"
+                className="size-10 rounded-full shadow-md"
                 onClick={scrollLeft}
                 aria-label="前へスクロール"
               >
-                <ChevronLeft className="h-5 w-5" />
+                <ChevronLeft className="size-5" />
               </Button>
             </div>
           )}
@@ -159,9 +159,9 @@ export function WorkVideos({ workId, videos }: { workId: number; videos: Video[]
                   {user && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 -mt-1 -mr-1">
-                          <MoreHorizontal />
-                        </Button>
+                        <button className="p-1 hover:bg-foreground/10 rounded-xl outline-none">
+                          <MoreHorizontal className="size-5" />
+                        </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleEditClick(video)}>
@@ -186,11 +186,11 @@ export function WorkVideos({ workId, videos }: { workId: number; videos: Video[]
               <Button
                 variant="secondary"
                 size="icon"
-                className="h-10 w-10 rounded-full shadow-md"
+                className="size-10 rounded-full shadow-md"
                 onClick={scrollRight}
                 aria-label="次へスクロール"
               >
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="size-5" />
               </Button>
             </div>
           )}

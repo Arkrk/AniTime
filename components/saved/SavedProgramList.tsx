@@ -123,7 +123,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
       <div className="flex h-full items-center justify-center p-8">
         <Empty>
           <EmptyMedia variant="icon">
-            <Bookmark className="size-6" />
+            <Bookmark />
           </EmptyMedia>
           <EmptyHeader>
             <EmptyTitle>保存済みの番組はありません</EmptyTitle>

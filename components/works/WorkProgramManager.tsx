@@ -123,7 +123,7 @@ export function WorkProgramManager({ workId }: { workId: number }) {
       return (
         <Empty>
           <EmptyMedia variant="icon">
-            <TvMinimal className="h-5 w-5" />
+            <TvMinimal />
           </EmptyMedia>
           <EmptyHeader>
             <EmptyTitle>放送情報がありません</EmptyTitle>
@@ -195,7 +195,7 @@ export function WorkProgramManager({ workId }: { workId: number }) {
                 className={`flex-1 p-4 flex items-center justify-center gap-2 text-muted-foreground bg-primary-foreground hover:bg-accent hover:text-foreground cursor-pointer transition-colors font-medium text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset
                   ${displayPrograms.length > 1 ? "rounded-bl-2xl" : "rounded-b-2xl"}`}
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="size-4" />
                 番組を追加
               </button>
             )}
@@ -219,7 +219,7 @@ export function WorkProgramManager({ workId }: { workId: number }) {
                     : "px-6 border-l text-muted-foreground hover:bg-accent hover:text-foreground rounded-br-2xl"
                   }`}
               >
-                {isReordering ? <Check className="h-4 w-4" /> : <ArrowUpDown className="h-4 w-4" />}
+                {isReordering ? <Check className="size-4" /> : <ArrowUpDown className="size-4" />}
                 {isReordering ? "並べ替えを完了" : "並べ替え"}
               </button>
             )}
@@ -228,7 +228,7 @@ export function WorkProgramManager({ workId }: { workId: number }) {
       </div>
 
       <Sheet open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <SheetContent className="flex flex-col w-screen sm:w-150" aria-describedby={undefined}>
+        <SheetContent className="flex flex-col w-screen sm:w-150 max-sm:border-none" aria-describedby={undefined}>
           <SheetHeader>
             <SheetTitle>{editingProgram?.id ? "番組を編集" : "番組を追加"}</SheetTitle>
           </SheetHeader>

@@ -76,9 +76,9 @@ async function UpdatesList() {
             <div className="flex items-center mb-3 text-sm text-muted-foreground">
               <span className="absolute flex items-center justify-center w-8 h-8 bg-background rounded-full -left-11 md:-left-14 ring-8 ring-background text-muted-foreground">
                 {event.type === "create" ? (
-                  <PlusCircle className="w-5 h-5" />
+                  <PlusCircle className="size-5" />
                 ) : (
-                  <TvMinimal className="w-5 h-5" />
+                  <TvMinimal className="size-5" />
                 )}
               </span>
               <span className="font-medium">

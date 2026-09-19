@@ -41,7 +41,7 @@ export const ViewSelector = () => {
               : "border-border text-muted-foreground"
           )}
         >
-          <option.icon className="h-5 w-5 mb-1.5" />
+          <option.icon className="size-5 mb-1.5" />
           {option.label}
         </button>
       ))}
