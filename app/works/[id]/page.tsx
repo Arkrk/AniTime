@@ -111,7 +111,7 @@ export default async function WorkPage({ params }: PageProps) {
 
         <div className="space-y-8">
           {/* 動画一覧 */}
-          <WorkVideos videos={work.videos} />
+          <WorkVideos workId={workId} videos={work.videos} />
 
           {/* あらすじ */}
           <WorkSynopsis synopsis={work.synopsis} />
