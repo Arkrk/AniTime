@@ -4,18 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/server";
 import { getOGImage } from "@/lib/get-opengraph";
-
-// 認証が必要な処理を行う前に呼び出す関数
-async function requireAuth() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("権限がありません。");
-  }
-
-  return supabase;
-}
+import { requireAuth } from "@/lib/auth";
 
 // 作品データを検索
 export async function searchWorks(query: string) {
@@ -72,7 +61,8 @@ export async function updateWork(id: number, data: {
   og_image_url?: string | null;
   synopsis?: string | null;
 }) {
-  const supabase = await requireAuth();
+  await requireAuth();
+  const supabase = await createClient();
 
   const updateData: any = { ...data };
 
@@ -101,7 +91,8 @@ export async function createWork(data: {
   og_image_url?: string | null;
   synopsis?: string | null;
 }, skipInsertTimestamp?: boolean) {
-  const supabase = await requireAuth();
+  await requireAuth();
+  const supabase = await createClient();
 
   // 作成日時を追加
   const insertData: any = { ...data };
@@ -135,7 +126,8 @@ export async function uploadWorkImage(formData: FormData) {
     throw new Error("ファイルが見つかりません。");
   }
 
-  const supabase = await requireAuth();
+  await requireAuth();
+  const supabase = await createClient();
 
   // 拡張子を取得
   const fileExt = file.name.split('.').pop();
@@ -163,7 +155,8 @@ export async function uploadWorkImage(formData: FormData) {
 
 // 作品データを削除
 export async function deleteWork(id: number, redirectTo = "/") {
-  const supabase = await requireAuth();
+  await requireAuth();
+  const supabase = await createClient();
 
   const { error } = await supabase
     .from("works")
