@@ -11,6 +11,7 @@ const cspHeader = `
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'self';
+    frame-src 'self' https://www.youtube.com;
     upgrade-insecure-requests;
 `;
 
