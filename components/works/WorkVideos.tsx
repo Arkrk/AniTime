@@ -141,6 +141,11 @@ export function WorkVideos({ workId, videos }: { workId: number; videos: Video[]
                       alt={video.title}
                       className="object-cover w-full h-full"
                       loading="lazy"
+                      onLoad={(e) => {
+                        if (e.currentTarget.naturalWidth <= 120) {
+                          e.currentTarget.src = `https://img.youtube.com/vi/${video.vid}/sddefault.jpg`;
+                        }
+                      }}
                     />
                   </div>
                 </a>
