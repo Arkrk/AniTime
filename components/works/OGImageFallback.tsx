@@ -5,10 +5,9 @@ import { ImageOff } from "lucide-react";
 
 interface OGImageFallbackProps {
   src: string;
-  alt: string;
 }
 
-export const OGImageFallback: React.FC<OGImageFallbackProps> = ({ src, alt }) => {
+export const OGImageFallback: React.FC<OGImageFallbackProps> = ({ src }) => {
   const [error, setError] = useState(false);
 
   if (error) {
@@ -22,8 +21,7 @@ export const OGImageFallback: React.FC<OGImageFallbackProps> = ({ src, alt }) =>
   return (
     <img
       src={src}
-      alt={alt}
-      className="object-cover w-full h-full"
+      className="object-cover object-center w-full h-full"
       loading="lazy"
       onError={() => setError(true)}
     />

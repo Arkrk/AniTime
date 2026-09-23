@@ -141,12 +141,10 @@ export function WorkVideos({ workId, videos }: { workId: number; videos: Video[]
               {videos.map((video) => (
                 <div
                   key={video.id}
-                  className="group flex-none w-70 md:w-80 snap-start rounded-2xl outline-none transition-all ring-12 ring-transparent hover:bg-accent hover:ring-accent relative"
+                  className="group flex-none w-70 md:w-80 snap-start rounded-2xl outline-none transition-all ring-12 ring-transparent hover:bg-accent hover:ring-accent relative cursor-pointer"
+                  onClick={(e) => handleVideoClick(e, video)}
                 >
-                  <div
-                    className="block cursor-pointer"
-                    onClick={(e) => handleVideoClick(e, video)}
-                  >
+                  <div className="block">
                     <div
                       className={`relative overflow-hidden aspect-video rounded-2xl border bg-background transition-all duration-300 ${activeVideo?.id === video.id && isPlayerOpen
                         ? "border-transparent ring-2 ring-foreground ring-offset-2 ring-offset-background"
@@ -154,10 +152,15 @@ export function WorkVideos({ workId, videos }: { workId: number; videos: Video[]
                         }`}
                     >
                       <img
-                        src={`https://img.youtube.com/vi/${video.vid}/sddefault.jpg`}
+                        src={`https://img.youtube.com/vi/${video.vid}/maxresdefault.jpg`}
                         alt={video.title}
-                        className="object-cover w-full h-full"
+                        className="object-cover object-center w-full h-full"
                         loading="lazy"
+                        onLoad={(e) => {
+                          if (e.currentTarget.naturalWidth <= 120) {
+                            e.currentTarget.src = `https://img.youtube.com/vi/${video.vid}/sddefault.jpg`;
+                          }
+                        }}
                       />
                       <div
                         className={`absolute inset-0 flex flex-col items-center justify-center text-white transition-all duration-300 pointer-events-none ${activeVideo?.id === video.id && isPlayerOpen ? "bg-black/40 opacity-100" : "bg-black/0 opacity-0"
@@ -182,7 +185,10 @@ export function WorkVideos({ workId, videos }: { workId: number; videos: Video[]
                     {user && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="p-1 hover:bg-foreground/10 rounded-xl outline-none">
+                          <button
+                            className="p-1 hover:bg-foreground/10 rounded-xl outline-none"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <MoreHorizontal className="size-5" />
                           </button>
                         </DropdownMenuTrigger>

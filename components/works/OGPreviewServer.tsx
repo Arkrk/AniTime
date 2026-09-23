@@ -20,7 +20,7 @@ async function OGImageFetcher({ imageUrl, className }: { imageUrl?: string | nul
 
   return (
     <div className={cn("w-full relative overflow-hidden bg-muted aspect-[1.91/1]", className)}>
-      <OGImageFallback src={imageUrl} alt="Official Site Preview" />
+      <OGImageFallback src={imageUrl} />
     </div>
   );
 }

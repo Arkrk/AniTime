@@ -325,7 +325,7 @@ export function WorkEditor({
               </div>
               {(previewUrl || formData.og_image_url) && (
                 <div className="mt-2 relative aspect-[1.91/1] w-full overflow-hidden rounded-2xl border">
-                  <img src={previewUrl || formData.og_image_url} alt="プレビュー" className="object-cover w-full h-full" />
+                  <img src={previewUrl || formData.og_image_url} alt="プレビュー" className="object-cover object-center w-full h-full" />
                 </div>
               )}
             </Field>
