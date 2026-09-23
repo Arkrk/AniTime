@@ -1,12 +1,20 @@
 import { BookOpen } from "lucide-react";
 import { remark } from "remark";
-import html from "remark-html";
+import remarkRehype from "remark-rehype";
+import rehypeSanitize from "rehype-sanitize";
+import rehypeStringify from "rehype-stringify";
 import { WorkSynopsisContent } from "./WorkSynopsisContent";
 
 export async function WorkSynopsis({ synopsis }: { synopsis: string | null | undefined }) {
   if (!synopsis) return null;
 
-  const htmlContent = (await remark().use(html).process(synopsis)).toString();
+  const htmlContent = (
+    await remark()
+      .use(remarkRehype)
+      .use(rehypeSanitize)
+      .use(rehypeStringify)
+      .process(synopsis)
+  ).toString();
 
   return (
     <div className="space-y-4">

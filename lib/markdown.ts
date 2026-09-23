@@ -2,7 +2,9 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
-import html from "remark-html";
+import remarkRehype from "remark-rehype";
+import rehypeSanitize from "rehype-sanitize";
+import rehypeStringify from "rehype-stringify";
 
 const contentDirectory = path.join(process.cwd(), "content");
 
@@ -20,7 +22,9 @@ export async function getMarkDownContent(fileName: string): Promise<{ contentHtm
 
   // remark を利用して Markdown を HTML に変換
   const processedContent = await remark()
-    .use(html)
+    .use(remarkRehype)
+    .use(rehypeSanitize)
+    .use(rehypeStringify)
     .process(matterResult.content);
 
   // リンクを新しいタブで開くようにする
