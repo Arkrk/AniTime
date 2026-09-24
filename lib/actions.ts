@@ -56,7 +56,7 @@ export async function updateWork(id: number, data: {
   website_url?: string | null;
   x_username?: string | null;
   wikipedia_url?: string | null;
-  annict_url?: string | null;
+  annict_id?: number | null;
   season_id?: number | null;
   og_image_url?: string | null;
   synopsis?: string | null;
@@ -86,7 +86,7 @@ export async function createWork(data: {
   website_url?: string | null;
   x_username?: string | null;
   wikipedia_url?: string | null;
-  annict_url?: string | null;
+  annict_id?: number | null;
   season_id?: number | null;
   og_image_url?: string | null;
   synopsis?: string | null;

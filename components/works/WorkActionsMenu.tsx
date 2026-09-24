@@ -31,7 +31,7 @@ interface Work {
   website_url: string | null;
   x_username: string | null;
   wikipedia_url: string | null;
-  annict_url: string | null;
+  annict_id: number | null;
   season_id: number | null;
 }
 

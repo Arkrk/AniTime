@@ -16,7 +16,7 @@ export type ProgramData = {
   color?: number; // 1-8
   website_url: string | null;
   og_image_url: string | null;
-  annict_url: string | null;
+  annict_id: number | null;
   wikipedia_url: string | null;
   x_username: string | null;
   tags: string[];

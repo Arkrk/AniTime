@@ -22,7 +22,7 @@ interface Work {
   website_url: string | null;
   x_username: string | null;
   wikipedia_url: string | null;
-  annict_url: string | null;
+  annict_id: number | null;
   season_id: number | null;
   og_image_url?: string | null;
   synopsis?: string | null;
@@ -58,7 +58,7 @@ export function WorkEditor({
     website_url: work?.website_url || "",
     x_username: work?.x_username || "",
     wikipedia_url: work?.wikipedia_url || "",
-    annict_url: work?.annict_url || "",
+    annict_id: work?.annict_id?.toString() || "",
     season_id: work?.season_id ?? null as number | null,
     og_image_url: work?.og_image_url || "",
     synopsis: work?.synopsis || "",
@@ -124,7 +124,7 @@ export function WorkEditor({
         website_url: work.website_url || "",
         x_username: work.x_username || "",
         wikipedia_url: work.wikipedia_url || "",
-        annict_url: work.annict_url || "",
+        annict_id: work.annict_id?.toString() || "",
         season_id: work.season_id ?? null,
         og_image_url: work.og_image_url || "",
         synopsis: work.synopsis || "",
@@ -136,7 +136,7 @@ export function WorkEditor({
         website_url: "",
         x_username: "",
         wikipedia_url: "",
-        annict_url: "",
+        annict_id: "",
         season_id: null,
         og_image_url: "",
         synopsis: "",
@@ -178,7 +178,7 @@ export function WorkEditor({
           website_url: formData.website_url || null,
           x_username: formData.x_username || null,
           wikipedia_url: formData.wikipedia_url || null,
-          annict_url: formData.annict_url || null,
+          annict_id: formData.annict_id && !isNaN(parseInt(formData.annict_id, 10)) ? parseInt(formData.annict_id, 10) : null,
           season_id: formData.season_id,
           og_image_url: finalOgImageUrl,
           synopsis: formData.synopsis || null,
@@ -190,7 +190,7 @@ export function WorkEditor({
           website_url: formData.website_url || null,
           x_username: formData.x_username || null,
           wikipedia_url: formData.wikipedia_url || null,
-          annict_url: formData.annict_url || null,
+          annict_id: formData.annict_id && !isNaN(parseInt(formData.annict_id, 10)) ? parseInt(formData.annict_id, 10) : null,
           season_id: formData.season_id,
           og_image_url: finalOgImageUrl,
           synopsis: formData.synopsis || null,
@@ -275,11 +275,12 @@ export function WorkEditor({
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor="annict_url">AnnictのURL</FieldLabel>
+              <FieldLabel htmlFor="annict_id">Annictの作品ID</FieldLabel>
               <Input
-                id="annict_url"
-                name="annict_url"
-                value={formData.annict_url}
+                id="annict_id"
+                name="annict_id"
+                type="number"
+                value={formData.annict_id}
                 onChange={handleChange}
               />
             </Field>

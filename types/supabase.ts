@@ -251,7 +251,7 @@ export type Database = {
       }
       works: {
         Row: {
-          annict_url: string | null
+          annict_id: number | null
           created_at: string | null
           id: number
           name: string
@@ -265,7 +265,7 @@ export type Database = {
           x_username: string | null
         }
         Insert: {
-          annict_url?: string | null
+          annict_id?: number | null
           created_at?: string | null
           id?: number
           name: string
@@ -279,7 +279,7 @@ export type Database = {
           x_username?: string | null
         }
         Update: {
-          annict_url?: string | null
+          annict_id?: number | null
           created_at?: string | null
           id?: number
           name?: string

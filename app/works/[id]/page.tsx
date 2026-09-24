@@ -99,9 +99,9 @@ export default async function WorkPage({ params }: PageProps) {
                 </a>
               </Button>
             )}
-            {work.annict_url && (
+            {work.annict_id && (
               <Button variant="secondary" size="sm" asChild>
-                <a href={work.annict_url} target="_blank" rel="noopener noreferrer">
+                <a href={`https://annict.com/works/${work.annict_id}`} target="_blank" rel="noopener noreferrer">
                   Annict
                 </a>
               </Button>
