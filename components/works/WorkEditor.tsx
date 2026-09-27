@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { AtSign, Globe, Lock, CloudUpload } from "lucide-react";
@@ -30,12 +30,14 @@ interface Work {
 
 interface WorkEditorProps {
   work?: Work;
+  initialData?: Partial<Work>;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
 export function WorkEditor({
   work,
+  initialData,
   open,
   onOpenChange,
 }: WorkEditorProps) {
@@ -129,6 +131,18 @@ export function WorkEditor({
         og_image_url: work.og_image_url || "",
         synopsis: work.synopsis || "",
       });
+    } else if (initialData) {
+      setFormData({
+        name: initialData.name || "",
+        name_yomi: initialData.name_yomi || "",
+        website_url: initialData.website_url || "",
+        x_username: initialData.x_username || "",
+        wikipedia_url: initialData.wikipedia_url || "",
+        annict_id: initialData.annict_id?.toString() || "",
+        season_id: initialData.season_id ?? null,
+        og_image_url: initialData.og_image_url || "",
+        synopsis: initialData.synopsis || "",
+      });
     } else {
       setFormData({
         name: "",
@@ -142,7 +156,7 @@ export function WorkEditor({
         synopsis: "",
       });
     }
-  }, [work, sheetOpen]);
+  }, [work, initialData, sheetOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -235,14 +249,26 @@ export function WorkEditor({
                 onChange={handleChange}
               />
             </Field>
-            <Field>
-              <FieldLabel htmlFor="season_id">放送開始クール</FieldLabel>
-              <SeasonSelector
-                seasons={seasons}
-                currentSeasonId={formData.season_id}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, season_id: value }))}
-              />
-            </Field>
+            <FieldGroup className="grid grid-cols-2 gap-4">
+              <Field>
+                <FieldLabel htmlFor="season_id">放送開始クール</FieldLabel>
+                <SeasonSelector
+                  seasons={seasons}
+                  currentSeasonId={formData.season_id}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, season_id: value }))}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="annict_id">Annictの作品ID</FieldLabel>
+                <Input
+                  id="annict_id"
+                  name="annict_id"
+                  type="number"
+                  value={formData.annict_id}
+                  onChange={handleChange}
+                />
+              </Field>
+            </FieldGroup>
             <Field>
               <FieldLabel htmlFor="website_url">公式サイトのURL</FieldLabel>
               <Input
@@ -271,16 +297,6 @@ export function WorkEditor({
                 id="wikipedia_url"
                 name="wikipedia_url"
                 value={formData.wikipedia_url}
-                onChange={handleChange}
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="annict_id">Annictの作品ID</FieldLabel>
-              <Input
-                id="annict_id"
-                name="annict_id"
-                type="number"
-                value={formData.annict_id}
                 onChange={handleChange}
               />
             </Field>
