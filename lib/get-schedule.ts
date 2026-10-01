@@ -185,3 +185,165 @@ export async function getChannels() {
 
   return data || [];
 }
+
+export async function getAreas() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("areas")
+    .select("*")
+    .order("order");
+
+  return data || [];
+}
+
+// 指定したシーズンとエリアの週間番組表を取得
+export async function getWeekScheduleByArea(seasonId: number, areaId: number): Promise<ProgramData[]> {
+  const supabase = await createClient();
+
+  const query = supabase
+    .from("programs")
+    .select(`
+      id,
+      start_date,
+      start_time,
+      end_time,
+      color,
+      day_of_the_week,
+      version,
+      note,
+      works ( id, name, name_yomi, website_url, og_image_url, annict_id, wikipedia_url, x_username ),
+      channels!inner (
+        id,
+        name,
+        order,
+        areas!inner ( id, name, order )
+      ),
+      programs_seasons!inner ( season_id ),
+      programs_tags ( tags ( name ) )
+    `)
+    .eq("programs_seasons.season_id", seasonId)
+    .eq("channels.areas.id", areaId)
+    .order("start_time", { ascending: true });
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Error fetching week schedule by area:", error);
+    return [];
+  }
+
+  if (!data) return [];
+
+  const formattedData: ProgramData[] = data.map((item: any) => ({
+    id: item.id,
+    work_id: item.works?.id,
+    name: item.works?.name || "未定",
+    name_yomi: item.works?.name_yomi ?? null,
+    start_date: item.start_date,
+    start_time: item.start_time,
+    end_time: item.end_time,
+    channel_id: item.channels?.id,
+    channel_name: item.channels?.name || "不明なチャンネル",
+    channel_order: item.channels?.order || 0,
+    area_id: item.channels?.areas?.id || 0,
+    area_name: item.channels?.areas?.name || "不明なエリア",
+    area_order: item.channels?.areas?.order || 0,
+    version: item.version,
+    note: item.note,
+    color: item.color,
+    website_url: item.works?.website_url ?? null,
+    og_image_url: item.works?.og_image_url ?? null,
+    annict_id: item.works?.annict_id ?? null,
+    wikipedia_url: item.works?.wikipedia_url ?? null,
+    x_username: item.works?.x_username ?? null,
+    day_of_the_week: item.day_of_the_week,
+    tags: item.programs_tags?.map((pt: any) => pt.tags?.name).filter(Boolean) || [],
+  }));
+
+  return formattedData;
+}
+
+// チャンネルと曜日に基づく前後番組表を取得
+export async function getSeasonSchedule(channelId: number, day: number, allSeasons: any[]): Promise<ProgramData[]> {
+  const supabase = await createClient();
+
+  let query = supabase
+    .from("programs")
+    .select(`
+      id,
+      start_date,
+      start_time,
+      end_time,
+      color,
+      day_of_the_week,
+      version,
+      note,
+      works ( id, name, name_yomi, website_url, og_image_url, annict_id, wikipedia_url, x_username ),
+      channels!inner (
+        id,
+        name,
+        order,
+        areas ( id, name, order )
+      ),
+      programs_seasons!inner ( 
+        season_id
+      ),
+      programs_tags ( tags ( name ) )
+    `)
+    .eq("channels.id", channelId)
+    .order("start_time", { ascending: true });
+
+  if (day !== 0) {
+    query = query.eq("day_of_the_week", day);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Error fetching season schedule:", error);
+    return [];
+  }
+
+  if (!data) return [];
+
+  const formattedData: ProgramData[] = [];
+  data.forEach((item: any) => {
+    // もし番組が複数のシーズンに紐づいている場合は、それぞれを独立したアイテムとして扱う
+    const seasons = item.programs_seasons || [];
+    seasons.forEach((ps: any) => {
+      const matchedSeason = allSeasons.find(s => s.id === ps.season_id);
+
+      formattedData.push({
+        id: item.id,
+        work_id: item.works?.id,
+        name: item.works?.name || "未定",
+        name_yomi: item.works?.name_yomi ?? null,
+        start_date: item.start_date,
+        start_time: item.start_time,
+        end_time: item.end_time,
+        channel_id: item.channels?.id,
+        channel_name: item.channels?.name || "不明なチャンネル",
+        channel_order: item.channels?.order || 0,
+        area_id: item.channels?.areas?.id || 0,
+        area_name: item.channels?.areas?.name || "不明なエリア",
+        area_order: item.channels?.areas?.order || 0,
+        version: item.version,
+        note: item.note,
+        color: item.color,
+        website_url: item.works?.website_url ?? null,
+        og_image_url: item.works?.og_image_url ?? null,
+        annict_id: item.works?.annict_id ?? null,
+        wikipedia_url: item.works?.wikipedia_url ?? null,
+        x_username: item.works?.x_username ?? null,
+        day_of_the_week: item.day_of_the_week,
+        tags: item.programs_tags?.map((pt: any) => pt.tags?.name).filter(Boolean) || [],
+        season_id: ps.season_id,
+        season_name: matchedSeason?.name,
+        season_year: matchedSeason?.year,
+        season_month: matchedSeason?.month,
+      });
+    });
+  });
+
+  return formattedData;
+}

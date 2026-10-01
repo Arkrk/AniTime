@@ -1,11 +1,12 @@
 import { Suspense } from "react";
-import { getScheduleByDay, getWeekScheduleByChannel, getChannels, resolveDayId } from "@/lib/get-schedule";
+import { getScheduleByDay, getWeekScheduleByChannel, getChannels, getAreas, getWeekScheduleByArea, getSeasonSchedule, resolveDayId } from "@/lib/get-schedule";
 import { getSeasons, resolveSeasonId } from "@/lib/get-seasons";
 import { TimeTable } from "@/components/schedule/TimeTable";
 import { DayTabs } from "@/components/schedule/DayTabs";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 import { DisplaySettings } from "@/components/schedule/DisplaySettings";
 import { ChannelNavigator } from "@/components/schedule/ChannelNavigator";
+import { AreaNavigator } from "@/components/schedule/AreaNavigator";
 import { LoadingOverlay } from "@/components/layout/LoadingOverlay";
 import { Spinner } from "@/components/ui/spinner";
 import { LayoutMode, ProgramData } from "@/types/schedule";
@@ -18,14 +19,19 @@ type PageProps = {
 export default async function Home({ searchParams }: PageProps) {
   const params = await searchParams;
 
-  // viewパラメータの取得
-  const viewParam = params.view as string;
+  // viewとgroupingパラメータの取得
+  const viewParam = (params.view as string) || "default";
+  const groupingParam = (params.grouping as string) || "area";
+
+  // LayoutModeの決定
   let layoutMode: LayoutMode;
   if (viewParam === "week") {
     layoutMode = "week";
-  } else if (viewParam === "channel") {
+  } else if (viewParam === "season") {
+    layoutMode = "season";
+  } else if (groupingParam === "channel") {
     layoutMode = "channel";
-  } else {
+  } else { // groupingParam === "area"
     layoutMode = "area";
   }
 
@@ -33,27 +39,22 @@ export default async function Home({ searchParams }: PageProps) {
   const seasons = await getSeasons();
 
   // シーズンIDの決定
-  // URLパラメータがあるか？ なければ最新(配列の0番目)のIDを使う
   const latestSeasonId = seasons.length > 0 ? seasons[0].id : 0;
   const currentSeasonId = resolveSeasonId(params.season, seasons, latestSeasonId);
 
-  // 3. データ取得分岐
-  let programs: ProgramData[] = [];
-  let channels: any[] = []; // weekモード用
-  let currentChannelId = 0;
-  let validDay = 1;
+  // 曜日IDの決定
+  const currentDay = resolveDayId(params.day, 1);
+  const validDay = currentDay;
 
-  if (layoutMode === "week") {
-    // 週間番組表モード
-    channels = await getChannels();
-    const defaultChannelId = channels.length > 0 ? channels[0].id : 0;
-    const channelParam = params.channel;
-    currentChannelId = channelParam ? Number(channelParam) : defaultChannelId;
-  } else {
-    // 通常モード
-    const currentDay = resolveDayId(params.day, 1);
-    validDay = currentDay;
-  }
+  // マスターデータ取得
+  const channels = await getChannels();
+  const areas = await getAreas();
+
+  // チャンネルID・エリアIDの決定
+  const defaultChannelId = channels.length > 0 ? channels[0].id : 0;
+  const currentChannelId = params.channel ? Number(params.channel) : defaultChannelId;
+  const defaultAreaId = areas.length > 0 ? areas[0].id : 0;
+  const currentAreaId = params.area ? Number(params.area) : defaultAreaId;
 
   // renderKeyを生成
   const sp = new URLSearchParams();
@@ -66,23 +67,35 @@ export default async function Home({ searchParams }: PageProps) {
   }
   const currentParamsKey = sp.toString();
 
+  // コントロール表示の判定
+  const showSeasonSelector = viewParam !== "season";
+  const showDayTabs = viewParam !== "week";
+  const showChannelNavigator = (viewParam === "week" && groupingParam === "channel") || (viewParam === "season");
+  const showAreaNavigator = viewParam === "week" && groupingParam === "area";
+
   return (
     <div className="flex flex-col h-full w-full">
       {/* コントロールバー */}
       <div className="shrink-0 p-4 border-b z-10">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="hidden sm:flex items-center gap-4">
-            <h1 className="text-lg font-bold">番組表</h1>
+            <h1 className="text-lg font-bold shrink-0">番組表</h1>
           </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-            <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
-            <div className="flex items-center gap-2">
-              {layoutMode === "week" ? (
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+            {showSeasonSelector && (
+              <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
+            )}
+            <div className="flex items-center gap-2 max-w-full overflow-x-auto pb-1 sm:pb-0">
+              {showAreaNavigator && (
+                <AreaNavigator areas={areas} currentAreaId={currentAreaId} />
+              )}
+              {showChannelNavigator && (
                 <ChannelNavigator channels={channels} currentChannelId={currentChannelId} />
-              ) : (
+              )}
+              {showDayTabs && (
                 <DayTabs currentDay={validDay} />
               )}
-              <DisplaySettings />
+              <DisplaySettings channels={channels} areas={areas} seasons={seasons} />
             </div>
           </div>
         </div>
@@ -93,10 +106,14 @@ export default async function Home({ searchParams }: PageProps) {
         <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start">
           <Suspense fallback={<LoaderScreen />}>
             <ScheduleDataWrapper
+              viewParam={viewParam}
+              groupingParam={groupingParam}
               layoutMode={layoutMode}
               currentSeasonId={currentSeasonId}
               currentChannelId={currentChannelId}
+              currentAreaId={currentAreaId}
               validDay={validDay}
+              seasons={seasons}
             />
           </Suspense>
         </LoadingOverlay>
@@ -106,20 +123,35 @@ export default async function Home({ searchParams }: PageProps) {
 }
 
 async function ScheduleDataWrapper({
+  viewParam,
+  groupingParam,
   layoutMode,
   currentSeasonId,
   currentChannelId,
-  validDay
+  currentAreaId,
+  validDay,
+  seasons
 }: {
+  viewParam: string;
+  groupingParam: string;
   layoutMode: LayoutMode;
   currentSeasonId: number;
   currentChannelId: number;
+  currentAreaId: number;
   validDay: number;
+  seasons: any[];
 }) {
   let programs: ProgramData[] = [];
-  if (layoutMode === "week") {
-    programs = await getWeekScheduleByChannel(currentSeasonId, currentChannelId);
-  } else {
+
+  if (viewParam === "week") {
+    if (groupingParam === "area") {
+      programs = await getWeekScheduleByArea(currentSeasonId, currentAreaId);
+    } else { // groupingParam === "channel"
+      programs = await getWeekScheduleByChannel(currentSeasonId, currentChannelId);
+    }
+  } else if (viewParam === "season") {
+    programs = await getSeasonSchedule(currentChannelId, validDay, seasons);
+  } else { // viewParam === "default"
     programs = await getScheduleByDay(validDay, currentSeasonId);
   }
 

@@ -14,10 +14,14 @@ import {
 import { DAYS, getDayString } from "@/lib/get-schedule";
 
 type DayTabsProps = {
-  currentDay: number;
+  currentDay?: number;
+  value?: string;
+  onValueChange?: (value: string) => void;
+  forceTabs?: boolean;
+  className?: string;
 };
 
-export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
+export const DayTabs: React.FC<DayTabsProps> = ({ currentDay = 1, value, onValueChange, forceTabs, className }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isMounted, setIsMounted] = useState(false);
@@ -26,32 +30,54 @@ export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
     setIsMounted(true);
   }, []);
 
-  const handleValueChange = (value: string) => {
+  const handleValueChange = (val: string) => {
+    if (onValueChange) {
+      onValueChange(val);
+      return;
+    }
     const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("day", value);
+    newParams.set("day", val);
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("loading-start", { detail: newParams.toString() }));
     }
     router.push(`/?${newParams.toString()}`, { scroll: false });
   };
 
+  const selectedValue = value !== undefined ? value : getDayString(currentDay);
+
+  const renderTabs = () => (
+    <Tabs
+      defaultValue={selectedValue}
+      value={selectedValue}
+      onValueChange={handleValueChange}
+      className={className || "w-fit"}
+    >
+      <TabsList className={className === "w-full" ? "w-full justify-between" : ""}>
+        {DAYS.map((d) => (
+          <TabsTrigger 
+            key={d.id} 
+            value={d.en.toLowerCase()}
+            className={className === "w-full" ? "w-full" : ""}
+          >
+            {d.label}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
+  );
+
   if (!isMounted) {
     return (
-      <div className="hidden sm:block">
-        <Tabs
-          defaultValue={getDayString(currentDay)}
-          value={getDayString(currentDay)}
-          onValueChange={handleValueChange}
-          className="w-fit"
-        >
-          <TabsList>
-            {DAYS.map((d) => (
-              <TabsTrigger key={d.id} value={d.en.toLowerCase()}>
-                {d.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+      <div className={forceTabs ? "block" : "hidden sm:block"}>
+        {renderTabs()}
+      </div>
+    );
+  }
+
+  if (forceTabs) {
+    return (
+      <div className="block">
+        {renderTabs()}
       </div>
     );
   }
@@ -60,8 +86,8 @@ export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
     <>
       {/* モバイルサイズではSelect */}
       <div className="block sm:hidden">
-        <Select value={getDayString(currentDay)} onValueChange={handleValueChange}>
-          <SelectTrigger>
+        <Select value={selectedValue} onValueChange={handleValueChange}>
+          <SelectTrigger className={className}>
             <SelectValue placeholder="曜日を選択" />
           </SelectTrigger>
           <SelectContent position="popper">
@@ -78,20 +104,7 @@ export const DayTabs: React.FC<DayTabsProps> = ({ currentDay }) => {
 
       {/* デスクトップサイズではTabs */}
       <div className="hidden sm:block">
-        <Tabs
-          defaultValue={getDayString(currentDay)}
-          value={getDayString(currentDay)}
-          onValueChange={handleValueChange}
-          className="w-fit"
-        >
-          <TabsList>
-            {DAYS.map((d) => (
-              <TabsTrigger key={d.id} value={d.en.toLowerCase()}>
-                {d.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+        {renderTabs()}
       </div>
     </>
   );

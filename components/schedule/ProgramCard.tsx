@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { ja } from "date-fns/locale";
 import { Clock, Calendar, Bookmark, Globe } from "lucide-react";
@@ -30,11 +31,14 @@ type ProgramCardProps = {
 
 export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, className, style, ogPreview, colWidth = 160, forceDesktopSize = false }) => {
   const { isSaved, toggleSaved } = useSavedPrograms();
+  const searchParams = useSearchParams();
   const isHoverable = useMediaQuery("(hover: hover)");
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const { hoverDetails, showOgPreview } = useProgramCardSettings();
   const saved = isSaved(String(program.id));
   const dayLabel = DAYS.find(d => d.id === program.day_of_the_week)?.label || "?";
+
+  const showChannelName = mode === "area" || (mode === "week" && searchParams?.get("grouping") === "area");
 
   const popupSide = isDesktop ? "right" : "bottom";
   const popupAlign = isDesktop ? "start" : "center";
@@ -60,8 +64,8 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
       }}
     >
       <div className="flex flex-col h-full">
-        {/* チャンネル名（エリア別表示時のみ） */}
-        {mode === "area" && (
+        {/* チャンネル名（エリア別表示時または週間・エリア別表示時のみ） */}
+        {showChannelName && (
           <span className={cn(forceDesktopSize ? "text-xs" : "text-[10px] md:text-xs", "font-semibold truncate leading-[1.15] shrink-0")}>
             {program.channel_name}
           </span>

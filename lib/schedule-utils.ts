@@ -58,8 +58,10 @@ export const calculateLayout = (
       key = p.channel_id;
     } else if (mode === "area") {
       key = p.area_id;
-    } else {
+    } else if (mode === "week") {
       key = p.day_of_the_week;
+    } else { // mode === "season"
+      key = p.season_id ?? 0;
     }
 
     if (!groupsMap.has(key)) {
@@ -67,16 +69,20 @@ export const calculateLayout = (
 
       // メタデータもモードによって切り替え
       if (mode === "channel") {
-        // チャンネル別
+        // チャンネルグルーピング
         const sortOrder = p.area_order * 1000 + p.channel_order;
         metaMap.set(key, { name: p.channel_name, order: sortOrder });
       } else if (mode === "area") {
-        // エリア別
+        // エリアグルーピング
         metaMap.set(key, { name: p.area_name, order: p.area_order });
-      } else {
-        // 週間表示: 曜日ごと
+      } else if (mode === "week") {
+        // 週間番組表
         const dayLabel = ["", "月", "火", "水", "木", "金", "土", "日"][key] || "不明";
         metaMap.set(key, { name: dayLabel, order: key });
+      } else { // mode === "season"
+        // 前後番組表
+        const order = (p.season_year ?? 2000) * 100 + (p.season_month ?? 1);
+        metaMap.set(key, { name: p.season_name ?? "不明", order: -order });
       }
     }
     groupsMap.get(key)!.push(p);

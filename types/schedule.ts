@@ -23,10 +23,14 @@ export type ProgramData = {
   version: string | null;
   note: string | null;
   day_of_the_week: number;
+  season_id?: number;
+  season_name?: string;
+  season_year?: number;
+  season_month?: number;
 };
 
 // 計算モードの型
-export type LayoutMode = "channel" | "area" | "week";
+export type LayoutMode = "channel" | "area" | "week" | "season";
 
 // 描画用に計算された座標情報を持つ型
 export type LayoutProgram = ProgramData & {

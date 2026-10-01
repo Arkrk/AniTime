@@ -16,21 +16,23 @@ import { Season } from "@/lib/get-seasons";
 type SeasonSelectorProps = {
   seasons: Season[];
   currentSeasonId?: number | "all" | null;
+  value?: number | null;
   onValueChange?: (value: number | null) => void;
   showAll?: boolean;
+  className?: string;
 };
 
-export const SeasonSelector = ({ seasons, currentSeasonId, onValueChange, showAll }: SeasonSelectorProps) => {
+export const SeasonSelector = ({ seasons, currentSeasonId, value, onValueChange, showAll, className }: SeasonSelectorProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const handleValueChange = (value: string) => {
+  const handleValueChange = (val: string) => {
     if (onValueChange) {
-      if (value === "none" || value === "all") {
+      if (val === "none" || val === "all") {
         onValueChange(null);
       } else {
-        onValueChange(Number(value));
+        onValueChange(Number(val));
       }
       return;
     }
@@ -38,14 +40,14 @@ export const SeasonSelector = ({ seasons, currentSeasonId, onValueChange, showAl
     // 現在のクエリパラメータをコピーしてインスタンス化
     const params = new URLSearchParams(searchParams.toString());
     // seasonのみを更新
-    if (value === "all" || value === "none") {
-      params.set("season", value);
+    if (val === "all" || val === "none") {
+      params.set("season", val);
     } else {
-      const selectedSeason = seasons.find((s) => s.id.toString() === value);
+      const selectedSeason = seasons.find((s) => s.id.toString() === val);
       if (selectedSeason) {
         params.set("season", `${selectedSeason.year}-${selectedSeason.month}`);
       } else {
-        params.set("season", value);
+        params.set("season", val);
       }
     }
     // シーズン変更時はページ番号をリセットする
@@ -65,16 +67,18 @@ export const SeasonSelector = ({ seasons, currentSeasonId, onValueChange, showAl
   // activeがfalseのグループ: 年月降順
   const inactiveSeasons = seasons.filter((s) => !s.active);
 
-  const selectValue = currentSeasonId !== undefined && currentSeasonId !== null
-    ? currentSeasonId.toString()
-    : showAll ? "all" : "none";
+  const selectValue = value !== undefined && value !== null
+    ? value.toString()
+    : currentSeasonId !== undefined && currentSeasonId !== null
+      ? currentSeasonId.toString()
+      : showAll ? "all" : "none";
 
   return (
     <Select
       value={selectValue}
       onValueChange={handleValueChange}
     >
-      <SelectTrigger>
+      <SelectTrigger className={className}>
         <SelectValue placeholder="放送クールを選択" />
       </SelectTrigger>
       <SelectContent position="popper">
@@ -82,14 +86,6 @@ export const SeasonSelector = ({ seasons, currentSeasonId, onValueChange, showAl
           <>
             <SelectGroup>
               <SelectItem value="all">すべて</SelectItem>
-            </SelectGroup>
-            {(activeSeasons.length > 0 || inactiveSeasons.length > 0) && <SelectSeparator />}
-          </>
-        )}
-        {onValueChange && (
-          <>
-            <SelectGroup>
-              <SelectItem value="none">未設定</SelectItem>
             </SelectGroup>
             {(activeSeasons.length > 0 || inactiveSeasons.length > 0) && <SelectSeparator />}
           </>
