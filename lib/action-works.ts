@@ -3,10 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/server";
-import { getOGImage } from "@/lib/get-opengraph";
 import { requireAuth } from "@/lib/auth";
 
-// 作品データを検索
+/**
+ * 作品データを検索
+ * @param query 検索クエリ
+ * @returns 検索結果
+ */
 export async function searchWorks(query: string) {
   if (!query || query.length < 1 || query.length > 100) return [];
 
@@ -28,28 +31,12 @@ export async function searchWorks(query: string) {
   return data;
 }
 
-export async function getAreasAndChannels() {
-  const supabase = await createClient();
-
-  const { data: areas, error: areasError } = await supabase
-    .from("areas")
-    .select("id, name, order")
-    .order("order");
-
-  const { data: channels, error: channelsError } = await supabase
-    .from("channels")
-    .select("id, name, order, area_id")
-    .order("order");
-
-  if (areasError || channelsError) {
-    console.error("Error fetching master data", areasError, channelsError);
-    return { areas: [], channels: [] };
-  }
-
-  return { areas, channels };
-}
-
-// 作品データを更新
+/**
+ * 作品データを更新
+ * @param id 作品ID
+ * @param data 作品データ
+ * @returns 成功レスポンス
+ */
 export async function updateWork(id: number, data: {
   name: string;
   name_yomi?: string | null;
@@ -79,7 +66,12 @@ export async function updateWork(id: number, data: {
   return { success: true };
 }
 
-// 作品データを追加
+/**
+ * 作品データを追加
+ * @param data 作品データ
+ * @param skipInsertTimestamp タイムスタンプ更新のスキップフラグ
+ * @returns 成功レスポンス
+ */
 export async function createWork(data: {
   name: string;
   name_yomi?: string | null;
@@ -114,12 +106,11 @@ export async function createWork(data: {
   return { success: true, id: newWork.id };
 }
 
-// OGP画像URLを取得
-export async function fetchOGImageURL(url: string) {
-  return await getOGImage(url);
-}
-
-// 画像をSupabaseにアップロード
+/**
+ * 作品の画像を Supabase Storage にアップロード
+ * @param formData 画像データ
+ * @returns 画像の公開URL
+ */
 export async function uploadWorkImage(formData: FormData) {
   const file = formData.get("file") as File | null;
   if (!file) {
@@ -153,7 +144,11 @@ export async function uploadWorkImage(formData: FormData) {
   return publicUrl;
 }
 
-// 作品データを削除
+/**
+ * 作品データを削除
+ * @param id 作品ID
+ * @param redirectTo リダイレクト先（デフォルトはトップページ）
+ */
 export async function deleteWork(id: number, redirectTo = "/") {
   await requireAuth();
   const supabase = await createClient();

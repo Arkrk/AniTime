@@ -22,14 +22,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { deleteVideoAction } from "@/lib/action-videos";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { VideoEditor } from "./VideoEditor";
-import { useVideos } from "@/hooks/use-videos";
-
 type Video = Database["public"]["Tables"]["videos"]["Row"];
 
 export function WorkVideos({ workId, videos }: { workId: number; videos: Video[] }) {
   const { user } = useLogin();
-  const { deleteVideo } = useVideos(workId);
+  const router = useRouter();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -91,8 +92,15 @@ export function WorkVideos({ workId, videos }: { workId: number; videos: Video[]
 
   const handleDeleteConfirm = async () => {
     if (videoToDelete !== null) {
-      await deleteVideo(videoToDelete);
-      setVideoToDelete(null);
+      try {
+        await deleteVideoAction(videoToDelete);
+        router.refresh();
+      } catch (error) {
+        console.error("Failed to delete video:", error);
+        toast.error("動画の削除に失敗しました");
+      } finally {
+        setVideoToDelete(null);
+      }
     }
   };
 
@@ -193,11 +201,17 @@ export function WorkVideos({ workId, videos }: { workId: number; videos: Video[]
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleEditClick(video)}>
+                          <DropdownMenuItem onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditClick(video);
+                          }}>
                             <Pencil />
                             動画を編集
                           </DropdownMenuItem>
-                          <DropdownMenuItem variant="destructive" onClick={() => setVideoToDelete(video.id)}>
+                          <DropdownMenuItem variant="destructive" onClick={(e) => {
+                            e.stopPropagation();
+                            setVideoToDelete(video.id);
+                          }}>
                             <Trash2 />
                             動画を削除
                           </DropdownMenuItem>

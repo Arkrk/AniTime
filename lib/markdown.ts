@@ -8,13 +8,17 @@ import rehypeStringify from "rehype-stringify";
 
 const contentDirectory = path.join(process.cwd(), "content");
 
-// Markdown ファイルを読み込み、HTML に変換して返す関数
-export async function getMarkDownContent(fileName: string): Promise<{ contentHtml: string; [key: string]: any } | null> {
+/**
+ * Markdown ファイルを読み込み、HTMLに変換
+ * @param fileName ファイル名
+ * @returns 変換後のHTML、または null
+ */
+export async function getMarkDownContent(fileName: string): Promise<{ contentHtml: string;[key: string]: any } | null> {
   const fullPath = path.join(contentDirectory, fileName);
   if (!fs.existsSync(fullPath)) {
     return null;
   }
-  
+
   const fileContents = fs.readFileSync(fullPath, "utf8");
 
   // gray-matter を利用してメタデータセクションを解析

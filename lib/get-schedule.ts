@@ -1,38 +1,15 @@
 import { createClient } from "@/utils/client";
 import { ProgramData } from "@/types/schedule";
 
-// 曜日の定義（1:月曜 〜 7:日曜）
-export const DAYS = [
-  { id: 1, label: "月", en: "Mon" },
-  { id: 2, label: "火", en: "Tue" },
-  { id: 3, label: "水", en: "Wed" },
-  { id: 4, label: "木", en: "Thu" },
-  { id: 5, label: "金", en: "Fri" },
-  { id: 6, label: "土", en: "Sat" },
-  { id: 7, label: "日", en: "Sun" },
-];
-
-// クエリパラメータから曜日IDを取得
-export function resolveDayId(dayParam: string | string[] | undefined, fallbackDay: number = 1): number {
-  const param = Array.isArray(dayParam) ? dayParam[0] : dayParam;
-  if (!param) return fallbackDay;
-
-  const lowerParam = param.toLowerCase();
-  const day = DAYS.find(d => d.en.toLowerCase() === lowerParam);
-  return day ? day.id : fallbackDay;
-}
-
-// 曜日IDからクエリパラメータ用の曜日文字列を取得
-export function getDayString(dayId: number): string {
-  const day = DAYS.find(d => d.id === dayId);
-  return day ? day.en.toLowerCase() : "mon";
-}
-
-// 指定したシーズンと曜日の番組表を取得
+/**
+ * 指定したシーズンと曜日の番組表を取得
+ * @param day 曜日ID (1〜7)
+ * @param seasonId シーズンID
+ * @returns 番組表データ
+ */
 export async function getScheduleByDay(day: number, seasonId: number): Promise<ProgramData[]> {
   const supabase = await createClient();
 
-  // Supabaseからデータ取得（リレーションを含む）
   let query = supabase
     .from("programs")
     .select(`
@@ -102,11 +79,15 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
   return formattedData;
 }
 
-// 指定したシーズンとチャンネルの週間番組表を取得
+/**
+ * 指定したシーズンとチャンネルの週間番組表を取得
+ * @param seasonId シーズンID
+ * @param channelId チャンネルID
+ * @returns 番組表データ
+ */
 export async function getWeekScheduleByChannel(seasonId: number, channelId: number): Promise<ProgramData[]> {
   const supabase = await createClient();
 
-  // Supabaseからデータ取得（リレーションを含む）
   const query = supabase
     .from("programs")
     .select(`
@@ -172,31 +153,12 @@ export async function getWeekScheduleByChannel(seasonId: number, channelId: numb
   return formattedData;
 }
 
-export async function getChannels() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("channels")
-    .select(`
-      *,
-      areas ( id, name, order )
-    `)
-    .order("area_id")
-    .order("order");
-
-  return data || [];
-}
-
-export async function getAreas() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("areas")
-    .select("*")
-    .order("order");
-
-  return data || [];
-}
-
-// 指定したシーズンとエリアの週間番組表を取得
+/**
+ * 指定したシーズンとエリアの週間番組表を取得
+ * @param seasonId シーズンID
+ * @param areaId エリアID
+ * @returns 番組表データ
+ */
 export async function getWeekScheduleByArea(seasonId: number, areaId: number): Promise<ProgramData[]> {
   const supabase = await createClient();
 
@@ -263,7 +225,13 @@ export async function getWeekScheduleByArea(seasonId: number, areaId: number): P
   return formattedData;
 }
 
-// チャンネルと曜日に基づく前後番組表を取得
+/**
+ * 指定したチャンネルと曜日の前後番組表を取得
+ * @param channelId チャンネルID
+ * @param day 曜日ID (1〜7)
+ * @param allSeasons 全シーズンの配列
+ * @returns 番組表データ
+ */
 export async function getSeasonSchedule(channelId: number, day: number, allSeasons: any[]): Promise<ProgramData[]> {
   const supabase = await createClient();
 

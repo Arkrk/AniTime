@@ -1,6 +1,5 @@
 import { ProgramData, ChannelLayout, LayoutProgram, LayoutMode } from "@/types/schedule";
-
-export const START_HOUR = 5; // 1日の開始時間
+import { calculatePosition } from "@/lib/format-time";
 
 // デスクトップ表示用
 export const HOUR_HEIGHT = 240; // 1時間あたりの高さ(px) -> 1分 = 4px
@@ -17,27 +16,11 @@ export const MOBILE_TIME_COL_WIDTH = 28;
 export const MOBILE_HEADER_HEIGHT = 28;
 
 /**
- * "HH:MM:SS" 形式の文字列を、開始時間からの経過分等に変換する
- */
-export const calculatePosition = (timeStr: string) => {
-  const [h, m] = timeStr.split(":").map(Number);
-
-  // 30時間制対応
-  let hour = h;
-  let isNextDay = false;
-  if (hour < START_HOUR) {
-    hour += 24;
-    isNextDay = true;
-  }
-
-  // 開始時間からの経過分数
-  const minutesFromStart = (hour - START_HOUR) * 60 + m;
-
-  return { minutesFromStart, isNextDay };
-};
-
-/**
  * 番組データの配列を受け取り、配置計算済みのチャンネル配列を返す
+ * @param programs 番組データの配列
+ * @param mode レイアウトモード
+ * @param options レイアウトオプション
+ * @returns レイアウト済みのチャンネル配列
  */
 export const calculateLayout = (
   programs: ProgramData[],
@@ -161,52 +144,3 @@ export const calculateLayout = (
   return result.sort((a, b) => a.order - b.order);
 };
 
-/**
- * 時刻文字列 (HH:MM:SS) を30時間制の表示形式 (HH:MM) に変換する
- * 例: "01:30:00" -> "25:30", "22:00:00" -> "22:00"
- */
-export const formatTime30 = (timeStr: string, startTimeStr?: string) => {
-  if (!timeStr) return "";
-
-  let { minutesFromStart: endMin } = calculatePosition(timeStr);
-
-  if (startTimeStr) {
-    const { minutesFromStart: startMin } = calculatePosition(startTimeStr);
-    if (endMin < startMin) {
-      endMin += 24 * 60;
-    }
-  }
-
-  const hour = Math.floor(endMin / 60) + START_HOUR;
-  const m = endMin % 60;
-
-  const minStr = m.toString().padStart(2, "0");
-  return `${hour}:${minStr}`;
-};
-
-/**
- * 番組の色IDからTailwind CSSのクラス名を取得する
- */
-export const getProgramColorClass = (colorId?: number | null) => {
-  const colors = [
-    // 1: AT-X 最速放送（1週間先行）
-    "bg-purple-200 border-purple-300 text-purple-900 dark:bg-purple-900 dark:border-purple-700 dark:text-purple-100",
-    // 2: AT-X 最速放送
-    "bg-red-200 border-red-300 text-red-900 dark:bg-red-900 dark:border-red-700 dark:text-red-100",
-    // 3: 最速放送
-    "bg-orange-200 border-orange-300 text-orange-900 dark:bg-orange-900 dark:border-orange-700 dark:text-orange-100",
-    // 4: 同日時差遅れ放送
-    "bg-yellow-200 border-yellow-300 text-yellow-900 dark:bg-yellow-900 dark:border-yellow-700 dark:text-yellow-100",
-    // 5: 1～6日遅れ放送
-    "bg-green-200 border-green-300 text-green-900 dark:bg-green-900 dark:border-green-700 dark:text-green-100",
-    // 6: 1週以上遅れ放送
-    "bg-sky-200 border-sky-300 text-sky-900 dark:bg-sky-900 dark:border-sky-700 dark:text-sky-100",
-    // 7: 旧作・再放送
-    "bg-slate-300 border-slate-400 text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100",
-    // 8: 関連番組
-    "bg-muted text-foreground",
-    // 9: 未確定の情報
-    "bg-background border-dashed border-chart-2 text-muted-foreground",
-  ];
-  return colors[(colorId || 1) - 1] || colors[8];
-};

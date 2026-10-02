@@ -12,7 +12,7 @@ import {
   CommandItem,
   CommandSeparator,
 } from "@/components/ui/command";
-import { searchWorks } from "@/lib/actions";
+import { searchWorks } from "@/lib/action-works";
 import { Table2, Bookmark, Clapperboard, History, Bolt } from "lucide-react";
 
 interface SearchDialogProps {

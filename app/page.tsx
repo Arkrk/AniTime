@@ -1,5 +1,7 @@
 import { Suspense } from "react";
-import { getScheduleByDay, getWeekScheduleByChannel, getChannels, getAreas, getWeekScheduleByArea, getSeasonSchedule, resolveDayId } from "@/lib/get-schedule";
+import { getScheduleByDay, getWeekScheduleByChannel, getWeekScheduleByArea, getSeasonSchedule } from "@/lib/get-schedule";
+import { resolveDayId } from "@/lib/format-days";
+import { getChannels, getAreas } from "@/lib/get-channels";
 import { getSeasons, resolveSeasonId } from "@/lib/get-seasons";
 import { TimeTable } from "@/components/schedule/TimeTable";
 import { DayTabs } from "@/components/schedule/DayTabs";
@@ -35,8 +37,12 @@ export default async function Home({ searchParams }: PageProps) {
     layoutMode = "area";
   }
 
-  // シーズン一覧を取得
-  const seasons = await getSeasons();
+  // シーズン、チャンネル、エリアの一覧を取得
+  const [seasons, channels, areas] = await Promise.all([
+    getSeasons(),
+    getChannels(),
+    getAreas()
+  ]);
 
   // シーズンIDの決定
   const latestSeasonId = seasons.length > 0 ? seasons[0].id : 0;
@@ -45,10 +51,6 @@ export default async function Home({ searchParams }: PageProps) {
   // 曜日IDの決定
   const currentDay = resolveDayId(params.day, 1);
   const validDay = currentDay;
-
-  // マスターデータ取得
-  const channels = await getChannels();
-  const areas = await getAreas();
 
   // チャンネルID・エリアIDの決定
   const defaultChannelId = channels.length > 0 ? channels[0].id : 0;

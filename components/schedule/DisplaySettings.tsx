@@ -15,7 +15,7 @@ import { useDisplaySettings } from "@/hooks/use-display-settings";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { DAYS, getDayString } from "@/lib/get-schedule";
+import { DAYS, getDayString } from "@/lib/format-days";
 
 interface DisplaySettingsProps {
   channels?: any[];

@@ -12,7 +12,11 @@ type WorkDetail = Database["public"]["Tables"]["works"]["Row"] & {
   videos: (Database["public"]["Tables"]["videos"]["Row"])[];
 };
 
-// IDを指定して作品データを取得
+/**
+ * IDを指定して作品データを取得
+ * @param id 作品ID
+ * @returns 作品データ
+ */
 export const getWorkById = cache(async (id: number) => {
   const supabase = await createClient();
 
@@ -69,7 +73,15 @@ export const getWorkById = cache(async (id: number) => {
   return work;
 });
 
-// 作品データをページ単位で取得
+/**
+ * 作品データの一覧を取得
+ * @param page ページ番号
+ * @param limit 1ページあたりの最大取得数
+ * @param sortColumn ソートカラム
+ * @param sortDirection ソート順
+ * @param seasonId シーズンID
+ * @returns 作品データ、総作品数
+ */
 export const getWorks = cache(async (
   page: number = 1,
   limit: number = 50,

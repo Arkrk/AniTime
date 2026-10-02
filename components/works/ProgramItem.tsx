@@ -11,8 +11,9 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatTime30, getProgramColorClass } from "@/lib/schedule-utils";
-import { DAYS, getDayString } from "@/lib/get-schedule";
+import { formatTime30 } from "@/lib/format-time";
+import { getProgramColorClass } from "@/lib/colors";
+import { DAYS, getDayString } from "@/lib/format-days";
 import { format, parseISO } from "date-fns";
 import { ja } from "date-fns/locale";
 import { compareSeasons } from "@/lib/get-seasons";

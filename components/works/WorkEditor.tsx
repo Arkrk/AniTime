@@ -11,7 +11,8 @@ import { Spinner } from "../ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { AtSign, Globe, Lock, CloudUpload } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { updateWork, createWork, fetchOGImageURL, uploadWorkImage } from "@/lib/actions";
+import { updateWork, createWork, uploadWorkImage } from "@/lib/action-works";
+import { getOGImage } from "@/lib/get-opengraph";
 import { getSeasons, Season } from "@/lib/get-seasons";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 
@@ -78,7 +79,7 @@ export function WorkEditor({
     }
     setIsFetchingImage(true);
     try {
-      const url = await fetchOGImageURL(formData.website_url);
+      const url = await getOGImage(formData.website_url);
       if (url) {
         setFormData(prev => ({ ...prev, og_image_url: url }));
         setSelectedImageFile(null);

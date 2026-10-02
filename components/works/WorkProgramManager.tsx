@@ -1,7 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useWorkPrograms } from "@/hooks/use-work-programs";
+import { useLogin } from "@/hooks/login";
+import { getChannels } from "@/lib/get-channels";
+import { getSeasons } from "@/lib/get-seasons";
+import { getTags } from "@/lib/get-tags";
+import {
+  getWorkPrograms,
+  addProgramAction,
+  updateProgramAction,
+  deleteProgramAction,
+  saveProgramsOrderAction
+} from "@/lib/action-programs";
 import { WorkProgramForm } from "./WorkProgramForm";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
@@ -27,18 +37,13 @@ import { ProgramItem } from "./ProgramItem";
 import { SortableItem } from "./SortableItem";
 
 export function WorkProgramManager({ workId }: { workId: number }) {
-  const {
-    user,
-    programs,
-    channels,
-    tags,
-    seasons,
-    loading,
-    addProgram,
-    updateProgram,
-    deleteProgram,
-    saveProgramsOrder
-  } = useWorkPrograms(workId);
+  const { user } = useLogin();
+
+  const [programs, setPrograms] = useState<any[]>([]);
+  const [channels, setChannels] = useState<any[]>([]);
+  const [tags, setTags] = useState<any[]>([]);
+  const [seasons, setSeasons] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const { isSaved, toggleSaved } = useSavedPrograms();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -47,9 +52,33 @@ export function WorkProgramManager({ workId }: { workId: number }) {
   const [isReordering, setIsReordering] = useState(false);
   const [localPrograms, setLocalPrograms] = useState<any[]>([]);
 
+  const fetchProgramsData = async () => {
+    const data = await getWorkPrograms(workId);
+    setPrograms(data);
+  };
+
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [channelsData, tagsData, seasonsData] = await Promise.all([
+          getChannels(),
+          getTags(),
+          getSeasons(),
+        ]);
+        setChannels(channelsData);
+        setTags(tagsData);
+        setSeasons(seasonsData);
+        await fetchProgramsData();
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
     setMounted(true);
-  }, []);
+  }, [workId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -87,17 +116,24 @@ export function WorkProgramManager({ workId }: { workId: number }) {
 
   const handleDelete = async (id: number) => {
     if (confirm("本当に削除しますか？")) {
-      await deleteProgram(id);
+      try {
+        await deleteProgramAction(id);
+        setPrograms(programs.filter((p) => p.id !== id));
+      } catch (e) {
+        console.error(e);
+        alert("削除に失敗しました");
+      }
     }
   };
 
   const handleSubmit = async (data: any) => {
     try {
       if (editingProgram?.id) {
-        await updateProgram(editingProgram.id, data);
+        await updateProgramAction(workId, editingProgram.id, data);
       } else {
-        await addProgram(data);
+        await addProgramAction(workId, data);
       }
+      await fetchProgramsData();
       setIsDialogOpen(false);
     } catch (error) {
       console.error(error);
@@ -205,7 +241,17 @@ export function WorkProgramManager({ workId }: { workId: number }) {
                   if (isReordering) {
                     const isChanged = localPrograms.length === programs.length && localPrograms.some((p, i) => p.id !== programs[i].id);
                     if (isChanged) {
-                      saveProgramsOrder(localPrograms);
+                      const updates = localPrograms.map((p, index) => ({
+                        id: p.id,
+                        order: index + 1,
+                      }));
+                      // 保存完了を待たずにUIに反映
+                      setPrograms(localPrograms);
+                      saveProgramsOrderAction(updates).catch((e) => {
+                        console.error(e);
+                        alert("並び順の保存に失敗しました");
+                        fetchProgramsData(); // 保存失敗の場合は元に戻す
+                      });
                     }
                     setIsReordering(false);
                   } else {

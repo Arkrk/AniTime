@@ -2,8 +2,13 @@
 
 import { requireAuth } from "@/lib/auth";
 
+/**
+ * YouTube の動画IDを指定して公開日時を取得
+ * @param vid YouTube の動画ID
+ * @returns 公開日時
+ */
 export async function getYoutubeVideoPublishedAt(vid: string) {
-  // 権限チェック (失敗した場合はエラーがスローされる)
+  // 権限チェック
   await requireAuth();
 
   let uploadedAt = null;

@@ -5,7 +5,7 @@ import { Palette, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { SearchDialog } from "@/components/search/SearchDialog";
-import { getProgramColorClass } from "@/lib/schedule-utils";
+import { getProgramColorClass } from "@/lib/colors";
 
 export const Toolbar: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);

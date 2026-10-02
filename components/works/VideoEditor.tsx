@@ -9,8 +9,9 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "../ui/spinner";
 import { Database } from "@/types/supabase";
-import { useVideos } from "@/hooks/use-videos";
-
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { addVideoAction, updateVideoAction } from "@/lib/action-videos";
 type Video = Database["public"]["Tables"]["videos"]["Row"];
 
 const PRESET_TITLES = [
@@ -50,7 +51,8 @@ export function VideoEditor({
   onOpenChange,
 }: VideoEditorProps) {
   const { user } = useLogin();
-  const { addVideo, updateVideo, isSaving } = useVideos(workId);
+  const router = useRouter();
+  const [isSaving, setIsSaving] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [internalOpen, setInternalOpen] = useState(false);
 
@@ -107,17 +109,26 @@ export function VideoEditor({
     if (!formData.title || !formData.vidOrUrl) return;
 
     const vid = extractVid(formData.vidOrUrl);
-
-    if (video) {
-      const success = await updateVideo(video.id, formData.title, vid, video.vid);
-      if (success) {
-        setSheetOpen(false);
+    setIsSaving(true);
+    try {
+      if (video) {
+        await updateVideoAction(video.id, formData.title, vid, video.vid);
+      } else {
+        await addVideoAction(workId, formData.title, vid);
       }
-    } else {
-      const success = await addVideo(formData.title, vid);
-      if (success) {
-        setSheetOpen(false);
+      setSheetOpen(false);
+      router.refresh();
+    } catch (error: any) {
+      if (error.message === "VIDEO_NOT_FOUND") {
+        toast.error(`動画の保存に失敗しました`, {
+          description: "このURLの動画は存在しません",
+        });
+      } else {
+        console.error(`Failed to save video:`, error);
+        toast.error(`動画の保存に失敗しました`);
       }
+    } finally {
+      setIsSaving(false);
     }
   };
 

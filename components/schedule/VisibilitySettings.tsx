@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAreasAndChannels } from "@/lib/actions";
+import { getAreas, getChannels } from "@/lib/get-channels";
 import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -22,11 +22,13 @@ export function VisibilitySettings() {
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
-    getAreasAndChannels().then((data) => {
-      setAreas(data.areas || []);
-      setChannels(data.channels || []);
+    const fetchData = async () => {
+      const [areasData, channelsData] = await Promise.all([getAreas(), getChannels()]);
+      setAreas(areasData || []);
+      setChannels(channelsData || []);
       setLoadingData(false);
-    });
+    };
+    fetchData();
   }, []);
 
   if (!loaded || loadingData) {

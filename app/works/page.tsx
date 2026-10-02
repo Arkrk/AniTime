@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { getWorks } from "@/lib/get-work";
+import { getWorks } from "@/lib/get-works";
 import { getSeasons, resolveSeasonId } from "@/lib/get-seasons";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 import { WorksList } from "@/components/works/WorksList";

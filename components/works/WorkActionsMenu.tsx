@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLogin } from "@/hooks/login";
 import { WorkEditor } from "@/components/works/WorkEditor";
-import { deleteWork } from "@/lib/actions";
+import { deleteWork } from "@/lib/action-works";
 import { toast } from "sonner";
 
 interface Work {

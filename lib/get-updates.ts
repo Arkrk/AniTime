@@ -12,6 +12,11 @@ export type TimelineEvent = {
   };
 };
 
+/**
+ * 更新履歴を取得
+ * @param limit 最大取得件数
+ * @returns 更新履歴の配列 または エラー
+ */
 export async function getTimelineEvents(limit = 50): Promise<{ events: TimelineEvent[], error: any }> {
   const supabase = await createClient();
 
@@ -79,7 +84,7 @@ export async function getTimelineEvents(limit = 50): Promise<{ events: TimelineE
 
   // 日付の降順でソート
   events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  
+
   // 最大表示数
   const displayEvents = events.slice(0, limit);
 

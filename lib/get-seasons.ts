@@ -8,7 +8,14 @@ export type Season = {
   active: boolean;
 };
 
+let cachedSeasons: Season[] | null = null;
+
+/**
+ * シーズン一覧を取得（キャッシュがある場合はそのまま使用）
+ * @returns シーズンの配列
+ */
 export async function getSeasons(): Promise<Season[]> {
+  if (cachedSeasons) return cachedSeasons;
   const supabase = await createClient();
 
   // IDの降順で取得
@@ -37,9 +44,17 @@ export async function getSeasons(): Promise<Season[]> {
     .filter((s) => !s.active)
     .sort((a, b) => compareSeasons(a, b, "desc"));
 
-  return [...activeSeasons, ...inactiveSeasons];
+  cachedSeasons = [...activeSeasons, ...inactiveSeasons];
+  return cachedSeasons;
 }
 
+/**
+ * シーズンをソートするための比較関数
+ * @param a 年月を持つオブジェクト
+ * @param b 年月を持つオブジェクト
+ * @param order 昇順または降順
+ * @returns 比較結果
+ */
 export function compareSeasons(
   a: { year: number; month: number },
   b: { year: number; month: number },
@@ -51,7 +66,13 @@ export function compareSeasons(
   return order === "asc" ? a.month - b.month : b.month - a.month;
 }
 
-// クエリパラメータからシーズンIDを取得
+/**
+ * クエリパラメータからシーズンIDを取得
+ * @param seasonParam クエリパラメータ
+ * @param seasons シーズン一覧
+ * @param fallbackId フォールバックID
+ * @returns シーズンIDまたはフォールバックID
+ */
 export function resolveSeasonId<T extends number | "all">(
   seasonParam: string | string[] | undefined,
   seasons: Season[],

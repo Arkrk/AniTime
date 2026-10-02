@@ -4,8 +4,6 @@ import React, { useMemo, useState, useEffect } from "react";
 import { ProgramData, LayoutMode } from "@/types/schedule";
 import {
   calculateLayout,
-  calculatePosition,
-  START_HOUR,
   HOUR_HEIGHT,
   MIN_HEIGHT,
   COL_WIDTH,
@@ -16,7 +14,8 @@ import {
   MOBILE_COL_WIDTH,
   MOBILE_TIME_COL_WIDTH,
   MOBILE_HEADER_HEIGHT,
-} from "@/lib/schedule-utils";
+} from "@/lib/schedule-layout";
+import { calculatePosition, START_HOUR } from "@/lib/format-time";
 import { ProgramCard } from "./ProgramCard";
 import { Toolbar } from "./Toolbar";
 import { useVisibilitySettings } from "@/hooks/use-visibility-settings";

@@ -2,9 +2,14 @@
 
 import ogs from 'open-graph-scraper';
 
+/**
+ * WebサイトのOGP画像を取得する
+ * @param url WebサイトのURL
+ * @returns OGP画像のURL または null
+ */
 export async function getOGImage(url: string): Promise<string | null> {
   if (!url) return null;
-  
+
   try {
     const { result } = await ogs({
       url,
@@ -20,7 +25,7 @@ export async function getOGImage(url: string): Promise<string | null> {
     if (result.ogImage && result.ogImage.length > 0) {
       return result.ogImage[0].url;
     }
-    
+
     return null;
   } catch (error) {
     console.error(`Failed to fetch OG image for ${url}:`, error);

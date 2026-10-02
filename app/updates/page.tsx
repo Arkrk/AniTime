@@ -1,4 +1,4 @@
-import { formatRelativeTime } from "@/lib/date-utils";
+import { formatRelativeTime } from "@/lib/format-time";
 import { OGPreviewServer } from "@/components/works/OGPreviewServer";
 import Link from "next/link";
 import { Metadata } from "next";
