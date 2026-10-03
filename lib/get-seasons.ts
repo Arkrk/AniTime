@@ -16,7 +16,7 @@ let cachedSeasons: Season[] | null = null;
  */
 export async function getSeasons(): Promise<Season[]> {
   if (cachedSeasons) return cachedSeasons;
-  const supabase = await createClient();
+  const supabase = createClient();
 
   // IDの降順で取得
   const { data, error } = await supabase

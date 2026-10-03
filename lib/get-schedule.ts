@@ -8,7 +8,7 @@ import { ProgramData } from "@/types/schedule";
  * @returns 番組表データ
  */
 export async function getScheduleByDay(day: number, seasonId: number): Promise<ProgramData[]> {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   let query = supabase
     .from("programs")
@@ -86,7 +86,7 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
  * @returns 番組表データ
  */
 export async function getWeekScheduleByChannel(seasonId: number, channelId: number): Promise<ProgramData[]> {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const query = supabase
     .from("programs")
@@ -160,7 +160,7 @@ export async function getWeekScheduleByChannel(seasonId: number, channelId: numb
  * @returns 番組表データ
  */
 export async function getWeekScheduleByArea(seasonId: number, areaId: number): Promise<ProgramData[]> {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const query = supabase
     .from("programs")
@@ -233,7 +233,7 @@ export async function getWeekScheduleByArea(seasonId: number, areaId: number): P
  * @returns 番組表データ
  */
 export async function getSeasonSchedule(channelId: number, day: number, allSeasons: any[]): Promise<ProgramData[]> {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   let query = supabase
     .from("programs")

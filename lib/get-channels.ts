@@ -1,6 +1,4 @@
-"use server";
-
-import { createClient } from "@/utils/server";
+import { createClient } from "@/utils/client";
 
 let cachedChannels: any[] | null = null;
 let cachedAreas: any[] | null = null;
@@ -11,7 +9,7 @@ let cachedAreas: any[] | null = null;
  */
 export async function getChannels() {
   if (cachedChannels) return cachedChannels;
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data } = await supabase
     .from("channels")
     .select(`
@@ -31,7 +29,7 @@ export async function getChannels() {
  */
 export async function getAreas() {
   if (cachedAreas) return cachedAreas;
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data } = await supabase
     .from("areas")
     .select("*")

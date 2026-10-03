@@ -1,6 +1,4 @@
-"use server";
-
-import { createClient } from "@/utils/server";
+import { createClient } from "@/utils/client";
 
 let cachedTags: any[] | null = null;
 
@@ -11,7 +9,7 @@ let cachedTags: any[] | null = null;
 export async function getTags() {
   if (cachedTags) return cachedTags;
   
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data } = await supabase
     .from("tags")
     .select("*")

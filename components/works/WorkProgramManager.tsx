@@ -5,8 +5,8 @@ import { useLogin } from "@/hooks/login";
 import { getChannels } from "@/lib/get-channels";
 import { getSeasons } from "@/lib/get-seasons";
 import { getTags } from "@/lib/get-tags";
+import { getWorkPrograms } from "@/lib/get-programs";
 import {
-  getWorkPrograms,
   addProgramAction,
   updateProgramAction,
   deleteProgramAction,
