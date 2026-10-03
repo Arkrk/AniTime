@@ -7,27 +7,27 @@ import { requireAuth } from "@/lib/auth";
  * @param vid YouTube の動画ID
  * @returns 公開日時
  */
-export async function getYoutubeVideoPublishedAt(vid: string) {
+export async function getYoutubeVideoPublishedAt(vid: string): Promise<string | null> {
   // 権限チェック
   await requireAuth();
 
-  let uploadedAt = null;
   if (process.env.YOUTUBE_API_KEY) {
     try {
       const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${vid}&key=${process.env.YOUTUBE_API_KEY}`);
       if (res.ok) {
         const data = await res.json();
         if (data.items && data.items.length === 0) {
-          return { error: "VIDEO_NOT_FOUND" };
+          throw new Error("VIDEO_NOT_FOUND");
         }
         if (data.items && data.items.length > 0) {
-          uploadedAt = data.items[0].snippet.publishedAt;
+          return data.items[0].snippet.publishedAt;
         }
       }
-    } catch (e) {
+    } catch (e: any) {
+      if (e.message === "VIDEO_NOT_FOUND") throw e;
       console.error("YouTube API error:", e);
     }
   }
 
-  return { uploadedAt };
+  return null;
 }

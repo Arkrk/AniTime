@@ -4,18 +4,6 @@ import { createClient } from "@/utils/server";
 import { requireAuth } from "@/lib/auth";
 import { getYoutubeVideoPublishedAt } from "@/lib/youtube";
 
-/**
- * YouTube Data API から動画の公開日時を取得
- * @param vid YouTube の動画ID
- * @returns 公開日時
- */
-async function fetchYoutubeData(vid: string) {
-  const res = await getYoutubeVideoPublishedAt(vid);
-  if (res && res.error === "VIDEO_NOT_FOUND") {
-    throw new Error("VIDEO_NOT_FOUND");
-  }
-  return res ? res.uploadedAt : null;
-}
 
 /**
  * 動画を追加
@@ -27,7 +15,7 @@ export async function addVideoAction(workId: number, title: string, vid: string)
   await requireAuth();
   const supabase = await createClient();
 
-  const uploadedAt = await fetchYoutubeData(vid);
+  const uploadedAt = await getYoutubeVideoPublishedAt(vid);
   const { error } = await supabase
     .from("videos")
     .insert({ work_id: workId, title, vid, uploaded_at: uploadedAt });
@@ -47,7 +35,7 @@ export async function updateVideoAction(id: number, title: string, newVid: strin
 
   let uploadedAt = undefined;
   if (newVid !== currentVid) {
-    uploadedAt = await fetchYoutubeData(newVid);
+    uploadedAt = await getYoutubeVideoPublishedAt(newVid);
   }
 
   const updateData: any = { title, vid: newVid };
