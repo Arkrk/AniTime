@@ -5,6 +5,8 @@ import { SavedCount } from "@/components/saved/SavedCount";
 import { getSeasons, resolveSeasonId } from "@/lib/get-seasons";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 import { SavedProgramList } from "@/components/saved/SavedProgramList";
+import { ExportSavedPrograms } from "@/components/saved/ExportSavedPrograms";
+import { ProgramData } from "@/types/schedule";
 import { defaultOpenGraph } from "@/lib/metadata";
 import { Spinner } from "@/components/ui/spinner";
 import { LoadingOverlay } from "@/components/layout/LoadingOverlay";
@@ -29,6 +31,10 @@ export default async function SavedPage({ searchParams }: PageProps) {
   // シーズンIDの決定
   const latestSeasonId = seasons.length > 0 ? seasons[0].id : 0;
   const currentSeasonId = resolveSeasonId(params.season, seasons, latestSeasonId);
+  const currentSeason = seasons.find((s) => s.id === currentSeasonId) || null;
+
+  // 全番組データ取得 (day=0 で全曜日取得)
+  const programs = await getScheduleByDay(0, currentSeasonId);
 
   // renderKeyを生成
   const sp = new URLSearchParams();
@@ -57,6 +63,7 @@ export default async function SavedPage({ searchParams }: PageProps) {
           </div>
           <div className="flex items-center gap-2">
             <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
+            <ExportSavedPrograms programs={programs} currentSeason={currentSeason} />
           </div>
         </div>
       </div>
@@ -66,7 +73,7 @@ export default async function SavedPage({ searchParams }: PageProps) {
         <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start">
           <div className="h-full w-full overflow-auto">
             <Suspense fallback={<LoaderScreen />}>
-              <SavedProgramListWrapper currentSeasonId={currentSeasonId} />
+              <SavedProgramListWrapper programs={programs} />
             </Suspense>
           </div>
         </LoadingOverlay>
@@ -76,10 +83,7 @@ export default async function SavedPage({ searchParams }: PageProps) {
   );
 }
 
-async function SavedProgramListWrapper({ currentSeasonId }: { currentSeasonId: number }) {
-  // 全番組データ取得 (day=0 で全曜日取得)
-  const programs = await getScheduleByDay(0, currentSeasonId);
-
+async function SavedProgramListWrapper({ programs }: { programs: ProgramData[] }) {
   // OGP情報を一括取得
   const ogPreviews = programs.reduce((acc, p) => {
     if (p.og_image_url && !acc[p.id]) {
