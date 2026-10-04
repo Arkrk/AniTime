@@ -33,8 +33,8 @@ export default async function SavedPage({ searchParams }: PageProps) {
   const currentSeasonId = resolveSeasonId(params.season, seasons, latestSeasonId);
   const currentSeason = seasons.find((s) => s.id === currentSeasonId) || null;
 
-  // 全番組データ取得 (day=0 で全曜日取得)
-  const programs = await getScheduleByDay(0, currentSeasonId);
+  // 全番組データ取得 (day=0 で全曜日取得) - await せずに Promise を作成
+  const programsPromise = getScheduleByDay(0, currentSeasonId);
 
   // renderKeyを生成
   const sp = new URLSearchParams();
@@ -63,7 +63,7 @@ export default async function SavedPage({ searchParams }: PageProps) {
           </div>
           <div className="flex items-center gap-2">
             <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
-            <ExportSavedPrograms programs={programs} currentSeason={currentSeason} />
+            <ExportSavedPrograms programsPromise={programsPromise} currentSeason={currentSeason} />
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@ export default async function SavedPage({ searchParams }: PageProps) {
         <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start">
           <div className="h-full w-full overflow-auto">
             <Suspense fallback={<LoaderScreen />}>
-              <SavedProgramListWrapper programs={programs} />
+              <SavedProgramListWrapper programsPromise={programsPromise} />
             </Suspense>
           </div>
         </LoadingOverlay>
@@ -83,7 +83,9 @@ export default async function SavedPage({ searchParams }: PageProps) {
   );
 }
 
-async function SavedProgramListWrapper({ programs }: { programs: ProgramData[] }) {
+async function SavedProgramListWrapper({ programsPromise }: { programsPromise: Promise<ProgramData[]> }) {
+  const programs = await programsPromise;
+
   // OGP情報を一括取得
   const ogPreviews = programs.reduce((acc, p) => {
     if (p.og_image_url && !acc[p.id]) {

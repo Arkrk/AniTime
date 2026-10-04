@@ -5,18 +5,45 @@ import { ProgramData } from "@/types/schedule";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Share, FileText, TableProperties } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { calculatePosition, formatTime30 } from "@/lib/format-time";
 import { Season } from "@/lib/get-seasons";
 import { DAYS } from "@/lib/format-days";
 import { format, isValid, parseISO } from "date-fns";
 
-export function ExportSavedPrograms({ programs, currentSeason }: { programs: ProgramData[], currentSeason?: Season | null }) {
+export function ExportSavedPrograms({ 
+  programsPromise,
+  currentSeason 
+}: { 
+  programsPromise?: Promise<ProgramData[]>,
+  currentSeason?: Season | null 
+}) {
   const { isSaved, isLoaded } = useSavedPrograms();
+  const [resolvedPrograms, setResolvedPrograms] = useState<ProgramData[] | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (programsPromise) {
+      Promise.resolve(programsPromise)
+        .then((data) => {
+          if (isMounted) {
+            setResolvedPrograms(data);
+          }
+        })
+        .catch((error) => {
+          if (isMounted) {
+            console.error("Failed to load programs:", error);
+          }
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [programsPromise]);
 
   const savedPrograms = useMemo(() => {
-    if (!isLoaded) return [];
-    const saved = programs.filter((p) => isSaved(String(p.id)));
+    if (!isLoaded || !resolvedPrograms || resolvedPrograms.length === 0) return [];
+    const saved = resolvedPrograms.filter((p) => isSaved(String(p.id)));
 
     // 曜日・時間でソート
     saved.sort((a, b) => {
@@ -29,7 +56,7 @@ export function ExportSavedPrograms({ programs, currentSeason }: { programs: Pro
     });
 
     return saved;
-  }, [programs, isSaved, isLoaded]);
+  }, [resolvedPrograms, isSaved, isLoaded]);
 
   const handleExportText = () => {
     if (savedPrograms.length === 0) return;
