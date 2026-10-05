@@ -17,7 +17,6 @@ import {
 } from "@/lib/schedule-layout";
 import { calculatePosition, START_HOUR } from "@/lib/format-time";
 import { ProgramCard } from "./ProgramCard";
-import { Toolbar } from "./Toolbar";
 import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { TvMinimal } from "lucide-react";
@@ -191,7 +190,6 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
             </EmptyHeader>
           </Empty>
         </div>
-        <Toolbar />
       </div>
     );
   }
@@ -322,7 +320,6 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
           </div>
         </div>
       </div>
-      <Toolbar />
     </div>
   );
 };

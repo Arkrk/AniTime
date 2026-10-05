@@ -13,6 +13,7 @@ import { LoadingOverlay } from "@/components/layout/LoadingOverlay";
 import { Spinner } from "@/components/ui/spinner";
 import { LayoutMode, ProgramData } from "@/types/schedule";
 import { OGPreviewServer } from "@/components/works/OGPreviewServer";
+import { Toolbar } from "@/components/schedule/Toolbar";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -117,6 +118,7 @@ export default async function Home({ searchParams }: PageProps) {
               validDay={validDay}
               seasons={seasons}
             />
+            <Toolbar />
           </Suspense>
         </LoadingOverlay>
       </div>

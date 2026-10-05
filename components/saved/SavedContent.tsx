@@ -13,7 +13,7 @@ import { LoadingOverlay } from "@/components/layout/LoadingOverlay";
 import { Spinner } from "@/components/ui/spinner";
 import { calculatePosition } from "@/lib/format-time";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { List, Table2 } from "lucide-react";
+import { LayoutGrid, Table2 } from "lucide-react";
 import { TimeTable } from "@/components/schedule/TimeTable";
 import { OGImageFallback } from "@/components/works/OGImageFallback";
 import React, { useMemo } from "react";
@@ -90,8 +90,8 @@ export function SavedContent({ seasons, currentSeasonId, currentSeason, currentP
             <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
             <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "list" | "timetable")}>
               <TabsList>
-                <TabsTrigger value="list" title="リストビュー">
-                  <List />
+                <TabsTrigger value="list" title="グリッドビュー">
+                  <LayoutGrid />
                 </TabsTrigger>
                 <TabsTrigger value="timetable" title="番組表ビュー">
                   <Table2 />
