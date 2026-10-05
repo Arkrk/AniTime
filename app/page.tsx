@@ -79,15 +79,15 @@ export default async function Home({ searchParams }: PageProps) {
     <div className="flex flex-col h-full w-full">
       {/* コントロールバー */}
       <div className="shrink-0 p-4 border-b z-10">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="hidden sm:flex items-center gap-4">
+        <div className="flex flex-col min-[360px]:flex-row items-center justify-between gap-4">
+          <div className="hidden min-[360px]:flex items-center gap-4">
             <h1 className="text-lg font-bold shrink-0">番組表</h1>
           </div>
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
             {showSeasonSelector && (
               <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
             )}
-            <div className="flex items-center gap-2 max-w-full overflow-x-auto pb-1 sm:pb-0">
+            <div className="flex items-center gap-2 max-w-full overflow-x-auto">
               {showAreaNavigator && (
                 <AreaNavigator areas={areas} currentAreaId={currentAreaId} />
               )}

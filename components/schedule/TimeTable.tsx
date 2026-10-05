@@ -181,7 +181,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
         <div className="flex-1 flex items-center justify-center p-8">
           <Empty>
             <EmptyMedia variant="icon">
-              <TvMinimal className="size-6" />
+              <TvMinimal />
             </EmptyMedia>
             <EmptyHeader>
               <EmptyTitle>表示する番組がありません</EmptyTitle>
