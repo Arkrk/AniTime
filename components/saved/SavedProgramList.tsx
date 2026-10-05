@@ -6,7 +6,7 @@ import { ProgramData, LayoutProgram } from "@/types/schedule";
 import { ProgramCard } from "@/components/schedule/ProgramCard";
 import { DAYS } from "@/lib/format-days";
 import { calculatePosition, formatTime30 } from "@/lib/format-time";
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Bookmark } from "lucide-react";
 import { Bar, BarChart, XAxis, LabelList } from "recharts";
@@ -92,14 +92,6 @@ export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
       chartData,
     };
   }, [programs, programsByDay]);
-
-  // コントロールバーの SavedCount コンポーネントへ件数を通知
-  useEffect(() => {
-    if (isLoaded) {
-      const event = new CustomEvent("saved-count-change", { detail: stats.count });
-      window.dispatchEvent(event);
-    }
-  }, [stats.count, isLoaded]);
 
   if (!isLoaded) {
     return null;

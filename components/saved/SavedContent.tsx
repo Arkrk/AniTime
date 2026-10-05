@@ -8,7 +8,6 @@ import { getScheduleByDay } from "@/lib/get-schedule";
 import { SeasonSelector } from "@/components/schedule/SeasonSelector";
 import { ExportSavedPrograms } from "@/components/saved/ExportSavedPrograms";
 import { SavedProgramList } from "@/components/saved/SavedProgramList";
-import { SavedCount } from "@/components/saved/SavedCount";
 import { LoadingOverlay } from "@/components/layout/LoadingOverlay";
 import { Spinner } from "@/components/ui/spinner";
 import { calculatePosition } from "@/lib/format-time";
@@ -83,7 +82,11 @@ export function SavedContent({ seasons, currentSeasonId, currentSeason, currentP
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold flex items-center gap-2">
               <span className="max-[390px]:hidden">保存済み</span>
-              <span className="max-[430px]:hidden"><SavedCount /></span>
+              {programs.length > 0 && (
+                <span className="max-[430px]:hidden text-base font-normal text-muted-foreground">
+                  {programs.length}
+                </span>
+              )}
             </h1>
           </div>
           <div className="flex items-center gap-2">
