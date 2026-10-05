@@ -1,16 +1,7 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { getScheduleByDay } from "@/lib/get-schedule";
-import { SavedCount } from "@/components/saved/SavedCount";
-import { getSeasons, resolveSeasonId } from "@/lib/get-seasons";
-import { SeasonSelector } from "@/components/schedule/SeasonSelector";
-import { SavedProgramList } from "@/components/saved/SavedProgramList";
-import { ExportSavedPrograms } from "@/components/saved/ExportSavedPrograms";
-import { ProgramData } from "@/types/schedule";
 import { defaultOpenGraph } from "@/lib/metadata";
-import { Spinner } from "@/components/ui/spinner";
-import { LoadingOverlay } from "@/components/layout/LoadingOverlay";
-import { OGPreviewServer } from "@/components/works/OGPreviewServer";
+import { getSeasons, resolveSeasonId } from "@/lib/get-seasons";
+import { SavedContent } from "@/components/saved/SavedContent";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -33,9 +24,6 @@ export default async function SavedPage({ searchParams }: PageProps) {
   const currentSeasonId = resolveSeasonId(params.season, seasons, latestSeasonId);
   const currentSeason = seasons.find((s) => s.id === currentSeasonId) || null;
 
-  // 全番組データ取得 (day=0 で全曜日取得) - await せずに Promise を作成
-  const programsPromise = getScheduleByDay(0, currentSeasonId);
-
   // renderKeyを生成
   const sp = new URLSearchParams();
   for (const [key, val] of Object.entries(params)) {
@@ -49,58 +37,12 @@ export default async function SavedPage({ searchParams }: PageProps) {
 
   return (
     <div className="flex flex-col h-full w-full">
-
-      {/* コントロールバー */}
-      <div className="shrink-0 p-4 border-b z-10 sticky top-0 bg-background/85 backdrop-blur-md">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <h1 className="text-lg font-bold flex items-center gap-2">
-              <span>保存済み</span>
-              <Suspense fallback={<span className="text-sm font-normal text-muted-foreground opacity-50"></span>}>
-                <SavedCount />
-              </Suspense>
-            </h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
-            <ExportSavedPrograms programsPromise={programsPromise} currentSeason={currentSeason} />
-          </div>
-        </div>
-      </div>
-
-      {/* 番組リストエリア */}
-      <div className="flex-1 min-h-0 relative">
-        <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start">
-          <div className="h-full w-full overflow-auto">
-            <Suspense fallback={<LoaderScreen />}>
-              <SavedProgramListWrapper programsPromise={programsPromise} />
-            </Suspense>
-          </div>
-        </LoadingOverlay>
-      </div>
-
-    </div>
-  );
-}
-
-async function SavedProgramListWrapper({ programsPromise }: { programsPromise: Promise<ProgramData[]> }) {
-  const programs = await programsPromise;
-
-  // OGP情報を一括取得
-  const ogPreviews = programs.reduce((acc, p) => {
-    if (p.og_image_url && !acc[p.id]) {
-      acc[p.id] = <OGPreviewServer imageUrl={p.og_image_url} className="rounded-lg border" />;
-    }
-    return acc;
-  }, {} as Record<string, React.ReactNode>);
-
-  return <SavedProgramList programs={programs} ogPreviews={ogPreviews} />;
-}
-
-function LoaderScreen() {
-  return (
-    <div className="w-full h-full flex items-center justify-center">
-      <Spinner className="size-8 text-muted-foreground" />
+      <SavedContent 
+        seasons={seasons} 
+        currentSeasonId={currentSeasonId} 
+        currentSeason={currentSeason} 
+        currentParamsKey={currentParamsKey} 
+      />
     </div>
   );
 }

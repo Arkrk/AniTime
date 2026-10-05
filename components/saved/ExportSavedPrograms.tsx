@@ -1,67 +1,25 @@
 "use client";
 
-import { useSavedPrograms } from "@/hooks/use-saved-programs";
 import { ProgramData } from "@/types/schedule";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Share, FileText, TableProperties } from "lucide-react";
-import { useMemo, useState, useEffect } from "react";
-import { calculatePosition, formatTime30 } from "@/lib/format-time";
+import { formatTime30 } from "@/lib/format-time";
 import { Season } from "@/lib/get-seasons";
 import { DAYS } from "@/lib/format-days";
 import { format, isValid, parseISO } from "date-fns";
 
 export function ExportSavedPrograms({ 
-  programsPromise,
+  programs,
   currentSeason 
 }: { 
-  programsPromise?: Promise<ProgramData[]>,
+  programs: ProgramData[],
   currentSeason?: Season | null 
 }) {
-  const { isSaved, isLoaded } = useSavedPrograms();
-  const [resolvedPrograms, setResolvedPrograms] = useState<ProgramData[] | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    if (programsPromise) {
-      Promise.resolve(programsPromise)
-        .then((data) => {
-          if (isMounted) {
-            setResolvedPrograms(data);
-          }
-        })
-        .catch((error) => {
-          if (isMounted) {
-            console.error("Failed to load programs:", error);
-          }
-        });
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [programsPromise]);
-
-  const savedPrograms = useMemo(() => {
-    if (!isLoaded || !resolvedPrograms || resolvedPrograms.length === 0) return [];
-    const saved = resolvedPrograms.filter((p) => isSaved(String(p.id)));
-
-    // 曜日・時間でソート
-    saved.sort((a, b) => {
-      if (a.day_of_the_week !== b.day_of_the_week) {
-        return a.day_of_the_week - b.day_of_the_week;
-      }
-      const posA = calculatePosition(a.start_time).minutesFromStart;
-      const posB = calculatePosition(b.start_time).minutesFromStart;
-      return posA - posB;
-    });
-
-    return saved;
-  }, [resolvedPrograms, isSaved, isLoaded]);
-
   const handleExportText = () => {
-    if (savedPrograms.length === 0) return;
+    if (programs.length === 0) return;
 
-    const lines = savedPrograms.map((p) => {
+    const lines = programs.map((p) => {
       let formattedDate = "開始日未定";
       if (p.start_date) {
         const parsedDate = parseISO(p.start_date);
@@ -104,7 +62,7 @@ export function ExportSavedPrograms({
   };
 
   const handleExportCSV = () => {
-    if (savedPrograms.length === 0) return;
+    if (programs.length === 0) return;
 
     const header = ["放送局", "開始日", "曜日", "放送時間", "作品名"];
 
@@ -114,7 +72,7 @@ export function ExportSavedPrograms({
       return `"${escaped}"`;
     };
 
-    const rows = savedPrograms.map((p) => {
+    const rows = programs.map((p) => {
       const date = p.start_date || "TBD";
       const startTime = formatTime30(p.start_time);
       const endTime = formatTime30(p.end_time, p.start_time);
@@ -148,7 +106,7 @@ export function ExportSavedPrograms({
     URL.revokeObjectURL(url);
   };
 
-  const isDisabled = !isLoaded || savedPrograms.length === 0;
+  const isDisabled = programs.length === 0;
 
   return (
     <DropdownMenu>

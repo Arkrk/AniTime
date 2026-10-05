@@ -5,9 +5,14 @@ import { ProgramData } from "@/types/schedule";
  * 指定したシーズンと曜日の番組表を取得
  * @param day 曜日ID (1〜7)
  * @param seasonId シーズンID
+ * @param savedIds 保存済み番組のID配列（オプション）
  * @returns 番組表データ
  */
-export async function getScheduleByDay(day: number, seasonId: number): Promise<ProgramData[]> {
+export async function getScheduleByDay(day: number, seasonId: number, savedIds?: string[]): Promise<ProgramData[]> {
+  if (savedIds !== undefined && savedIds.length === 0) {
+    return [];
+  }
+
   const supabase = createClient();
 
   let query = supabase
@@ -37,6 +42,11 @@ export async function getScheduleByDay(day: number, seasonId: number): Promise<P
   // dayが0以外の場合は曜日で絞り込み
   if (day !== 0) {
     query = query.eq("day_of_the_week", day);
+  }
+
+  // savedIdsが指定されている場合はIDで絞り込み
+  if (savedIds && savedIds.length > 0) {
+    query = query.in("id", savedIds);
   }
 
   const { data, error } = await query;

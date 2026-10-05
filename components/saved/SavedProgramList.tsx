@@ -9,9 +9,9 @@ import { calculatePosition, formatTime30 } from "@/lib/format-time";
 import { useMemo, useEffect } from "react";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Bookmark } from "lucide-react";
-import React from "react";
 import { Bar, BarChart, XAxis, LabelList } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { OGImageFallback } from "@/components/works/OGImageFallback";
 
 const formatDuration = (minutes: number, format?: "text" | "colon") => {
   const h = Math.floor(minutes / 60);
@@ -30,44 +30,31 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramData[], ogPreviews?: Record<string, React.ReactNode> }) => {
+export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
   const { isSaved, isLoaded } = useSavedPrograms();
   const containerRef = useScrollReset<HTMLDivElement>();
-
-  const savedPrograms = useMemo(() => {
-    return programs.filter(p => isSaved(String(p.id)));
-  }, [programs, isSaved]);
 
   // 曜日ごとにグループ化
   const programsByDay = useMemo(() => {
     const grouped = new Map<number, ProgramData[]>();
     DAYS.forEach(day => grouped.set(day.id, []));
 
-    savedPrograms.forEach(p => {
+    programs.forEach(p => {
       const list = grouped.get(p.day_of_the_week);
       if (list) list.push(p);
     });
 
-    // 30時間制でソート (20:00開始基準)
-    grouped.forEach((list) => {
-      list.sort((a, b) => {
-        const posA = calculatePosition(a.start_time).minutesFromStart;
-        const posB = calculatePosition(b.start_time).minutesFromStart;
-        return posA - posB;
-      });
-    });
-
     return grouped;
-  }, [savedPrograms]);
+  }, [programs]);
 
   // 統計情報の計算
   const stats = useMemo(() => {
-    const count = savedPrograms.length;
+    const count = programs.length;
     let totalMinutes = 0;
     const dayMinutes = new Map<number, number>();
     DAYS.forEach(day => dayMinutes.set(day.id, 0));
 
-    savedPrograms.forEach(prog => {
+    programs.forEach(prog => {
       const { minutesFromStart: startMin } = calculatePosition(prog.start_time);
       const { minutesFromStart: endMin } = calculatePosition(prog.end_time);
       // 日またぎ対応: 終了時刻が開始時刻より前の場合は翌日とみなす
@@ -104,7 +91,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
       maxTime: formatDuration(maxMinutes),
       chartData,
     };
-  }, [savedPrograms, programsByDay]);
+  }, [programs, programsByDay]);
 
   // コントロールバーの SavedCount コンポーネントへ件数を通知
   useEffect(() => {
@@ -118,7 +105,7 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
     return null;
   }
 
-  if (savedPrograms.length === 0) {
+  if (programs.length === 0) {
     return (
       <div className="flex h-full items-center justify-center p-8">
         <Empty>
@@ -234,7 +221,11 @@ export const SavedProgramList = ({ programs, ogPreviews }: { programs: ProgramDa
                       isNextDay: false
                     } as LayoutProgram}
                     mode="area"
-                    ogPreview={program.og_image_url ? ogPreviews?.[program.id] : undefined}
+                    ogPreview={program.og_image_url ? (
+                      <div className="w-full relative overflow-hidden bg-muted aspect-[1.91/1] rounded-lg border">
+                        <OGImageFallback src={program.og_image_url} />
+                      </div>
+                    ) : undefined}
                     className="relative! top-0! left-0! w-full! h-full!"
                     style={{ width: "100%", height: "100%" }}
                     forceDesktopSize={true}
