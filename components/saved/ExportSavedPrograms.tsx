@@ -8,6 +8,7 @@ import { formatTime30 } from "@/lib/format-time";
 import { Season } from "@/lib/get-seasons";
 import { DAYS } from "@/lib/format-days";
 import { format, isValid, parseISO } from "date-fns";
+import { toast } from "sonner";
 
 export function ExportSavedPrograms({ 
   programs,
@@ -59,6 +60,7 @@ export function ExportSavedPrograms({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    toast.success("テキスト形式でエクスポートしました");
   };
 
   const handleExportCSV = () => {
@@ -104,6 +106,7 @@ export function ExportSavedPrograms({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    toast.success("CSV形式でエクスポートしました");
   };
 
   const isDisabled = programs.length === 0;

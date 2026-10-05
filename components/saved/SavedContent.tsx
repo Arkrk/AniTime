@@ -76,7 +76,7 @@ export function SavedContent({ seasons, currentSeasonId, currentSeason, currentP
       <div className="flex-1 min-h-0 relative">
         <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start">
           <div className="h-full w-full overflow-auto">
-            {isLoading ? (
+            {isLoading && programs.length === 0 ? (
               <div className="w-full h-full flex items-center justify-center">
                 <Spinner className="size-8 text-muted-foreground" />
               </div>
