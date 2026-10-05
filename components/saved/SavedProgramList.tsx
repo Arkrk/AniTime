@@ -31,7 +31,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
-  const { isSaved, isLoaded } = useSavedPrograms();
+  const { isLoaded } = useSavedPrograms();
   const containerRef = useScrollReset<HTMLDivElement>();
 
   // 曜日ごとにグループ化

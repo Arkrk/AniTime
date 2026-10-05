@@ -12,6 +12,11 @@ import { SavedCount } from "@/components/saved/SavedCount";
 import { LoadingOverlay } from "@/components/layout/LoadingOverlay";
 import { Spinner } from "@/components/ui/spinner";
 import { calculatePosition } from "@/lib/format-time";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { List, Table2 } from "lucide-react";
+import { TimeTable } from "@/components/schedule/TimeTable";
+import { OGImageFallback } from "@/components/works/OGImageFallback";
+import React, { useMemo } from "react";
 
 interface SavedContentProps {
   seasons: Season[];
@@ -24,6 +29,7 @@ export function SavedContent({ seasons, currentSeasonId, currentSeason, currentP
   const { isLoaded, savedIds } = useSavedPrograms();
   const [programs, setPrograms] = useState<ProgramData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<"list" | "timetable">("list");
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -56,18 +62,42 @@ export function SavedContent({ seasons, currentSeasonId, currentSeason, currentP
     };
   }, [isLoaded, savedIds, currentSeasonId]);
 
+  const ogPreviews = useMemo(() => {
+    const map: Record<number, React.ReactNode> = {};
+    programs.forEach(p => {
+      if (p.og_image_url) {
+        map[p.id] = (
+          <div className="w-full relative overflow-hidden bg-muted aspect-[1.91/1] rounded-lg border">
+            <OGImageFallback src={p.og_image_url} />
+          </div>
+        );
+      }
+    });
+    return map;
+  }, [programs]);
+
   return (
     <>
       <div className="shrink-0 p-4 border-b z-10 sticky top-0 bg-background/85 backdrop-blur-md">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold flex items-center gap-2">
-              <span>保存済み</span>
-              <SavedCount />
+              <span className="max-[390px]:hidden">保存済み</span>
+              <span className="max-[430px]:hidden"><SavedCount /></span>
             </h1>
           </div>
           <div className="flex items-center gap-2">
             <SeasonSelector seasons={seasons} currentSeasonId={currentSeasonId} />
+            <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "list" | "timetable")}>
+              <TabsList>
+                <TabsTrigger value="list" title="リストビュー">
+                  <List />
+                </TabsTrigger>
+                <TabsTrigger value="timetable" title="番組表ビュー">
+                  <Table2 />
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
             <ExportSavedPrograms programs={programs} currentSeason={currentSeason} />
           </div>
         </div>
@@ -75,13 +105,17 @@ export function SavedContent({ seasons, currentSeasonId, currentSeason, currentP
 
       <div className="flex-1 min-h-0 relative">
         <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start">
-          <div className="h-full w-full overflow-auto">
+          <div className={`h-full w-full relative ${viewMode === "list" ? "overflow-auto" : "overflow-hidden"}`}>
             {isLoading && programs.length === 0 ? (
               <div className="w-full h-full flex items-center justify-center">
                 <Spinner className="size-8 text-muted-foreground" />
               </div>
             ) : (
-              <SavedProgramList programs={programs} />
+              viewMode === "list" ? (
+                <SavedProgramList programs={programs} />
+              ) : (
+                <TimeTable programs={programs} mode="week" ogPreviews={ogPreviews} />
+              )
             )}
           </div>
         </LoadingOverlay>
