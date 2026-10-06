@@ -29,6 +29,12 @@ export function SavedContent({ seasons, currentSeasonId, currentSeason, currentP
   const [programs, setPrograms] = useState<ProgramData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"list" | "timetable">("list");
+  const [currentRenderedSeasonId, setCurrentRenderedSeasonId] = useState(currentSeasonId);
+
+  if (currentSeasonId !== currentRenderedSeasonId) {
+    setCurrentRenderedSeasonId(currentSeasonId);
+    setIsLoading(true);
+  }
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -107,18 +113,16 @@ export function SavedContent({ seasons, currentSeasonId, currentSeason, currentP
       </div>
 
       <div className="flex-1 min-h-0 relative">
-        <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start">
+        <LoadingOverlay currentParamsKey={currentParamsKey} eventName="loading-start" forcePending={isLoading}>
           <div className={`h-full w-full relative ${viewMode === "list" ? "overflow-auto" : "overflow-hidden"}`}>
             {isLoading && programs.length === 0 ? (
               <div className="w-full h-full flex items-center justify-center">
                 <Spinner className="size-8 text-muted-foreground" />
               </div>
+            ) : viewMode === "list" ? (
+              <SavedProgramList programs={programs} />
             ) : (
-              viewMode === "list" ? (
-                <SavedProgramList programs={programs} />
-              ) : (
-                <TimeTable programs={programs} mode="week" ogPreviews={ogPreviews} />
-              )
+              <TimeTable programs={programs} mode="week" ogPreviews={ogPreviews} />
             )}
           </div>
         </LoadingOverlay>

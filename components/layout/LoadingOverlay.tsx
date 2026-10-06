@@ -14,11 +14,13 @@ function getSortedParams(paramsStr: string) {
 export function LoadingOverlay({ 
   currentParamsKey,
   eventName,
-  children 
+  children,
+  forcePending = false
 }: { 
   currentParamsKey: string;
   eventName: string;
   children: React.ReactNode; 
+  forcePending?: boolean;
 }) {
   const [targetParamsStr, setTargetParamsStr] = useState<string | null>(null);
 
@@ -43,7 +45,8 @@ export function LoadingOverlay({
   const normalizedTargetKey = targetParamsStr !== null ? getSortedParams(targetParamsStr) : null;
   const normalizedUrlKey = getSortedParams(searchParams.toString());
 
-  const isPending = (normalizedTargetKey !== null && normalizedTargetKey !== normalizedCurrentKey) || 
+  const isPending = forcePending || 
+                   (normalizedTargetKey !== null && normalizedTargetKey !== normalizedCurrentKey) || 
                    (normalizedUrlKey !== normalizedCurrentKey);
 
   return (
