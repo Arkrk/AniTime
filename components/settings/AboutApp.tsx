@@ -4,7 +4,7 @@ import Link from "next/link";
 export function AboutApp() {
   return (
     <div className="bg-primary-foreground rounded-2xl border overflow-hidden">
-      <Link href="/about" className="block border-b p-4 hover:bg-accent">
+      <Link href="/about" className="block border-b p-4 hover:bg-accent transition-colors">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h3 className="font-medium text-base">AniTime について</h3>
@@ -15,7 +15,7 @@ export function AboutApp() {
           <ChevronRight className="size-4 text-muted-foreground shrink-0" />
         </div>
       </Link>
-      <Link href="/privacy" className="block border-b p-4 hover:bg-accent">
+      <Link href="/privacy" className="block border-b p-4 hover:bg-accent transition-colors">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h3 className="font-medium text-base">プライバシーポリシー</h3>
@@ -26,7 +26,7 @@ export function AboutApp() {
           <ChevronRight className="size-4 text-muted-foreground shrink-0" />
         </div>
       </Link>
-      <Link href="/releases" className="block p-4 hover:bg-accent">
+      <Link href="/releases" className="block p-4 hover:bg-accent transition-colors">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h3 className="font-medium text-base">リリースノート</h3>

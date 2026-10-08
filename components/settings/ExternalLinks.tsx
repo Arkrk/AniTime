@@ -7,7 +7,7 @@ export function ExternalLinks() {
         href="https://arkxv.notion.site/programs"
         target="_blank"
         rel="noopener noreferrer"
-        className="block border-b p-4 hover:bg-accent"
+        className="block border-b p-4 hover:bg-accent transition-colors"
       >
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -23,7 +23,7 @@ export function ExternalLinks() {
         href="https://arkxv.notion.site/12bc003785008090871bcde77dce5ba4"
         target="_blank"
         rel="noopener noreferrer"
-        className="block border-b p-4 hover:bg-accent"
+        className="block border-b p-4 hover:bg-accent transition-colors"
       >
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -39,7 +39,7 @@ export function ExternalLinks() {
         href="https://arkxv.notion.site/32dc0037850081f69b51eb1ca3c87f0e"
         target="_blank"
         rel="noopener noreferrer"
-        className="block p-4 hover:bg-accent"
+        className="block p-4 hover:bg-accent transition-colors"
       >
         <div className="flex items-center justify-between gap-4">
           <div>

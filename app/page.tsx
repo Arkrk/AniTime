@@ -79,7 +79,7 @@ export default async function Home({ searchParams }: PageProps) {
   return (
     <div className="flex flex-col h-full w-full">
       {/* コントロールバー */}
-      <div className="shrink-0 p-4 border-b z-10">
+      <div className="shrink-0 p-4 border-b z-10 bg-background">
         <div className="flex flex-col min-[360px]:flex-row items-center justify-between gap-4">
           <div className="hidden min-[360px]:flex items-center gap-4">
             <h1 className="text-lg font-bold shrink-0">番組表</h1>

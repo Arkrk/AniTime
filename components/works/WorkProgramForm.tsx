@@ -196,7 +196,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
                 key={color}
                 type="button"
                 onClick={() => handleChange("color", color)}
-                className={`w-8 h-8 rounded-full border-2 ${getProgramColorClass(color)} ${formData.color === color ? "ring-2 ring-offset-2 ring-black" : ""}`}
+                className={`size-8 rounded-full border-2 ${getProgramColorClass(color)} ${formData.color === color ? "ring-2 ring-offset-2 ring-black" : ""}`}
               />
             ))}
           </div>
@@ -264,13 +264,13 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
       <SheetFooter>
         <div className="flex justify-between items-center w-full">
           <div className="flex items-center space-x-2">
-            <Globe className={cn("h-4 w-4 transition-colors", !skipUpdateTimestamp ? "text-foreground" : "text-muted-foreground")} />
+            <Globe className={cn("size-4 transition-colors", !skipUpdateTimestamp ? "text-foreground" : "text-muted-foreground")} />
             <Switch
               id="skip-update-timestamp"
               checked={skipUpdateTimestamp}
               onCheckedChange={setSkipUpdateTimestamp}
             />
-            <Lock className={cn("h-4 w-4 transition-colors", skipUpdateTimestamp ? "text-foreground" : "text-muted-foreground")} />
+            <Lock className={cn("size-4 transition-colors", skipUpdateTimestamp ? "text-foreground" : "text-muted-foreground")} />
           </div>
           <div className="flex gap-2">
             <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>

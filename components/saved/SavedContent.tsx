@@ -83,7 +83,7 @@ export function SavedContent({ seasons, currentSeasonId, currentSeason, currentP
 
   return (
     <>
-      <div className="shrink-0 p-4 border-b z-10 sticky top-0 bg-background/85 backdrop-blur-md">
+      <div className="shrink-0 p-4 border-b z-10 sticky top-0 bg-background">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold flex items-center gap-2">
