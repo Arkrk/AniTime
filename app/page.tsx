@@ -82,8 +82,8 @@ export default async function Home({ searchParams }: PageProps) {
     <div className="flex flex-col h-full w-full">
       {/* コントロールバー */}
       <div className="shrink-0 p-4 border-b z-10 sticky top-0 bg-background">
-        <div className="flex flex-col min-[330px]:flex-row items-center justify-between gap-4">
-          <div className="hidden min-[330px]:flex items-center gap-4">
+        <div className="flex flex-col min-[440px]:flex-row items-center justify-between gap-4">
+          <div className="hidden min-[440px]:flex items-center gap-4">
             <h1 className="text-lg font-bold shrink-0 hidden md:block">番組表</h1>
             <Image src={icon} alt="AniTime" width={28} height={28} className="md:hidden shrink-0" />
           </div>
