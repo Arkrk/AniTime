@@ -14,7 +14,7 @@ import { AreaNavigator } from "@/components/schedule/AreaNavigator";
 import { useDisplaySettings } from "@/hooks/use-display-settings";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { DAYS, getDayString } from "@/lib/format-days";
 
 interface DisplaySettingsProps {

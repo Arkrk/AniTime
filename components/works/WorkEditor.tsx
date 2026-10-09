@@ -11,7 +11,7 @@ import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { AtSign, Globe, Lock, CloudUpload } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { updateWork, createWork, uploadWorkImage } from "@/lib/action-works";
 import { getOGImage } from "@/lib/get-opengraph";
 import { getSeasons, Season } from "@/lib/get-seasons";
@@ -204,7 +204,7 @@ export function WorkEditor({
         await updateWork(work.id, workData);
       } else {
         const result = await createWork(workData, skipInsertTimestamp);
-        
+
         setSheetOpen(false);
         router.push(`/works/${result.id}`);
         return;

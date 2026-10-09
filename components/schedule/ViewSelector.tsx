@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Map, RadioTower, CalendarDays } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 export const ViewSelector = () => {
   const router = useRouter();

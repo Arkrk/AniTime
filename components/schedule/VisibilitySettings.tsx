@@ -10,7 +10,7 @@ import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/acco
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 type Area = { id: number; name: string; order: number };
 type Channel = { id: number; name: string; order: number; area_id: number };

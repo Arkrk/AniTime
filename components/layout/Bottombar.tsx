@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { Table2, Bookmark, History, Clapperboard, Bolt } from "lucide-react";
 import { useState, PointerEvent } from "react";
 

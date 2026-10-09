@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { Button } from "@/components/ui/button";
 
 export function WorkSynopsisContent({ htmlContent }: { htmlContent: string }) {

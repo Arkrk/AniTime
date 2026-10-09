@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 interface PaginationProps {
   currentPage: number;

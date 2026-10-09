@@ -11,7 +11,7 @@ import { LayoutProgram, LayoutMode } from "@/types/schedule";
 import { formatTime30 } from "@/lib/format-time";
 import { getProgramColorClass } from "@/lib/colors";
 import { DAYS } from "@/lib/format-days";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";

@@ -15,7 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { CalendarIcon, Globe, Lock } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { SheetFooter } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";

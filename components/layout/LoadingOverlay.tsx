@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 function getSortedParams(paramsStr: string) {
   const p = new URLSearchParams(paramsStr);
@@ -11,15 +11,15 @@ function getSortedParams(paramsStr: string) {
   return p.toString();
 }
 
-export function LoadingOverlay({ 
+export function LoadingOverlay({
   currentParamsKey,
   eventName,
   children,
   forcePending = false
-}: { 
+}: {
   currentParamsKey: string;
   eventName: string;
-  children: React.ReactNode; 
+  children: React.ReactNode;
   forcePending?: boolean;
 }) {
   const [targetParamsStr, setTargetParamsStr] = useState<string | null>(null);
@@ -29,7 +29,7 @@ export function LoadingOverlay({
       const customEvent = e as CustomEvent<string>;
       setTargetParamsStr(customEvent.detail);
     };
-    
+
     window.addEventListener(eventName, handleStart);
     return () => window.removeEventListener(eventName, handleStart);
   }, [eventName]);
@@ -45,9 +45,9 @@ export function LoadingOverlay({
   const normalizedTargetKey = targetParamsStr !== null ? getSortedParams(targetParamsStr) : null;
   const normalizedUrlKey = getSortedParams(searchParams.toString());
 
-  const isPending = forcePending || 
-                   (normalizedTargetKey !== null && normalizedTargetKey !== normalizedCurrentKey) || 
-                   (normalizedUrlKey !== normalizedCurrentKey);
+  const isPending = forcePending ||
+    (normalizedTargetKey !== null && normalizedTargetKey !== normalizedCurrentKey) ||
+    (normalizedUrlKey !== normalizedCurrentKey);
 
   return (
     <div className="relative h-full w-full">

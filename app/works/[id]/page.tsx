@@ -14,7 +14,7 @@ import { WorkSynopsis } from "@/components/works/WorkSynopsis";
 import { defaultOpenGraph } from "@/lib/metadata";
 import { OGPreviewServer } from "@/components/works/OGPreviewServer";
 import { WorkActionsMenu } from "@/components/works/WorkActionsMenu";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { getSeasonBadgeClass } from "@/lib/colors";
 
 type PageProps = {

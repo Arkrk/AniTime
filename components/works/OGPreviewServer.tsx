@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageOff } from "lucide-react";
 import { OGImageFallback } from "./OGImageFallback";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 interface OGPreviewServerProps {
   imageUrl?: string | null;
