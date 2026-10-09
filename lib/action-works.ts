@@ -102,7 +102,6 @@ export async function createWork(data: {
     throw new Error(error.message);
   }
 
-  revalidatePath("/admin");
   return { success: true, id: newWork.id };
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useLogin } from "@/hooks/login";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
@@ -42,6 +43,7 @@ export function WorkEditor({
   open,
   onOpenChange,
 }: WorkEditorProps) {
+  const router = useRouter();
   const { user } = useLogin();
   const [mounted, setMounted] = useState(false);
   const [internalOpen, setInternalOpen] = useState(false);
@@ -186,30 +188,26 @@ export function WorkEditor({
         }
       }
 
+      const workData = {
+        name: formData.name,
+        name_yomi: formData.name_yomi || null,
+        website_url: formData.website_url || null,
+        x_username: formData.x_username || null,
+        wikipedia_url: formData.wikipedia_url || null,
+        annict_id: formData.annict_id && !isNaN(parseInt(formData.annict_id, 10)) ? parseInt(formData.annict_id, 10) : null,
+        season_id: formData.season_id,
+        og_image_url: finalOgImageUrl,
+        synopsis: formData.synopsis || null,
+      };
+
       if (work) {
-        await updateWork(work.id, {
-          name: formData.name,
-          name_yomi: formData.name_yomi || null,
-          website_url: formData.website_url || null,
-          x_username: formData.x_username || null,
-          wikipedia_url: formData.wikipedia_url || null,
-          annict_id: formData.annict_id && !isNaN(parseInt(formData.annict_id, 10)) ? parseInt(formData.annict_id, 10) : null,
-          season_id: formData.season_id,
-          og_image_url: finalOgImageUrl,
-          synopsis: formData.synopsis || null,
-        });
+        await updateWork(work.id, workData);
       } else {
-        await createWork({
-          name: formData.name,
-          name_yomi: formData.name_yomi || null,
-          website_url: formData.website_url || null,
-          x_username: formData.x_username || null,
-          wikipedia_url: formData.wikipedia_url || null,
-          annict_id: formData.annict_id && !isNaN(parseInt(formData.annict_id, 10)) ? parseInt(formData.annict_id, 10) : null,
-          season_id: formData.season_id,
-          og_image_url: finalOgImageUrl,
-          synopsis: formData.synopsis || null,
-        }, skipInsertTimestamp);
+        const result = await createWork(workData, skipInsertTimestamp);
+        
+        setSheetOpen(false);
+        router.push(`/works/${result.id}`);
+        return;
       }
       setSheetOpen(false);
     } catch (error) {
