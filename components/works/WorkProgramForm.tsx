@@ -11,6 +11,7 @@ import { getProgramColorClass } from "@/lib/colors";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Toggle } from "@/components/ui/toggle";
 import { Calendar } from "@/components/ui/calendar";
+import { TimePicker, TimePickerContent, TimePickerInput } from "@/components/reui/time-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
@@ -135,7 +136,7 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
             <Popover>
               <PopoverTrigger asChild>
                 <Button
-                  variant={"outline"}
+                  variant="secondary"
                   className={cn(
                     "w-full pl-3 text-left font-normal",
                     !formData.start_date && "text-muted-foreground"
@@ -146,13 +147,16 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
                   ) : (
                     <span>日付を選択</span>
                   )}
-                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  <CalendarIcon className="ml-auto" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
                   captionLayout="dropdown"
+                  startMonth={new Date(1950, 0)}
+                  endMonth={new Date(2050, 11)}
+                  defaultMonth={formData.start_date ? new Date(formData.start_date) : undefined}
                   selected={formData.start_date ? new Date(formData.start_date) : undefined}
                   onSelect={(date) => handleChange("start_date", date ? format(date, "yyyy-MM-dd") : "")}
                   locale={ja}
@@ -165,26 +169,28 @@ export function WorkProgramForm({ initialData, channels, tags, seasons, onSubmit
         <div className="grid grid-cols-2 gap-4">
           <Field>
             <FieldLabel htmlFor="start_time">開始時間</FieldLabel>
-            <Input
+            <TimePicker
               id="start_time"
-              type="time"
-              value={formData.start_time || ""}
-              onChange={(e) => handleChange("start_time", e.target.value)}
-              required
-              className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-            />
+              minuteStep={1}
+              value={formData.start_time || null}
+              onValueChange={(val) => handleChange("start_time", val || "")}
+            >
+              <TimePickerInput required />
+              <TimePickerContent align="end" />
+            </TimePicker>
           </Field>
 
           <Field>
             <FieldLabel htmlFor="end_time">終了時間</FieldLabel>
-            <Input
+            <TimePicker
               id="end_time"
-              type="time"
-              value={formData.end_time || ""}
-              onChange={(e) => handleChange("end_time", e.target.value)}
-              required
-              className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-            />
+              minuteStep={1}
+              value={formData.end_time || null}
+              onValueChange={(val) => handleChange("end_time", val || "")}
+            >
+              <TimePickerInput required />
+              <TimePickerContent align="end" />
+            </TimePicker>
           </Field>
         </div>
 
