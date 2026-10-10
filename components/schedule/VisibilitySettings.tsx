@@ -79,7 +79,7 @@ export function VisibilitySettings() {
 
               return (
                 <AccordionItem key={area.id} value={`area-${area.id}`} className="border-b last:border-b-0 group overflow-hidden">
-                  <div className="flex items-center bg-primary-foreground hover:bg-accent border-b -mb-px group-data-[state=open]:mb-0 relative z-10">
+                  <div className="flex items-center bg-primary-foreground hover:bg-accent relative z-10">
                     <div className="flex items-center pl-4 py-3 pr-3">
                       <Checkbox
                         id={`area-group-${area.id}`}
@@ -100,7 +100,7 @@ export function VisibilitySettings() {
                     </AccordionPrimitive.Header>
                   </div>
                   <AccordionContent className="p-0">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col border-t">
                       {areaChannels.map((channel) => (
                         <div
                           key={channel.id}
