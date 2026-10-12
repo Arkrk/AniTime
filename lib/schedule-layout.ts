@@ -19,16 +19,22 @@ export const MOBILE_HEADER_HEIGHT = 28;
  * 番組データの配列を受け取り、配置計算済みのチャンネル配列を返す
  * @param programs 番組データの配列
  * @param mode レイアウトモード
- * @param options レイアウトオプション
+ * @param options レイアウトオプション（areaOrder: エリアの表示順）
  * @returns レイアウト済みのチャンネル配列
  */
 export const calculateLayout = (
   programs: ProgramData[],
   mode: LayoutMode,
-  options?: { minHeight?: number; colWidth?: number }
+  options?: { minHeight?: number; colWidth?: number; areaOrder?: number[] }
 ): ChannelLayout[] => {
   const minHeight = options?.minHeight ?? MIN_HEIGHT;
   const colWidth = options?.colWidth ?? COL_WIDTH;
+
+  // ユーザー定義のエリア並び順（エリアID → 表示位置）
+  const areaOrderIndex = new Map<number, number>();
+  options?.areaOrder?.forEach((id, index) => areaOrderIndex.set(id, index));
+  // 並び順に含まれないエリアを末尾に配置するためのオフセット
+  const UNORDERED_AREA_OFFSET = 1_000_000;
 
   // グループ化のキーとメタデータを保持するMap
   const groupsMap = new Map<number, ProgramData[]>();
@@ -56,8 +62,10 @@ export const calculateLayout = (
         const sortOrder = p.area_order * 1000 + p.channel_order;
         metaMap.set(key, { name: p.channel_name, order: sortOrder });
       } else if (mode === "area") {
-        // エリアグルーピング
-        metaMap.set(key, { name: p.area_name, order: p.area_order });
+        // エリアグルーピング（ユーザー定義の並び順を優先）
+        const customIndex = areaOrderIndex.get(key);
+        const order = customIndex !== undefined ? customIndex : UNORDERED_AREA_OFFSET + p.area_order;
+        metaMap.set(key, { name: p.area_name, order });
       } else if (mode === "week") {
         // 週間番組表
         const dayLabel = ["", "月", "火", "水", "木", "金", "土", "日"][key] || "不明";

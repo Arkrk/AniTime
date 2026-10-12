@@ -22,6 +22,7 @@ import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/
 import { TvMinimal } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useDisplaySettings } from "@/hooks/use-display-settings";
+import { useAreaOrder } from "@/hooks/use-area-order";
 
 type TimeTableProps = {
   programs: ProgramData[];
@@ -39,6 +40,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
 
   const { hiddenChannelIds, loaded } = useVisibilitySettings();
   const { showNewOnly } = useDisplaySettings();
+  const { areaOrder } = useAreaOrder();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const currentHourHeight = isDesktop ? HOUR_HEIGHT : MOBILE_HOUR_HEIGHT;
@@ -61,8 +63,9 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
     return calculateLayout(filteredPrograms, mode, {
       minHeight: currentMinHeight,
       colWidth: currentColWidth,
+      areaOrder,
     });
-  }, [programs, mode, hiddenChannelIds, loaded, showNewOnly, currentMinHeight, currentColWidth]);
+  }, [programs, mode, hiddenChannelIds, loaded, showNewOnly, currentMinHeight, currentColWidth, areaOrder]);
 
   const scrollHourRef = React.useRef<number | null>(null);
 
