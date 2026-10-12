@@ -102,7 +102,7 @@ export const getWorks = cache(async (
   }
 
   const { data, count, error } = await query
-    .order(sortColumn, { ascending: sortDirection === "asc" })
+    .order(sortColumn, { ascending: sortDirection === "asc", nullsFirst: false })
     .range(from, to);
 
   if (error) {
