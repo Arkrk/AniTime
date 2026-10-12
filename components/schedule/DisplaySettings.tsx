@@ -215,10 +215,9 @@ export function DisplaySettings({ channels = [], areas = [], seasons = [] }: Dis
             </Button>
           </div>
 
-          <div className="h-px bg-border" />
           <div className="flex flex-col">
             <div
-              className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent cursor-pointer"
+              className="flex items-center justify-between gap-4 px-4 py-3 border-t transition-colors hover:bg-accent cursor-pointer"
               onClick={toggleNewOnly}
             >
               <Label className="w-full cursor-pointer pointer-events-none">
@@ -226,11 +225,10 @@ export function DisplaySettings({ channels = [], areas = [], seasons = [] }: Dis
               </Label>
               <Switch checked={showNewOnly} className="pointer-events-none" />
             </div>
-            <div className="h-px bg-border" />
             <Sheet>
               <SheetTrigger asChild>
                 <div
-                  className="flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-accent cursor-pointer"
+                  className="flex items-center justify-between gap-4 px-4 py-3 border-t transition-colors hover:bg-accent cursor-pointer"
                 >
                   <Label className="w-full cursor-pointer pointer-events-none">
                     チャンネル表示設定
