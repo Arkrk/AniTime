@@ -26,6 +26,7 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
+  Modifier,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -35,6 +36,9 @@ import {
 } from "@dnd-kit/sortable";
 import { ProgramItem } from "./ProgramItem";
 import { SortableItem } from "./SortableItem";
+
+// ドラッグを縦方向のみに制限する
+const restrictToVerticalAxis: Modifier = ({ transform }) => ({ ...transform, x: 0 });
 
 export function WorkProgramManager({ workId }: { workId: number }) {
   const { user } = useLogin();
@@ -174,6 +178,7 @@ export function WorkProgramManager({ workId }: { workId: number }) {
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          modifiers={[restrictToVerticalAxis]}
           onDragEnd={handleDragEnd}
         >
           <SortableContext
