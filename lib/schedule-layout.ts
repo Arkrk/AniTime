@@ -16,6 +16,67 @@ export const MOBILE_TIME_COL_WIDTH = 28;
 export const MOBILE_HEADER_HEIGHT = 28;
 
 /**
+ * 放送開始日の昇順で比較する（開始日未設定は末尾、同日ならID順）
+ */
+const compareByStartDate = (a: ProgramData, b: ProgramData): number => {
+  if (a.start_date && b.start_date) {
+    if (a.start_date !== b.start_date) {
+      return a.start_date < b.start_date ? -1 : 1;
+    }
+  } else if (a.start_date) {
+    return -1;
+  } else if (b.start_date) {
+    return 1;
+  }
+  return a.id - b.id;
+};
+
+type ProgramSlot = {
+  programs: ProgramData[];
+  startMin: number;
+  endMin: number;
+  isNextDay: boolean;
+  channelOrder: number;
+};
+
+/**
+ * チャンネル・曜日・放送時間が同じ番組を1つの枠にまとめる
+ * @param programs 番組データの配列
+ * @returns 表示枠の配列
+ */
+const groupBySlot = (programs: ProgramData[]): ProgramSlot[] => {
+  const slotMap = new Map<string, ProgramSlot>();
+
+  for (const p of programs) {
+    const key = `${p.channel_id}|${p.day_of_the_week}|${p.start_time}|${p.end_time}`;
+    const slot = slotMap.get(key);
+
+    if (slot) {
+      slot.programs.push(p);
+    } else {
+      const { minutesFromStart: startMin, isNextDay } = calculatePosition(p.start_time);
+      const { minutesFromStart: endMin } = calculatePosition(p.end_time);
+      slotMap.set(key, {
+        programs: [p],
+        startMin,
+        endMin,
+        isNextDay,
+        channelOrder: p.area_order * 1000 + p.channel_order,
+      });
+    }
+  }
+
+  const slots = Array.from(slotMap.values());
+  for (const slot of slots) {
+    // 複数番組がある枠のみ、放送開始日の昇順に並べ替える
+    if (slot.programs.length > 1) {
+      slot.programs.sort(compareByStartDate);
+    }
+  }
+  return slots;
+};
+
+/**
  * 番組データの配列を受け取り、配置計算済みのチャンネル配列を返す
  * @param programs 番組データの配列
  * @param mode レイアウトモード
@@ -82,25 +143,19 @@ export const calculateLayout = (
   const result: ChannelLayout[] = [];
 
   groupsMap.forEach((progs, key) => {
+    // チャンネル・曜日・放送時間が同じ番組を1つの枠にまとめる
+    const slots = groupBySlot(progs);
+
     // ソート順: 開始時間(昇順) -> チャンネル順(昇順)
     // エリア表示の場合、同じ時間に複数のチャンネルが重なるため、チャンネル順序で左詰めにする
-    progs.sort((a, b) => {
-      const posA = calculatePosition(a.start_time).minutesFromStart;
-      const posB = calculatePosition(b.start_time).minutesFromStart;
-
-      if (posA !== posB) {
-        return posA - posB; // 時間優先
-      }
-      // 時間が同じならチャンネルオーダー順
-      return (a.area_order * 1000 + a.channel_order) - (b.area_order * 1000 + b.channel_order);
-    });
+    slots.sort((a, b) => a.startMin - b.startMin || a.channelOrder - b.channelOrder);
 
     const layoutProgs: LayoutProgram[] = [];
     const lanes: number[] = [];
 
-    progs.forEach((prog) => {
-      const { minutesFromStart: startMin, isNextDay } = calculatePosition(prog.start_time);
-      const { minutesFromStart: endMin } = calculatePosition(prog.end_time);
+    for (const slot of slots) {
+      // 代表番組（放送開始日が最も早い番組）で配置を計算する
+      const { programs: slotPrograms, startMin, endMin, isNextDay } = slot;
 
       // 終了時間が開始時間より前になってしまう場合（日またぎ計算ミス等）のガード
       const safeEndMin = endMin < startMin ? endMin + 24 * 60 : endMin;
@@ -128,13 +183,14 @@ export const calculateLayout = (
       }
 
       layoutProgs.push({
-        ...prog,
+        ...slotPrograms[0],
         top,
         height,
         laneIndex,
         isNextDay,
+        stackedPrograms: slotPrograms.length > 1 ? slotPrograms : undefined,
       });
-    });
+    }
 
     const meta = metaMap.get(key)!;
 

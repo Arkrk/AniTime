@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { ja } from "date-fns/locale";
-import { Clock, Calendar, Bookmark, Globe } from "lucide-react";
+import { Clock, Calendar, Bookmark, Globe, ChevronLeft, ChevronRight, Layers } from "lucide-react";
 import { FaXTwitter, FaWikipediaW } from "react-icons/fa6";
 import { LayoutProgram, LayoutMode } from "@/types/schedule";
 import { formatTime30 } from "@/lib/format-time";
@@ -26,16 +26,28 @@ type ProgramCardProps = {
   className?: string;
   style?: React.CSSProperties;
   ogPreview?: React.ReactNode;
+  // 番組IDをキーとしたOGプレビュー（指定時は ogPreview より優先。スタック切替時に使用）
+  ogPreviews?: Record<string, React.ReactNode>;
   colWidth?: number;
   forceDesktopSize?: boolean;
 };
 
-export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, className, style, ogPreview, colWidth = 160, forceDesktopSize = false }) => {
+export const ProgramCard: React.FC<ProgramCardProps> = ({ program: baseProgram, mode, className, style, ogPreview: baseOgPreview, ogPreviews, colWidth = 160, forceDesktopSize = false }) => {
   const { isSaved, toggleSaved } = useSavedPrograms();
   const searchParams = useSearchParams();
   const isHoverable = useMediaQuery("(hover: hover)");
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const { hoverDetails, showOgPreview } = useProgramCardSettings();
+
+  // チャンネル・曜日・放送時間が同じ番組スタック
+  const stack = baseProgram.stackedPrograms && baseProgram.stackedPrograms.length > 1 ? baseProgram.stackedPrograms : null;
+  const stackCount = stack?.length ?? 1;
+  const [stackIndex, setStackIndex] = useState(0);
+  const currentIndex = Math.min(stackIndex, stackCount - 1);
+  // 配置情報は維持しつつ、番組情報を選択中のものに差し替える
+  const program: LayoutProgram = stack ? { ...baseProgram, ...stack[currentIndex] } : baseProgram;
+  const ogPreview = ogPreviews ? ogPreviews[program.id] : baseOgPreview;
+
   const saved = isSaved(String(program.id));
   const dayLabel = DAYS.find(d => d.id === program.day_of_the_week)?.label || "?";
 
@@ -64,6 +76,13 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
         ...style,
       }}
     >
+      {/* スタック件数バッジ */}
+      {stack && (
+        <span className="absolute top-0.5 right-0.5 flex items-center gap-0.5 rounded-full bg-background/80 px-1 py-0.5 text-[10px] font-bold leading-none text-foreground shadow-sm tabular-nums">
+          <Layers className="size-2.5" />
+          {currentIndex + 1}/{stackCount}
+        </span>
+      )}
       <div className="flex flex-col h-full">
         {/* チャンネル名（列がチャンネルではない場合は非表示） */}
         {!hideChannelName && (
@@ -91,6 +110,34 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, mode, classNa
 
   const programDetails = (
     <div className="flex flex-col gap-3">
+      {/* スタック切替 */}
+      {stack && (
+        <div className="flex items-center justify-between -mt-2.5 -mx-2.5 bg-accent rounded-full">
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => setStackIndex(Math.max(currentIndex - 1, 0))}
+            disabled={currentIndex === 0}
+            aria-label="前の番組"
+          >
+            <ChevronLeft />
+          </Button>
+          <span className="flex items-center gap-1 text-xs font-medium tabular-nums">
+            <Layers className="size-3" />
+            {currentIndex + 1} / {stackCount}
+          </span>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => setStackIndex(Math.min(currentIndex + 1, stackCount - 1))}
+            disabled={currentIndex === stackCount - 1}
+            aria-label="次の番組"
+          >
+            <ChevronRight />
+          </Button>
+        </div>
+      )}
+
       <div className="flex items-center justify-between text-xs text-muted-foreground border-b pb-2">
         {/* 放送開始日 */}
         {program.start_date ? (

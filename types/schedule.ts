@@ -38,6 +38,7 @@ export type LayoutProgram = ProgramData & {
   height: number;    // CSS height (px)
   laneIndex: number; // 左から何番目の列か (0〜)
   isNextDay: boolean; // 24時以降かどうか（表示上の判定用）
+  stackedPrograms?: ProgramData[]; // チャンネル・曜日・放送時間が同じ番組
 };
 
 // チャンネルごとの描画データ
