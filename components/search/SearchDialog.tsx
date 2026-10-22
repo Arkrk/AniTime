@@ -12,8 +12,9 @@ import {
   CommandItem,
   CommandSeparator,
 } from "@/components/ui/command";
+import { Empty, EmptyMedia, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { searchWorks } from "@/lib/action-works";
-import { Table2, Bookmark, Clapperboard, History, Bolt } from "lucide-react";
+import { Table2, Bookmark, Clapperboard, History, Bolt, Search } from "lucide-react";
 
 interface SearchDialogProps {
   open: boolean;
@@ -83,7 +84,19 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
             </CommandItem>
           </CommandGroup>
           {query.length > 0 && data.length === 0 && !isPending && !isTyping && (
-            <CommandEmpty>作品が見つかりませんでした</CommandEmpty>
+            <CommandEmpty>
+              <Empty>
+                <EmptyMedia variant="icon">
+                  <Search />
+                </EmptyMedia>
+                <EmptyHeader>
+                  <EmptyTitle>検索結果がありません</EmptyTitle>
+                  <EmptyDescription>
+                    入力語句を変更して再度お試しください
+                  </EmptyDescription>
+                </EmptyHeader>
+              </Empty>
+            </CommandEmpty>
           )}
           {data.length > 0 && (
             <>

@@ -65,7 +65,7 @@ export const WorksList = ({
           <EmptyHeader>
             <EmptyTitle>表示する作品がありません</EmptyTitle>
             <EmptyDescription>
-              選択された放送開始クールに<br />一致する作品がありません。
+              表示条件を変更して再度お試しください
             </EmptyDescription>
           </EmptyHeader>
         </Empty>

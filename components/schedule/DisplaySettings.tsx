@@ -211,7 +211,7 @@ export function DisplaySettings({ channels = [], areas = [], seasons = [] }: Dis
             )}
 
             <Button onClick={handleApply} disabled={!hasChanges} className="w-full mt-2">
-              設定を適用
+              この表示条件を適用
             </Button>
           </div>
 

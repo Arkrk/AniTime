@@ -105,9 +105,9 @@ export const SavedProgramList = ({ programs }: { programs: ProgramData[] }) => {
             <Bookmark />
           </EmptyMedia>
           <EmptyHeader>
-            <EmptyTitle>保存済みの番組はありません</EmptyTitle>
+            <EmptyTitle>保存済みの番組がありません</EmptyTitle>
             <EmptyDescription>
-              番組表から気になる番組を保存すると<br />ここに一覧表示されます。
+              番組表から視聴予定の番組を保存できます
             </EmptyDescription>
           </EmptyHeader>
         </Empty>

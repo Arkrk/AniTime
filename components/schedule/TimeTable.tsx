@@ -188,7 +188,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
             <EmptyHeader>
               <EmptyTitle>表示する番組がありません</EmptyTitle>
               <EmptyDescription>
-                選択された曜日やチャンネルに<br />一致する番組がありません。
+                表示条件を変更して再度お試しください
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
