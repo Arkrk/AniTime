@@ -1,5 +1,5 @@
 import { ProgramData, ChannelLayout, LayoutProgram, LayoutMode } from "@/types/schedule";
-import { calculatePosition } from "@/lib/format-time";
+import { calculatePosition, START_HOUR } from "@/lib/format-time";
 
 // デスクトップ表示用
 export const HOUR_HEIGHT = 240; // 1時間あたりの高さ(px) -> 1分 = 4px
@@ -208,3 +208,71 @@ export const calculateLayout = (
   return result.sort((a, b) => a.order - b.order);
 };
 
+/**
+ * 番組表に表示する時間帯（hour）のリストと、各時間帯のY座標を計算する
+ * - 全日帯 (5:00〜19:59) は番組が存在する時間帯のみ表示
+ * - 深夜帯 (20:00〜) は番組が存在する時間帯とその間をすべて表示
+ * @param programs 番組データの配列
+ * @param hourHeight 1時間あたりの高さ(px)
+ * @returns 表示する時間帯・時間帯ごとのY座標・全体の高さ
+ */
+export const calculateVisibleHours = (
+  programs: ProgramData[],
+  hourHeight: number
+): { visibleHours: number[]; hourToY: Map<number, number>; totalHeight: number } => {
+  const programHours = new Set<number>();
+
+  programs.forEach((p) => {
+    const { minutesFromStart: startMin } = calculatePosition(p.start_time);
+    let { minutesFromStart: endMin } = calculatePosition(p.end_time);
+
+    if (endMin < startMin) {
+      endMin += 24 * 60;
+    }
+
+    const startH = Math.floor(startMin / 60) + START_HOUR;
+    const endH = Math.floor((endMin - 1) / 60) + START_HOUR;
+
+    for (let h = startH; h <= endH; h++) {
+      programHours.add(h);
+    }
+  });
+
+  const hours = new Set<number>();
+  let minLate = 30;
+  let maxLate = -1;
+
+  programHours.forEach((h) => {
+    if (h >= START_HOUR && h < 20) {
+      hours.add(h); // 全日帯 (5:00〜19:59) は番組が存在する時間帯のみ
+    }
+    if (h >= 20) {
+      if (h < minLate) minLate = h;
+      if (h > maxLate) maxLate = h;
+    }
+  });
+
+  // 深夜帯 (20:00～) は番組が存在する時間帯とその間を表示
+  if (minLate <= maxLate) {
+    for (let h = minLate; h <= maxLate; h++) {
+      hours.add(h);
+    }
+  }
+
+  // ソートして配列化
+  const sortedHours = Array.from(hours).sort((a, b) => a - b);
+
+  // Y座標のマッピングを作成
+  const hourToY = new Map<number, number>();
+  let currentY = 0;
+  sortedHours.forEach((h) => {
+    hourToY.set(h, currentY);
+    currentY += hourHeight;
+  });
+
+  return {
+    visibleHours: sortedHours,
+    hourToY,
+    totalHeight: currentY,
+  };
+};

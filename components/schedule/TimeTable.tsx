@@ -4,6 +4,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { ProgramData, LayoutMode } from "@/types/schedule";
 import {
   calculateLayout,
+  calculateVisibleHours,
   HOUR_HEIGHT,
   MIN_HEIGHT,
   COL_WIDTH,
@@ -15,7 +16,7 @@ import {
   MOBILE_TIME_COL_WIDTH,
   MOBILE_HEADER_HEIGHT,
 } from "@/lib/schedule-layout";
-import { calculatePosition, START_HOUR } from "@/lib/format-time";
+import { START_HOUR } from "@/lib/format-time";
 import { ProgramCard } from "./ProgramCard";
 import { useVisibilitySettings } from "@/hooks/use-visibility-settings";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
@@ -70,63 +71,10 @@ export const TimeTable: React.FC<TimeTableProps> = ({ programs, mode = "area", o
   const scrollHourRef = React.useRef<number | null>(null);
 
   // 表示する時間帯（hour）のリストを計算
-  const { visibleHours, hourToY, totalHeight } = useMemo(() => {
-    const programHours = new Set<number>();
-
-    programs.forEach((p) => {
-      const { minutesFromStart: startMin } = calculatePosition(p.start_time);
-      let { minutesFromStart: endMin } = calculatePosition(p.end_time);
-
-      if (endMin < startMin) {
-        endMin += 24 * 60;
-      }
-
-      const startH = Math.floor(startMin / 60) + START_HOUR;
-      const endH = Math.floor((endMin - 1) / 60) + START_HOUR;
-
-      for (let h = startH; h <= endH; h++) {
-        programHours.add(h);
-      }
-    });
-
-    const hours = new Set<number>();
-    let minLate = 30;
-    let maxLate = -1;
-
-    programHours.forEach((h) => {
-      if (h >= START_HOUR && h < 20) {
-        hours.add(h); // 全日帯 (5:00〜19:59) は番組が存在する時間帯のみ
-      }
-      if (h >= 20) {
-        if (h < minLate) minLate = h;
-        if (h > maxLate) maxLate = h;
-      }
-    });
-
-    // 深夜帯 (20:00～) は番組が存在する時間帯とその間を表示
-    if (minLate <= maxLate) {
-      for (let h = minLate; h <= maxLate; h++) {
-        hours.add(h);
-      }
-    }
-
-    // ソートして配列化
-    const sortedHours = Array.from(hours).sort((a, b) => a - b);
-
-    // Y座標のマッピングを作成
-    const map = new Map<number, number>();
-    let currentY = 0;
-    sortedHours.forEach((h) => {
-      map.set(h, currentY);
-      currentY += currentHourHeight;
-    });
-
-    return {
-      visibleHours: sortedHours,
-      hourToY: map,
-      totalHeight: currentY,
-    };
-  }, [programs, currentHourHeight]);
+  const { visibleHours, hourToY, totalHeight } = useMemo(
+    () => calculateVisibleHours(programs, currentHourHeight),
+    [programs, currentHourHeight]
+  );
 
   useEffect(() => {
     if (mounted && scrollRef.current) {

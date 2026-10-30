@@ -1,14 +1,28 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import { toPng } from "html-to-image";
 import { ProgramData } from "@/types/schedule";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Share, FileText, TableProperties } from "lucide-react";
+import { Share, FileText, TableProperties, Image } from "lucide-react";
 import { formatTime30 } from "@/lib/format-time";
 import { Season } from "@/lib/get-seasons";
 import { DAYS } from "@/lib/format-days";
 import { format, isValid, parseISO } from "date-fns";
 import { toast } from "sonner";
+import { SavedTimeTableExport } from "@/components/saved/SavedTimeTableExport";
+
+// 出力画像の最大ピクセル数（iOS Safari の Canvas 上限 16,777,216px を下回るよう設定）
+const MAX_CANVAS_PIXELS = 16_000_000;
+// 出力画像の最大倍率（Retina 相当）
+const MAX_PIXEL_RATIO = 2;
+
+/**
+ * 次の描画フレームまで待機する
+ */
+const waitForNextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
 export function ExportSavedPrograms({ 
   programs,
@@ -17,6 +31,67 @@ export function ExportSavedPrograms({
   programs: ProgramData[],
   currentSeason?: Season | null 
 }) {
+  // 画像出力中のファイル名（null 以外の場合に出力処理を実行する）
+  const [exportingFileName, setExportingFileName] = useState<string | null>(null);
+  const isExportingImage = exportingFileName !== null;
+  const imageRef = useRef<HTMLDivElement>(null);
+
+  // 画像出力用の番組表がマウントされた後にPNG化してダウンロードする
+  useEffect(() => {
+    if (exportingFileName === null) return;
+
+    const toastId = toast.loading("画像を生成しています…");
+
+    const exportImage = async () => {
+      try {
+        // Webフォントの読み込みとレイアウトの確定を待つ
+        await document.fonts.ready;
+        await waitForNextFrame();
+        await waitForNextFrame();
+
+        const node = imageRef.current;
+        if (!node) throw new Error("Export target not found");
+
+        // Canvas の上限を超えないよう倍率を調整する
+        const width = node.offsetWidth;
+        const height = node.offsetHeight;
+        const pixelRatio = Math.min(MAX_PIXEL_RATIO, Math.sqrt(MAX_CANVAS_PIXELS / (width * height)));
+
+        const dataUrl = await toPng(node, {
+          pixelRatio,
+          // 透過PNGにならないよう、テーマの背景色で塗りつぶす
+          backgroundColor: getComputedStyle(node).backgroundColor,
+        });
+
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = exportingFileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        toast.success("画像形式でエクスポートしました", { id: toastId });
+      } catch (error) {
+        console.error("Failed to export timetable image:", error instanceof Error ? error.message : error);
+        toast.error("画像の生成に失敗しました", { id: toastId });
+      } finally {
+        setExportingFileName(null);
+      }
+    };
+
+    exportImage();
+  }, [exportingFileName]);
+
+  const handleExportImage = () => {
+    if (programs.length === 0) {
+      toast.error("画像に出力する番組がありません");
+      return;
+    }
+    if (isExportingImage) return;
+    setExportingFileName(
+      currentSeason ? `anitime-saved-${currentSeason.year}-${currentSeason.month}.png` : "anitime-saved.png"
+    );
+  };
   const handleExportText = () => {
     if (programs.length === 0) return;
 
@@ -112,22 +187,41 @@ export function ExportSavedPrograms({
   const isDisabled = programs.length === 0;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="secondary" size="icon" title="エクスポート" disabled={isDisabled}>
-          <Share />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleExportText}>
-          <FileText />
-          テキストで出力
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleExportCSV}>
-          <TableProperties />
-          CSVで出力
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="secondary" size="icon" title="エクスポート" disabled={isDisabled}>
+            <Share />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleExportText}>
+            <FileText />
+            テキストで出力
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleExportCSV}>
+            <TableProperties />
+            CSVで出力
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleExportImage} disabled={isExportingImage}>
+            <Image />
+            画像で出力
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* 画像出力用の番組表（出力処理中のみ画面外にマウント） */}
+      {isExportingImage &&
+        createPortal(
+          <div
+            aria-hidden="true"
+            className="fixed top-0 pointer-events-none"
+            style={{ left: -100000 }}
+          >
+            <SavedTimeTableExport ref={imageRef} programs={programs} currentSeason={currentSeason} />
+          </div>,
+          document.body
+        )}
+    </>
   );
 }
