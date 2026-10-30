@@ -10,7 +10,9 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
+import { Empty, EmptyMedia, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { searchAnnictWorks } from "@/lib/annict";
+import { Search } from "lucide-react";
 
 interface AnnictSearchDialogProps {
   open: boolean;
@@ -69,7 +71,19 @@ export function AnnictSearchDialog({ open, onOpenChange, onSelect }: AnnictSearc
         />
         <CommandList className="h-75">
           {query.length > 0 && data.length === 0 && !isPending && !isTyping && (
-            <CommandEmpty>作品が見つかりませんでした</CommandEmpty>
+            <CommandEmpty>
+              <Empty>
+                <EmptyMedia variant="icon">
+                  <Search />
+                </EmptyMedia>
+                <EmptyHeader>
+                  <EmptyTitle>検索結果がありません</EmptyTitle>
+                  <EmptyDescription>
+                    入力語句を変更して再度お試しください
+                  </EmptyDescription>
+                </EmptyHeader>
+              </Empty>
+            </CommandEmpty>
           )}
           {data.length > 0 && (
             <CommandGroup heading="Annictの作品">
