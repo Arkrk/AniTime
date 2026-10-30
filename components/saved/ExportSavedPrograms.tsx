@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { toPng } from "html-to-image";
 import { ProgramData } from "@/types/schedule";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Share, FileText, TableProperties, Image } from "lucide-react";
 import { formatTime30 } from "@/lib/format-time";
@@ -195,18 +195,25 @@ export function ExportSavedPrograms({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={handleExportText}>
-            <FileText />
-            テキストで出力
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleExportCSV}>
-            <TableProperties />
-            CSVで出力
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleExportImage} disabled={isExportingImage}>
-            <Image />
-            画像で出力
-          </DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>一覧形式</DropdownMenuLabel>
+            <DropdownMenuItem onClick={handleExportText}>
+              <FileText />
+              テキストで出力
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleExportCSV}>
+              <TableProperties />
+              CSVで出力
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>番組表形式</DropdownMenuLabel>
+            <DropdownMenuItem onClick={handleExportImage} disabled={isExportingImage}>
+              <Image />
+              画像で出力
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
 
