@@ -20,7 +20,7 @@ import { useOs } from "@/hooks/use-os";
 export const Sidebar = () => {
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
-  const os = useOs();
+  const { os } = useOs();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -92,7 +92,7 @@ export const Sidebar = () => {
             <TooltipContent side="right" className="font-medium flex items-center">
               <p>検索</p>
               <Kbd>
-                <span className="text-xs">{os === "mac" ? "⌘" : "Ctrl + "}</span>K
+                <span className="text-xs">{os === "mac" || os === "ipados" ? "⌘" : "Ctrl + "}</span>K
               </Kbd>
             </TooltipContent>
           </Tooltip>

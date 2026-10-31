@@ -2,16 +2,18 @@
 
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { toPng } from "html-to-image";
+import { toBlob } from "html-to-image";
 import { ProgramData } from "@/types/schedule";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Share, FileText, TableProperties, Image } from "lucide-react";
+import { Share, FileText, TableProperties, Image, Download } from "lucide-react";
 import { formatTime30 } from "@/lib/format-time";
 import { Season } from "@/lib/get-seasons";
 import { DAYS } from "@/lib/format-days";
 import { format, isValid, parseISO } from "date-fns";
 import { toast } from "sonner";
+import { useOs } from "@/hooks/use-os";
 import { SavedTimeTableExport } from "@/components/saved/SavedTimeTableExport";
 
 // 出力画像の最大ピクセル数（iOS Safari の Canvas 上限 16,777,216px を下回るよう設定）
@@ -24,6 +26,40 @@ const MAX_PIXEL_RATIO = 2;
  */
 const waitForNextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
+/**
+ * Web Share API でファイルを共有できるかどうかを判定する
+ */
+const canShareFile = (file: File) =>
+  typeof navigator.share === "function" &&
+  typeof navigator.canShare === "function" &&
+  navigator.canShare({ files: [file] });
+
+/**
+ * 共有シートのキャンセルによるエラーかどうかを判定する
+ */
+const isAbortError = (error: unknown) => error instanceof DOMException && error.name === "AbortError";
+
+/**
+ * Blob を a[download] でダウンロードする
+ */
+const downloadBlob = (blob: Blob, fileName: string) => {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+// 画像プレビューダイアログで扱う情報
+type ImagePreview = {
+  file: File;
+  url: string; // プレビュー表示用の Object URL
+  canShare: boolean; // Web Share API で共有可能かどうか
+};
+
 export function ExportSavedPrograms({ 
   programs,
   currentSeason 
@@ -31,12 +67,21 @@ export function ExportSavedPrograms({
   programs: ProgramData[],
   currentSeason?: Season | null 
 }) {
+  const { isIos, isIosPwa } = useOs();
   // 画像出力中のファイル名（null 以外の場合に出力処理を実行する）
   const [exportingFileName, setExportingFileName] = useState<string | null>(null);
   const isExportingImage = exportingFileName !== null;
   const imageRef = useRef<HTMLDivElement>(null);
+  // 画像プレビューダイアログ（画像の生成完了後に表示する）
+  const [preview, setPreview] = useState<ImagePreview | null>(null);
 
-  // 画像出力用の番組表がマウントされた後にPNG化してダウンロードする
+  // プレビュー用の Object URL をダイアログを閉じたときに解放する
+  useEffect(() => {
+    if (!preview) return;
+    return () => URL.revokeObjectURL(preview.url);
+  }, [preview]);
+
+  // 画像出力用の番組表がマウントされた後に画像化し、プレビューダイアログを表示する
   useEffect(() => {
     if (exportingFileName === null) return;
 
@@ -57,20 +102,21 @@ export function ExportSavedPrograms({
         const height = node.offsetHeight;
         const pixelRatio = Math.min(MAX_PIXEL_RATIO, Math.sqrt(MAX_CANVAS_PIXELS / (width * height)));
 
-        const dataUrl = await toPng(node, {
+        const blob = await toBlob(node, {
           pixelRatio,
           // 透過PNGにならないよう、テーマの背景色で塗りつぶす
           backgroundColor: getComputedStyle(node).backgroundColor,
         });
+        if (!blob) throw new Error("Failed to create image blob");
 
-        const a = document.createElement("a");
-        a.href = dataUrl;
-        a.download = exportingFileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        const file = new File([blob], exportingFileName, { type: "image/png" });
 
-        toast.success("画像形式でエクスポートしました", { id: toastId });
+        toast.dismiss(toastId);
+        setPreview({
+          file,
+          url: URL.createObjectURL(blob),
+          canShare: canShareFile(file),
+        });
       } catch (error) {
         console.error("Failed to export timetable image:", error instanceof Error ? error.message : error);
         toast.error("画像の生成に失敗しました", { id: toastId });
@@ -81,6 +127,38 @@ export function ExportSavedPrograms({
 
     exportImage();
   }, [exportingFileName]);
+
+  // iOS / iPadOS の PWA かつ Web Share API が利用不可な環境かどうかを判定する
+  const canSave = preview !== null && !(isIosPwa && !preview.canShare);
+
+  // プレビューダイアログから画像を保存する（iOS / iPadOS は共有シート、それ以外は直接ダウンロード）
+  const handleSavePreview = async () => {
+    if (!preview) return;
+
+    if (isIos) {
+      if (preview.canShare) {
+        try {
+          await navigator.share({ files: [preview.file] });
+          setPreview(null);
+          toast.success("画像を保存しました");
+        } catch (error) {
+          if (isAbortError(error)) return;
+          console.error("Failed to share timetable image:", error instanceof Error ? error.message : error);
+          toast.error("共有に失敗しました。画像を長押しして保存してください");
+        }
+        return;
+      }
+
+      if (isIosPwa) {
+        toast.error("この環境では保存できません。画像を長押しして保存してください");
+        return;
+      }
+    }
+
+    downloadBlob(preview.file, preview.file.name);
+    setPreview(null);
+    toast.success("画像をダウンロードしました");
+  };
 
   const handleExportImage = () => {
     if (programs.length === 0) {
@@ -229,6 +307,38 @@ export function ExportSavedPrograms({
           </div>,
           document.body
         )}
+
+      {/* 画像プレビューダイアログ（画像の生成完了後に表示） */}
+      <Dialog open={preview !== null} onOpenChange={(open) => !open && setPreview(null)}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>画像のプレビュー</DialogTitle>
+            <DialogDescription>
+              {!canSave
+                ? "画像を長押しして保存できます。"
+                : "”保存” ボタンを選択して画像をダウンロードできます。"}
+            </DialogDescription>
+          </DialogHeader>
+          {preview && (
+            <div className="max-h-[50vh] overflow-auto rounded-lg border">
+              <img
+                src={preview.url}
+                className="w-full h-auto"
+                style={{ WebkitTouchCallout: "default" }}
+              />
+            </div>
+          )}
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">キャンセル</Button>
+            </DialogClose>
+            <Button onClick={handleSavePreview} disabled={!canSave}>
+              <Download />
+              保存
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
